@@ -1,6 +1,7 @@
 ﻿using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 using MediatR;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
+using NcpAdminBlazor.Domain.AggregatesModel.MenuAggregate;
 using NetCorePal.Extensions.DistributedTransactions.CAP.Persistence;
 
 namespace NcpAdminBlazor.Infrastructure;
@@ -25,4 +26,5 @@ public partial class ApplicationDbContext(DbContextOptions<ApplicationDbContext>
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Menu> Menus => Set<Menu>();
 }
