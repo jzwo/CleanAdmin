@@ -1,38 +1,35 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
-    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
-    <IsPublishable>false</IsPublishable>
-    <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+        <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+        <IsPublishable>false</IsPublishable>
+        <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+        <PublishTrimmed>true</PublishTrimmed>
+        <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+    </PropertyGroup>
 
-  <!--    -->
-  <PropertyGroup>
-      <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
-  </PropertyGroup>
-    
-  <ItemGroup>
-    <PackageReference Include="Blazored.LocalStorage" />
-    <PackageReference Include="FluentValidation" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" />
-    <PackageReference Include="Microsoft.Extensions.Http" />
-    <PackageReference Include="Microsoft.Kiota.Bundle" />
-    <PackageReference Include="MudBlazor" />
-    <PackageReference Include="MudBlazor.Markdown" />
-    <PackageReference Include="MudBlazor.Translations" />
-    <PackageReference Include="MudX.MudBlazor.Extension" />
-    <PackageReference Include="PodNet.Blazor.TypedRoutes" />
-    <PackageReference Include="Microsoft.Extensions.AI" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Blazored.LocalStorage"/>
+        <PackageReference Include="FluentValidation"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Authorization"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication"/>
+        <PackageReference Include="Microsoft.Extensions.Http"/>
+        <PackageReference Include="Microsoft.Kiota.Bundle"/>
+        <PackageReference Include="MudBlazor"/>
+        <PackageReference Include="MudBlazor.Markdown"/>
+        <PackageReference Include="MudBlazor.Translations"/>
+        <PackageReference Include="MudX.MudBlazor.Extension"/>
+        <PackageReference Include="PodNet.Blazor.TypedRoutes"/>
+        <PackageReference Include="Microsoft.Extensions.AI"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\NcpAdminBlazor.Shared\NcpAdminBlazor.Shared.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\NcpAdminBlazor.Shared\NcpAdminBlazor.Shared.csproj"/>
+    </ItemGroup>
 
 </Project>

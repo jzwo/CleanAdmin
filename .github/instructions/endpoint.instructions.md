@@ -151,14 +151,4 @@ public override async Task HandleAsync(UpdateUserRequestDto req, CancellationTok
 
 ## 配置方式
 
-端点使用属性模式配置，不使用 `Configure()` 方法：
-
-```csharp
-[Tags("ModuleName")]
-[HttpPost("/api/resource")]
-[AllowAnonymous]
-public class CreateResourceEndpoint(IMediator mediator) : Endpoint<CreateRequest, ResponseData<CreateResponse>>
-{
-    // 实现
-}
-```
+端点使用 `Configure()` 方法配置
