@@ -1,5 +1,4 @@
 using Microsoft.JSInterop;
-using NcpAdminBlazor.Client.Services;
 using NcpAdminBlazor.Client.Shared;
 
 namespace NcpAdminBlazor.Web.Services;
@@ -8,21 +7,17 @@ namespace NcpAdminBlazor.Web.Services;
 /// 基于 JavaScript Interop 的 Cookie 认证服务
 /// 用于在 SSR 场景下通过浏览器 JavaScript 发起 HTTP 请求来设置和清除认证 Cookie
 /// </summary>
-public sealed class JsCookieAuthService(
-    IJSRuntime jsRuntime,
-    ILogger<JsCookieAuthService> logger)
+public sealed class JsCookieAuthService(IJSRuntime jsRuntime, ILogger<JsCookieAuthService> logger)
     : ICookieAuthService, IAsyncDisposable
 {
     private const string JsModulePath = "./js/cookieAuth.js";
     private const string SetAuthCookieFunction = "setAuthCookie";
     private const string ClearAuthCookieFunction = "clearAuthCookie";
 
-    private readonly Lazy<Task<IJSObjectReference>> _moduleTask = new(
-        () => jsRuntime.InvokeAsync<IJSObjectReference>("import", JsModulePath).AsTask());
+    private readonly Lazy<Task<IJSObjectReference>> _moduleTask = new(() =>
+        jsRuntime.InvokeAsync<IJSObjectReference>("import", JsModulePath).AsTask());
 
-    /// <inheritdoc />
-    public async Task<bool> SetAuthCookieAsync(
-        SetAuthCookieRequest request,
+    public async Task<bool> SetAuthCookieAsync(SetAuthCookieRequest request,
         CancellationToken cancellationToken = default)
     {
         try
@@ -35,7 +30,8 @@ public sealed class JsCookieAuthService(
                 request.RefreshToken,
                 request.AccessTokenExpiry.ToString("O"),
                 request.RefreshTokenExpiry.ToString("O"),
-                request.UserId);
+                request.UserId,
+                request.RememberMe);
         }
         catch (JSException ex)
         {
@@ -44,7 +40,6 @@ public sealed class JsCookieAuthService(
         }
     }
 
-    /// <inheritdoc />
     public async Task<bool> ClearAuthCookieAsync(CancellationToken cancellationToken = default)
     {
         try
@@ -59,15 +54,23 @@ public sealed class JsCookieAuthService(
         }
     }
 
-    /// <summary>
-    /// 释放 JavaScript 模块资源
-    /// </summary>
     public async ValueTask DisposeAsync()
     {
         if (_moduleTask.IsValueCreated)
         {
-            var module = await _moduleTask.Value;
-            await module.DisposeAsync();
+            try
+            {
+                var module = await _moduleTask.Value;
+                await module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // 如果 SignalR 已经断开，Dispose 可能会失败，忽略即可
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Error disposing JS module");
+            }
         }
     }
 }

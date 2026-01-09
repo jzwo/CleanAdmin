@@ -10,16 +10,18 @@
  * @param {string} accessTokenExpiry - Access Token 过期时间 (ISO 8601)
  * @param {string} refreshTokenExpiry - Refresh Token 过期时间 (ISO 8601)
  * @param {string} userId - 用户 ID
+ * @param {boolean} rememberMe - 是否记住我（持久化 Cookie）
  * @returns {Promise<boolean>} 是否成功设置 Cookie
  */
-export async function setAuthCookie(accessToken, refreshToken, accessTokenExpiry, refreshTokenExpiry, userId) {
+export async function setAuthCookie(accessToken, refreshToken, accessTokenExpiry, refreshTokenExpiry, userId, rememberMe) {
     try {
         const request = {
             accessToken,
             refreshToken,
             accessTokenExpiry,
             refreshTokenExpiry,
-            userId
+            userId,
+            rememberMe
         };
 
         const response = await fetch('/bff-api/auth/login', {

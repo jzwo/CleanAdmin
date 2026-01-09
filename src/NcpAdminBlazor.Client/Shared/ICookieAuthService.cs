@@ -24,4 +24,5 @@ public record SetAuthCookieRequest(
     string RefreshToken,
     DateTimeOffset AccessTokenExpiry,
     DateTimeOffset RefreshTokenExpiry,
-    string UserId);
+    string UserId,
+    bool RememberMe);

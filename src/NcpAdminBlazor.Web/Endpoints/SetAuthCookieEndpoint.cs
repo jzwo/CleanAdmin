@@ -53,7 +53,19 @@ public static class AuthEndpoints
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);
 
-        await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+        // 配置认证属性，根据 RememberMe 设置持久化 Cookie
+        var authProperties = new AuthenticationProperties
+        {
+            IsPersistent = request.RememberMe,
+            // 如果选择记住我，设置过期时间为 RefreshToken 的过期时间
+            // 如果不选择记住我，Cookie 将是会话 Cookie（浏览器关闭时删除）
+            ExpiresUtc = request.RememberMe ? request.RefreshTokenExpiry : null
+        };
+
+        await httpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme, 
+            principal, 
+            authProperties);
 
         await userTokenStore.StoreTokenAsync(new UserTokenData(
             request.UserId,

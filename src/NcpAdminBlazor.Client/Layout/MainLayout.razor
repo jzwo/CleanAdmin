@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @using MudX
-@implements IDisposable
+@implements IAsyncDisposable
 
 <MudThemeProvider Theme="@_theme" IsDarkMode="LayoutStore.IsDarkMode"/>
 <MudPopoverProvider/>
@@ -20,6 +20,7 @@
     [Inject] LayoutStore LayoutStore { get; set; } = null!;
     [Inject] ISnackbar Snackbar { get; set; } = null!;
     private MudTheme? _theme;
+    private bool _disposed;
 
     protected override void OnInitialized()
     {
@@ -39,9 +40,24 @@
         };
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        LayoutStore.OnDarkModeChanged -= OnDarkModeToggled;
+        if (_disposed) return;
+
+        try
+        {
+            // 取消订阅事件
+            LayoutStore.OnDarkModeChanged -= OnDarkModeToggled;
+            await Task.CompletedTask;
+        }
+        catch (JSDisconnectedException)
+        {
+            // 连接已断开时静默失败，忽略
+        }
+        finally
+        {
+            _disposed = true;
+        }
     }
 
     private void OnDarkModeToggled(bool isDarkMode)

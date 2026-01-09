@@ -40,4 +40,3 @@ public sealed class CookieAuthService(HttpClient httpClient) : ICookieAuthServic
         }
     }
 }
-
