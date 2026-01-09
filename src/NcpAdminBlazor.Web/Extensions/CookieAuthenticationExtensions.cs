@@ -35,44 +35,7 @@ public static class CookieAuthenticationExtensions
                 // 路径配置
                 options.LoginPath = "/account/login"; // 未登录时跳转地址
                 // options.AccessDeniedPath = "/access-denied"; // 403 禁止访问地址
-                
-                //【关键】API 请求不跳转 (AJAX/Fetch 优化)
-                // 默认情况下，未登录访问接口会返回 302 跳转到 /login。
-                // 对于 Blazor/API 调用，这会导致 fetch 报错或重定向循环。
-                // 我们需要让它返回 401，让前端拦截器去处理跳转。
-                options.Events.OnRedirectToLogin = context =>
-                {
-                    // 判断是否是 API 请求 (根据路径或请求头)
-                    if (IsApiRequest(context.Request))
-                    {
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        return Task.CompletedTask;
-                    }
-
-                    // 普通页面请求，执行默认跳转
-                    context.Response.Redirect(context.RedirectUri);
-                    return Task.CompletedTask;
-                };
-
-                // 同理处理 403 禁止访问
-                options.Events.OnRedirectToAccessDenied = context =>
-                {
-                    if (IsApiRequest(context.Request))
-                    {
-                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                        return Task.CompletedTask;
-                    }
-
-                    context.Response.Redirect(context.RedirectUri);
-                    return Task.CompletedTask;
-                };
             });
         return services;
-    }
-
-    // 辅助方法：判断是否 API 请求
-    private static bool IsApiRequest(HttpRequest request)
-    {
-        return request.Path.StartsWithSegments("/api");
     }
 }

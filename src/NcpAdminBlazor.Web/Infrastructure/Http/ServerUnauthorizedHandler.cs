@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using NcpAdminBlazor.Client.Pages.Authentication;
 using NcpAdminBlazor.Web.Infrastructure.Auth;
 
 namespace NcpAdminBlazor.Web.Infrastructure.Http;
@@ -39,7 +40,7 @@ public class ServerUnauthorizedHandler(
         // 它会强制浏览器发起一个新的 HTTP GET 请求访问 /login，
         // 从而触发 CookieAuthenticationMiddleware 的 ValidatePrincipal 逻辑，完成最终的"拒绝"过程。
         var returnUrl = Uri.EscapeDataString(navigationManager.Uri);
-        navigationManager.NavigateTo($"/login?returnUrl={returnUrl}", forceLoad: true);
+        navigationManager.NavigateTo($"{Login.PageUri}?returnUrl={returnUrl}", forceLoad: true);
 
         return response;
     }

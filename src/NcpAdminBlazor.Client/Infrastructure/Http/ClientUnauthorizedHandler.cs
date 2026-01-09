@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Components;
+using NcpAdminBlazor.Client.Pages.Authentication;
 
 namespace NcpAdminBlazor.Client.Infrastructure.Http;
 
@@ -18,7 +19,7 @@ public class ClientUnauthorizedHandler(NavigationManager navigationManager) : De
         if (response.StatusCode != HttpStatusCode.Unauthorized) return response;
         // 3. 构建跳转 URL (带上当前页面作为 ReturnUrl)
         var returnUrl = Uri.EscapeDataString(navigationManager.Uri);
-        var loginUrl = $"/login?returnUrl={returnUrl}";
+        var loginUrl = $"{Login.PageUri}?returnUrl={returnUrl}";
 
         // 4. 执行跳转
         // 【关键点】forceLoad: true
