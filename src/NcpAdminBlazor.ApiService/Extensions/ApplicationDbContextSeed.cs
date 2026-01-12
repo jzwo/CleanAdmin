@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using NcpAdminBlazor.Domain.AggregatesModel.MenuAggregate;
 using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
 using NcpAdminBlazor.Infrastructure.Utils;
@@ -41,6 +42,67 @@ public static class ApplicationDbContextSeed
                     assignedRoleIds: new List<RoleId> { adminRoleId });
 
                 await context.Users.AddAsync(adminUser, cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
+            }
+
+            if (!await context.Menus.AnyAsync(cancellationToken))
+            {
+                // 创建主菜单
+                var homeMenu = new Menu(
+                    menuName: "首页",
+                    menuType: MenuType.Menu,
+                    parentId: null,
+                    routePath: "/",
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 1,
+                    permissionCode: null);
+
+                var systemMenu = new Menu(
+                    menuName: "系统管理",
+                    menuType: MenuType.Directory,
+                    parentId: null,
+                    routePath: "/system",
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 2,
+                    permissionCode: null);
+
+                var chatMenu = new Menu(
+                    menuName: "AI Chat",
+                    menuType: MenuType.Menu,
+                    parentId: null,
+                    routePath: "/chat",
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 3,
+                    permissionCode: null);
+
+                await context.Menus.AddRangeAsync([homeMenu, systemMenu, chatMenu], cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
+
+                // 创建系统管理子菜单
+                var userMenu = new Menu(
+                    menuName: "用户管理",
+                    menuType: MenuType.Menu,
+                    parentId: systemMenu.Id,
+                    routePath: "/system/users",
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 1,
+                    permissionCode: "user.view");
+
+                var roleMenu = new Menu(
+                    menuName: "角色管理",
+                    menuType: MenuType.Menu,
+                    parentId: systemMenu.Id,
+                    routePath: "/system/roles",
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 2,
+                    permissionCode: "role.view");
+
+                await context.Menus.AddRangeAsync([userMenu, roleMenu], cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);
             }
         }

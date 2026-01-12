@@ -7,7 +7,7 @@ namespace NcpAdminBlazor.ApiService.Endpoints.MenusManagement;
 /// 获取菜单树端点
 /// </summary>
 public sealed class GetMenuTreeEndpoint(IMediator mediator)
-    : Endpoint<GetMenuTreeRequest, ResponseData<List<MenuTreeNodeDto>>>
+    : EndpointWithoutRequest<ResponseData<List<MenuTreeNodeDto>>>
 {
     public override void Configure()
     {
@@ -20,17 +20,10 @@ public sealed class GetMenuTreeEndpoint(IMediator mediator)
         });
     }
 
-    public override async Task HandleAsync(GetMenuTreeRequest req, CancellationToken ct)
+    public override async Task HandleAsync(CancellationToken ct)
     {
         var query = new GetMenuTreeQuery();
         var result = await mediator.Send(query, ct);
         await Send.OkAsync(result.AsResponseData(), ct);
     }
-}
-
-/// <summary>
-/// 获取菜单树请求DTO
-/// </summary>
-public sealed class GetMenuTreeRequest
-{
 }
