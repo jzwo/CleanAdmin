@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using FastEndpoints;
-using NcpAdminBlazor.ApiService.Application.Commands.UsersManagement;
-using NcpAdminBlazor.ApiService.Application.Queries.UsersManagement;
+using NcpAdminBlazor.ApiService.Application.Commands.Users;
+using NcpAdminBlazor.ApiService.Application.Queries.Users;
 using NcpAdminBlazor.ApiService.Auth;
 
 namespace NcpAdminBlazor.ApiService.Endpoints.Authentication;

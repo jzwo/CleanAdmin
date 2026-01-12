@@ -1,4 +1,4 @@
-using NcpAdminBlazor.ApiService.Application.Queries.MenusManagement;
+using NcpAdminBlazor.ApiService.Application.Queries.Menus;
 using NcpAdminBlazor.Domain.AggregatesModel.MenuAggregate;
 using NcpAdminBlazor.Infrastructure.Repositories;
 

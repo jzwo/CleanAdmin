@@ -1,10 +1,10 @@
 using System.Net;
 using System.Net.Http.Headers;
 using FastEndpoints.Security;
+using NcpAdminBlazor.ApiService.Application.Queries.Users;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
-using NcpAdminBlazor.ApiService.Application.Queries.UsersManagement;
 using NcpAdminBlazor.ApiService.Endpoints.Authentication;
-using NcpAdminBlazor.ApiService.Endpoints.UsersManagement;
+using NcpAdminBlazor.ApiService.Endpoints.Users;
 using NcpAdminBlazor.ApiService.Tests.Fixtures;
 
 namespace NcpAdminBlazor.ApiService.Tests;

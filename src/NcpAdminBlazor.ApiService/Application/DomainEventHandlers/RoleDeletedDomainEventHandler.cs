@@ -1,5 +1,5 @@
+using NcpAdminBlazor.ApiService.Application.Queries.Users;
 using NcpAdminBlazor.Domain.DomainEvents;
-using NcpAdminBlazor.ApiService.Application.Queries.UsersManagement;
 
 namespace NcpAdminBlazor.ApiService.Application.DomainEventHandlers;
 

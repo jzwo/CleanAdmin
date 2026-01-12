@@ -1,5 +1,5 @@
 using FastEndpoints;
-using NcpAdminBlazor.ApiService.Application.Commands.UsersManagement;
+using NcpAdminBlazor.ApiService.Application.Commands.Users;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
 
 namespace NcpAdminBlazor.ApiService.Endpoints.Authentication;
