@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using NcpAdminBlazor.Client.Pages.Authentication;
 using NcpAdminBlazor.Web.Infrastructure.Auth;
+using NcpAdminBlazor.Web.Infrastructure.Circuit;
 
 namespace NcpAdminBlazor.Web.Infrastructure.Http;
 
@@ -13,7 +14,7 @@ namespace NcpAdminBlazor.Web.Infrastructure.Http;
 public class ServerUnauthorizedHandler(
     NavigationManager navigationManager,
     IUserTokenStore tokenStore,
-    AuthenticationStateProvider authStateProvider)
+    CircuitServicesAccessor circuitServicesAccessor)
     : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
@@ -26,15 +27,21 @@ public class ServerUnauthorizedHandler(
         if (response.StatusCode != HttpStatusCode.Unauthorized) return response;
         // 3. 获取当前用户
         // 注意：在 Server 模式下，使用 AuthenticationStateProvider 获取用户状态是最稳健的
-        var authState = await authStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+        var authStateProvider = circuitServicesAccessor.Services?
+            .GetRequiredService<AuthenticationStateProvider>();
 
-        // 4. 【关键步骤】清除服务端存储的 Token
-        if (user.Identity?.IsAuthenticated == true)
+        if (authStateProvider is not null)
         {
-            await tokenStore.ClearTokenAsync(user);
-        }
+            var authState = await authStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
 
+            // 4. 【关键步骤】清除服务端存储的 Token
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                await tokenStore.ClearTokenAsync(user);
+            }
+        }
+        
         // 5. 强制跳转到登录页
         // forceLoad: true 是必须的。
         // 它会强制浏览器发起一个新的 HTTP GET 请求访问 /login，

@@ -48,6 +48,7 @@ builder.Services.AddScoped<ICookieAuthService, JsCookieAuthService>();
 
 const string apiServiceAddress = "https+http://apiservice";
 
+builder.Services.AddCircuitServicesAccessor();
 // 注册服务端 HTTP 消息处理器
 builder.Services.AddScoped<ServerUnauthorizedHandler>();
 
