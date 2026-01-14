@@ -34,4 +34,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(NcpAdminAntBlazor.Client._Imports).Assembly);
 
+#pragma warning disable S6966
 app.Run();
+#pragma warning restore S6966

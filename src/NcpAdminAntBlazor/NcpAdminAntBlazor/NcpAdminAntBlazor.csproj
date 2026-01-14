@@ -10,6 +10,29 @@
     <ItemGroup>
         <ProjectReference Include="..\NcpAdminAntBlazor.Client\NcpAdminAntBlazor.Client.csproj"/>
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server"/>
+        <PackageReference Include="Tailwind.Hosting"/>
+        <PackageReference Include="Tailwind.Hosting.Build">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
+    <PropertyGroup Label="Tailwind.Hosting.Build Props">
+        <TailwindVersion>latest</TailwindVersion>
+        <TailwindWatch>true</TailwindWatch>
+
+        <TailwindInputCssFile>wwwroot/app.css</TailwindInputCssFile>
+        <TailwindOutputCssFile>wwwroot/tailwind.css</TailwindOutputCssFile>
+
+        <TailwindMinifyOnPublish>true</TailwindMinifyOnPublish>
+        <TailwindExcludeInputFileOnPublish>true</TailwindExcludeInputFileOnPublish>
+    </PropertyGroup>
+
+    <Target Name="CleanUpTailwindStaticCache"
+            BeforeTargets="PrepareForBuild"
+            Condition="'$(OS)' == 'Windows_NT'">
+        <ItemGroup>
+            <Content Remove="$(TailwindOutputCssFile)" />
+        </ItemGroup>
+    </Target>
 </Project>
