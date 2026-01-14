@@ -1,0 +1,34 @@
+@typeparam TItem
+@using MudBlazor
+
+<div class="d-flex align-center" style="width: 100%">
+    
+    <!-- 1. 缩进区域: 宽度 = 层级 * 缩进单位 -->
+    <div style="width: @(Context.Level * Context.IndentSize)px; flex-shrink: 0;"></div>
+
+    <!-- 2. 图标区域 -->
+    <div style="width: 24px; height: 24px; margin-right: 8px; display: flex; align-items: center; justify-content: center;">
+        @if (Context.HasChildren)
+        {
+            <MudIconButton Icon="@(Context.IsExpanded ? Icons.Material.Filled.ExpandMore : Icons.Material.Filled.ChevronRight)"
+                           OnClick="@Context.Toggle"
+                           Variant="Variant.Text"
+                           Size="Size.Small"
+                           Color="Color.Default"
+                           Ripple="false" 
+                           Style="padding:0;" />
+        }
+    </div>
+
+    <!-- 3. 内容区域 -->
+    <div>
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired] 
+    public required TreeItemContext<TItem> Context { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

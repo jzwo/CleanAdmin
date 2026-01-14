@@ -1,0 +1,44 @@
+@page "/system/menus"
+@using NcpAdminBlazor.Client.Component.TreeTable
+
+<!--
+    TreeDataGrid 配置:
+    TItem: 指定 DTO 类型
+    Items: 树形数据源
+    Children: 子节点选择器
+-->
+@* <TreeDataGrid TItem="NcpAdminBlazorApiServiceApplicationQueriesMenusMenuTreeNodeDto" *@
+@*               Items="MenuTreeNodes" *@
+@*               Children="x => x.Children"> *@
+@*     <Columns> *@
+@*         <TreePropertyColumn TItem="NcpAdminBlazorApiServiceApplicationQueriesMenusMenuTreeNodeDto" *@
+@*                             TProperty="string" *@
+@*                             ItemProperty="x => x.MenuName"/> *@
+@*     </Columns> *@
+@* </TreeDataGrid> *@
+
+
+
+
+@code {
+    [Inject] ApiWrapper ApiWrapper { get; set; } = null!;
+    private List<NcpAdminBlazorApiServiceApplicationQueriesMenusMenuTreeNodeDto> MenuTreeNodes { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMenusAsync();
+    }
+
+    private async Task LoadMenusAsync()
+    {
+        await ApiWrapper.HandleCallAsync(apiClient => apiClient.Api.Menus.Tree.All.GetAsync(), result =>
+        {
+            if (result is { Data: not null })
+            {
+                MenuTreeNodes = result.Data;
+            }
+        });
+    } // 辅助方法：获取菜单类型颜色
+
+    private static Color GetMenuTypeColor(NcpAdminBlazorDomainAggregatesModelMenuAggregateMenuType? type) => type switch { NcpAdminBlazorDomainAggregatesModelMenuAggregateMenuType.Directory => Color.Warning, NcpAdminBlazorDomainAggregatesModelMenuAggregateMenuType.Menu => Color.Info, NcpAdminBlazorDomainAggregatesModelMenuAggregateMenuType.Button => Color.Default, _ => Color.Default };
+}

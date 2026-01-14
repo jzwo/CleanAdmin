@@ -2,6 +2,7 @@ using System.ClientModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.ClientGen.Kiota;
 using FastEndpoints.Security;
@@ -213,6 +214,7 @@ try
     });
 
     builder.Services.AddUtilsInfrastructure();
+
     #endregion
 
     builder.Services.AddMediatR(cfg =>
@@ -299,7 +301,11 @@ try
     app.UseMiddleware<CurrentUserMiddleware>();
 
     app.MapControllers();
-    app.UseFastEndpoints(c => c.Binding.UseDefaultValuesForNullableProps = false);
+    app.UseFastEndpoints(c =>
+    {
+        c.Binding.UseDefaultValuesForNullableProps = false;
+        c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
+    });
     if (app.Environment.IsDevelopment())
     {
         app.UseSwaggerGen(); //add this

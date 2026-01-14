@@ -3,7 +3,7 @@ using FluentValidation;
 namespace NcpAdminBlazor.Client.Pages.Applications.User.Validators;
 
 public class
-    UserEditModelValidator : FormModelValidator<NcpAdminBlazorApiServiceEndpointsUsersManagementUpdateUserRequest>
+    UserEditModelValidator : FormModelValidator<NcpAdminBlazorApiServiceEndpointsUsersUpdateUserRequest>
 {
     public UserEditModelValidator()
     {

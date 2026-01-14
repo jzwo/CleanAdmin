@@ -1,0 +1,47 @@
+@typeparam TItem
+@typeparam TProperty
+@inherits MudBlazor.PropertyColumn<TreeItemContext<TItem>, TProperty>
+
+@code {
+    // 原始项的属性表达式（指向 TItem，而不是 TreeItemContext<TItem>）
+    [Parameter, EditorRequired]
+    public System.Linq.Expressions.Expression<Func<TItem, TProperty>> ItemProperty { get; set; } = null!;
+
+    protected override void OnParametersSet()
+    {
+        // 将 ItemProperty (TItem => TProperty) 转换为 Property (TreeItemContext<TItem> => TProperty)
+        // 通过访问 context.Item 来获取实际的项
+        var parameter = System.Linq.Expressions.Expression.Parameter(typeof(TreeItemContext<TItem>), "context");
+        var itemAccess = System.Linq.Expressions.Expression.Property(parameter, nameof(TreeItemContext<TItem>.Item));
+        
+        // 将 ItemProperty 的 body 中的参数替换为 context.Item
+        var visitor = new ParameterReplacerVisitor(ItemProperty.Parameters[0], itemAccess);
+        var newBody = visitor.Visit(ItemProperty.Body);
+        
+        // 构造新的 lambda: context => context.Item.{Property}
+        var lambda = System.Linq.Expressions.Expression.Lambda<Func<TreeItemContext<TItem>, TProperty>>(newBody, parameter);
+        
+        // 将转换后的表达式赋值给基类的 Property
+        Property = lambda;
+        
+        base.OnParametersSet();
+    }
+
+    // 表达式访问器，用于替换参数
+    private class ParameterReplacerVisitor : System.Linq.Expressions.ExpressionVisitor
+    {
+        private readonly System.Linq.Expressions.ParameterExpression _oldParameter;
+        private readonly System.Linq.Expressions.Expression _newExpression;
+
+        public ParameterReplacerVisitor(System.Linq.Expressions.ParameterExpression oldParameter, System.Linq.Expressions.Expression newExpression)
+        {
+            _oldParameter = oldParameter;
+            _newExpression = newExpression;
+        }
+
+        protected override System.Linq.Expressions.Expression VisitParameter(System.Linq.Expressions.ParameterExpression node)
+        {
+            return node == _oldParameter ? _newExpression : base.VisitParameter(node);
+        }
+    }
+}

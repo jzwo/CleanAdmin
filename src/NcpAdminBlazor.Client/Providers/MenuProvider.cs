@@ -1,5 +1,6 @@
 using MudBlazor;
 using NcpAdminBlazor.Client.Pages;
+using NcpAdminBlazor.Client.Pages.Applications.Menus;
 using NcpAdminBlazor.Client.Pages.Applications.Role;
 using NcpAdminBlazor.Client.Pages.Applications.User;
 
@@ -21,6 +22,7 @@ public partial class MenuProvider
             {
                 system.AddLink("用户管理", UserList.PageUri, Icons.Material.Outlined.ManageAccounts);
                 system.AddLink("角色管理", RoleList.PageUri, Icons.Material.Outlined.AdminPanelSettings);
+                system.AddLink("菜单管理",Menus.PageUri, Icons.Material.Outlined.Menu);
             })
             .AddLink("AI Chat", "/chat", Icons.Material.Outlined.Chat);
 
