@@ -1,6 +1,56 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
+<Layout Class="h-dvh">
+    <Sider @bind-Collapsed="@_collapsed" Theme="SiderTheme.Light" Class="border-r border-border">
+        <div class="flex items-center justify-center h-16">
+            <div class="flex items-center gap-2">
+                <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.3"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
+                @if (!_collapsed)
+                {
+                    <span class="text-xl font-bold text-black">NcpAdmin</span>
+                }
+            </div>
+        </div>
+        <NavMenu></NavMenu>
+    </Sider>
+    <Layout>
+        <Header Class="flex flex-col h-24 bg-white px-0">
+            <div class="h-14 items-center border-b border-border justify-between">
+                @if (_collapsed)
+                {
+                    <Icon Type="@IconType.Outline.MenuUnfold" Class="trigger" OnClick="Toggle"/>
+                }
+                else
+                {
+                    <Icon Type="@IconType.Outline.MenuFold" Class="trigger" OnClick="Toggle"/>
+                }
+            </div>
+
+            <div class="h-10 items-center pb-0 border-b border-border">
+                <ChromeStyleReuseTabs></ChromeStyleReuseTabs>
+            </div>
+
+        </Header>
+        <Content>@Body</Content>
+        <Footer>Footer</Footer>
+    </Layout>
+</Layout>
+
+@code {
+    private bool _collapsed;
+
+    private void Toggle()
+    {
+        _collapsed = !_collapsed;
+    }
+
+}
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

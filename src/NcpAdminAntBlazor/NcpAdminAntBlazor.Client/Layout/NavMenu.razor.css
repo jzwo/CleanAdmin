@@ -1,0 +1,38 @@
+﻿/* 移除菜单容器右侧的 1px 灰色边框 */
+::deep .rounded-menu {
+    border-right: none !important;
+}
+
+/* --- 1. 基础形状设置 --- */
+::deep .rounded-menu .ant-menu-item,
+::deep .rounded-menu .ant-menu-submenu-title {
+    border-radius: 8px; /* 圆角 */
+    margin: 4px 8px; /* 留出边距 */
+    width: calc(100% - 16px);
+    transition: all 0.3s;
+}
+
+/* 移除选中状态右侧的竖条 */
+::deep .rounded-menu .ant-menu-item::after {
+    border-right: none !important;
+}
+
+/* 移除子菜单展开时的默认灰色背景 */
+::deep .rounded-menu .ant-menu-sub.ant-menu-inline {
+    background: transparent !important;
+}
+
+/* --- 3. 选中（激活）状态样式 --- */
+::deep .rounded-menu .ant-menu-item-selected {
+    background-color: #e6f7ff !important; /* 激活时的背景色 (淡蓝) */
+    color: #1890ff; /* 激活时的文字色 */
+}
+
+/* ================= 3. 仅在【折叠】时应用的样式 ================= */
+::deep .rounded-menu.ant-menu-inline-collapsed .ant-menu-item,
+::deep .rounded-menu.ant-menu-inline-collapsed .ant-menu-submenu-title {
+    /* 计算折叠时图标居中的宽度与内边距*/
+    margin: 4px 8px !important;
+    width: calc(100% - 16px) !important;
+    padding: 0 calc(50% - 16px / 2 - 8px) !important; /* 计算居中 */
+}
