@@ -118,6 +118,9 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.1" />
     <!-- Blazor Libraries -->
+    <PackageVersion Include="AntDesign" Version="1.5.1" />
+    <PackageVersion Include="AntDesign.Charts" Version="0.9.0" />
+    <PackageVersion Include="AntDesign.Extensions.Localization" Version="1.5.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageVersion Include="MudBlazor" Version="8.15.0" />
     <PackageVersion Include="MudBlazor.Translations" Version="2.7.0" />

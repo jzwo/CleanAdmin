@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/"/>
+    <ResourcePreloader/>
+    <link rel="stylesheet" href="@Assets["app.css"]"/>
+    <link rel="stylesheet" href="@Assets["NcpAdminAntBlazor.styles.css"]"/>
+    <link rel="stylesheet" href="@Assets["_content/AntDesign/css/ant-design-blazor.aliyun.css"]"/>
+    <ImportMap/>
+    <HeadOutlet @rendermode="InteractiveAuto"/>
+</head>
+
+<body>
+    <Routes @rendermode="InteractiveAuto"/>
+    <AntContainer @rendermode="InteractiveAuto"/>
+    <ReconnectModal/>
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+    <script src="@Assets["_content/AntDesign/js/ant-design-blazor.js"]"></script>
+</body>
+
+</html>
