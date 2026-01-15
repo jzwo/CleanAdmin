@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject IJSRuntime JsRuntime
 
 <Layout Class="h-dvh">
     <Sider @bind-Collapsed="@_collapsed"
@@ -31,10 +32,11 @@
                 @* 左侧区域 *@
                 <Space Class="h-full" Size="@("24")">
                     <SpaceItem>
-                        <Icon Type="@(_collapsed ? "menu-unfold" : "menu-fold")" OnClick="Toggle"/>
+                        <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"
+                              OnClick="@CollapseToggle"/>
                     </SpaceItem>
                     <SpaceItem>
-                        <Icon Type="reload" Theme="@IconThemeType.Outline"/>
+                        <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
                     </SpaceItem>
                     <SpaceItem>
                         <Breadcrumb AutoGenerate>
@@ -45,10 +47,12 @@
                 @* 右侧区域 *@
                 <Space Class="h-full" Size="@("24")">
                     <SpaceItem>
-                        <Icon Type="@(_collapsed ? "menu-unfold" : "menu-fold")" OnClick="Toggle"/>
+                        <Icon
+                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
+                            OnClick="@ToggleBrowserFullscreen"/>
                     </SpaceItem>
                     <SpaceItem>
-                        <Icon Type="reload" Theme="@IconThemeType.Outline"/>
+                        <Icon Component="@IconHelper.TailwindIcon("icon-[tabler--moon-filled]")"/>
                     </SpaceItem>
                 </Space>
             </div>
@@ -66,11 +70,48 @@
 
 @code {
     private bool _collapsed;
+    private bool _isBrowserFullscreen;
+    private DotNetObjectReference<MainLayout>? _dotNetRef;
+    private IJSObjectReference? _jsModule;
 
-    private void Toggle()
+    private void CollapseToggle()
     {
         _collapsed = !_collapsed;
     }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotNetRef = DotNetObjectReference.Create(this);
+            _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
+                "./js/AppLayout.js");
+            await _jsModule.InvokeVoidAsync("registerFullscreenHandler", _dotNetRef);
+        }
+    }
+
+    [JSInvokable]
+    public void OnBrowserFullscreenChanged(bool isFullscreen)
+    {
+        _isBrowserFullscreen = isFullscreen;
+        StateHasChanged();
+    }
+
+    private async Task ToggleBrowserFullscreen()
+    {
+        if (_jsModule is null) return;
+
+        if (_isBrowserFullscreen)
+        {
+            await _jsModule.InvokeVoidAsync("exitFullscreen");
+        }
+        else
+        {
+            await _jsModule.InvokeVoidAsync("enterFullscreen");
+        }
+        // 状态由 fullscreenchange 事件监听器自动更新
+    }
+
 
 }
 

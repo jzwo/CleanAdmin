@@ -10,10 +10,7 @@
     <ResourcePreloader/>
     <link rel="stylesheet" href="@Assets["tailwind.css"]"/>
     <link rel="stylesheet" href="@Assets["NcpAdminAntBlazor.styles.css"]"/>
-    <link
-        href="_content/AntDesign/css/ant-design-blazor.variable.css"
-        rel="stylesheet"
-    />
+    <link rel="stylesheet" href="@Assets["_content/AntDesign/css/ant-design-blazor.variable.css"]"/>
     <link rel="stylesheet" href="@Assets["_content/AntDesign/css/ant-design-blazor.css"]"/>
     <link rel="stylesheet" href="@Assets["_content/AntDesign/css/ant-design-blazor.aliyun.css"]"/>
     <ImportMap/>
@@ -21,11 +18,11 @@
 </head>
 
 <body>
-<Routes @rendermode="PageRenderMode"/>
-<AntContainer @rendermode="PageRenderMode"/>
-<ReconnectModal/>
-<script src="@Assets["_framework/blazor.web.js"]"></script>
-<script src="@Assets["_content/AntDesign/js/ant-design-blazor.js"]"></script>
+    <Routes @rendermode="PageRenderMode"/>
+    <AntContainer @rendermode="PageRenderMode"/>
+    <ReconnectModal/>
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+    <script src="@Assets["_content/AntDesign/js/ant-design-blazor.js"]"></script>
 </body>
 
 </html>
