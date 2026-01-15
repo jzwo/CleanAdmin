@@ -1,7 +1,10 @@
 ﻿@inherits LayoutComponentBase
 
 <Layout Class="h-dvh">
-    <Sider @bind-Collapsed="@_collapsed" Theme="SiderTheme.Light" Class="border-r border-border">
+    <Sider @bind-Collapsed="@_collapsed"
+           CollapsedWidth="48"
+           Theme="SiderTheme.Light"
+           Class="border-r border-border">
         <div class="flex items-center justify-center h-16">
             <div class="flex items-center gap-2">
                 <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,18 +23,37 @@
         <NavMenu></NavMenu>
     </Sider>
     <Layout>
-        <Header Class="flex flex-col h-24 bg-white px-0">
-            <div class="h-14 items-center border-b border-border justify-between">
-                @if (_collapsed)
-                {
-                    <Icon Type="@IconType.Outline.MenuUnfold" Class="trigger" OnClick="Toggle"/>
-                }
-                else
-                {
-                    <Icon Type="@IconType.Outline.MenuFold" Class="trigger" OnClick="Toggle"/>
-                }
+        <Header Class="flex flex-col h-22 bg-white px-0">
+
+            @* 顶部操作栏 *@
+            <div class="h-12 px-4 border-b border-border items-center flex justify-between">
+
+                @* 左侧区域 *@
+                <Space Class="h-full" Size="@("24")">
+                    <SpaceItem>
+                        <Icon Type="@(_collapsed ? "menu-unfold" : "menu-fold")" OnClick="Toggle"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Icon Type="reload" Theme="@IconThemeType.Outline"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Breadcrumb AutoGenerate>
+                            <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                        </Breadcrumb>
+                    </SpaceItem>
+                </Space>
+                @* 右侧区域 *@
+                <Space Class="h-full" Size="@("24")">
+                    <SpaceItem>
+                        <Icon Type="@(_collapsed ? "menu-unfold" : "menu-fold")" OnClick="Toggle"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Icon Type="reload" Theme="@IconThemeType.Outline"/>
+                    </SpaceItem>
+                </Space>
             </div>
 
+            @* 标签页区域 *@
             <div class="h-10 items-center pb-0 border-b border-border">
                 <ChromeStyleReuseTabs></ChromeStyleReuseTabs>
             </div>
