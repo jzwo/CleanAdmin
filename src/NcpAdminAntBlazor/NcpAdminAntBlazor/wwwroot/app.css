@@ -1,7 +1,13 @@
 @import "tailwindcss" source(none) important;
-@import "./base.css"
+@theme {
+    /* 在这里定义你的设计系统变量 */
+    --color-border: #e4e4e7;
+}
+@plugin "@iconify/tailwind4";
 /* Use source(none) to completely disable automatic source detection */
 /* You can use @source "path" to manually specify a source */
 /* view more:https://tailwindcss.com/docs/detecting-classes-in-source-files#disabling-automatic-detection */
 @source "../Components";
 @source "../../NcpAdminAntBlazor.Client"
+
+
