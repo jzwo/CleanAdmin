@@ -4,8 +4,7 @@
 <Layout Class="h-dvh">
     <Sider @bind-Collapsed="@_collapsed"
            CollapsedWidth="48"
-           Theme="SiderTheme.Dark"
-           Class="border-r border-border">
+           Class="border-r border-border bg-sider">
         <div class="flex items-center justify-center h-16">
             <div class="flex items-center gap-2">
                 <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,14 +16,14 @@
                 </svg>
                 @if (!_collapsed)
                 {
-                    <span class="text-xl font-bold text-black">NcpAdmin</span>
+                    <span class="text-xl font-bold text-text">NcpAdmin</span>
                 }
             </div>
         </div>
         <NavMenu></NavMenu>
     </Sider>
     <Layout>
-        <Header Class="flex flex-col h-22 bg-white px-0">
+        <Header Class="flex flex-col h-22 bg-appbar px-0">
 
             @* 顶部操作栏 *@
             <div class="h-12 px-4 border-b border-border items-center flex justify-between">

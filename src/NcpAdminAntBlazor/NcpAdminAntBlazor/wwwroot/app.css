@@ -1,8 +1,22 @@
 @import "tailwindcss" source(none) important;
+
 @theme {
     /* 在这里定义你的设计系统变量 */
     --color-border: var(--ant-border-color-base);
+    --color-sider: #ffffff;
+    --color-appbar: #ffffff;
+    --color-text: var(--ant-text-color);
+    --color-activebackground: var(--ant-primary-1);
+    --radius-borderbase: var(--ant-border-radius-base);
 }
+
+@layer base {
+    .dark {
+        --color-sider: var(--ant-layout-sider-background);
+        --color-appbar: var(--ant-layout-header-background);
+    }
+}
+
 @plugin "@iconify/tailwind4";
 /* Use source(none) to completely disable automatic source detection */
 /* You can use @source "path" to manually specify a source */

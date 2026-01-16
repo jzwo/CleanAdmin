@@ -9,14 +9,14 @@
 
     /* 2. 对应 @primary-color-active (Palette 7) 
     */
-    --chrome-bg-active: var(--ant-primary-1, #096dd9);
+    --chrome-bg-active: var(--color-activebackground);
 
     /* 3. 设置轨道背景为继承 (transparent) 
     */
     --chrome-bg-bar: transparent;
 
     /* 几何设置 (保持不变) */
-    --chrome-radius: 10px;
+    --chrome-radius: var(--radius-borderbase);
     --chrome-curve-size: 10px;
 }
 

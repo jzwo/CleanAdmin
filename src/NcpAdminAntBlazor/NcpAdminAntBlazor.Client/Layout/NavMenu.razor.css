@@ -6,7 +6,7 @@
 /* --- 1. 基础形状设置 --- */
 ::deep .rounded-menu .ant-menu-item,
 ::deep .rounded-menu .ant-menu-submenu-title {
-    border-radius: 8px; /* 圆角 */
+    border-radius: var(--radius-borderbase); /* 圆角 */
     margin: 4px 8px; /* 留出边距 */
     width: calc(100% - 16px);
     transition: all 0.3s;
@@ -24,8 +24,7 @@
 
 /* --- 3. 选中（激活）状态样式 --- */
 ::deep .rounded-menu .ant-menu-item-selected {
-    background-color: #e6f7ff !important; /* 激活时的背景色 (淡蓝) */
-    color: #1890ff; /* 激活时的文字色 */
+    background-color: var(--color-activebackground); /* 激活时的背景色 */
 }
 
 /* ================= 3. 仅在【折叠】时应用的样式 ================= */
