@@ -49,13 +49,16 @@
                 <Space Class="h-full" Size="@("24")">
                     <SpaceItem>
                         <Icon
-                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
-                            OnClick="@ToggleBrowserFullscreen"/>
+                            Component="@IconHelper.TailwindIcon(ThemeService.IsDark ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
+                            OnClick="@ToggleTheme"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <CultureSelector/>
                     </SpaceItem>
                     <SpaceItem>
                         <Icon
-                            Component="@IconHelper.TailwindIcon(ThemeService.IsDark ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
-                            OnClick="@ToggleTheme"/>
+                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
+                            OnClick="@ToggleBrowserFullscreen"/>
                     </SpaceItem>
                 </Space>
             </div>

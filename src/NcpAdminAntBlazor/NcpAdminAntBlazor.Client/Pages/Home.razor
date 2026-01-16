@@ -1,14 +1,75 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@inject IStringLocalizer<Home> L
 
-<h1>Hello, world!</h1>
+<PageTitle>@L["Title"]</PageTitle>
 
-Welcome to your new app.
-<div class="chrome-tabs-wrapper">
-    <Tabs Type="@TabType.EditableCard" HideAdd>
-        <TabPane Key="1" Tab="页面访问" Closable="true">内容区域 1</TabPane>
-        <TabPane Key="2" Tab="角色管理" Closable="true">内容区域 2</TabPane>
-        <TabPane Key="3" Tab="菜单管理" Closable="true">内容区域 3</TabPane>
-    </Tabs>
+<div style="padding: 24px;">
+    <Card Title="@L["Welcome"]" Style="margin-bottom: 24px;">
+        <ChildContent>
+            <div style="margin-bottom: 16px;">
+                <Text Strong>@L["Description"]</Text>
+            </div>
+            <Alert Type="@AlertType.Info"
+                   Message="@L["CurrentLanguage"]"
+                   Description="@CultureInfo.CurrentCulture.DisplayName"
+                   ShowIcon="true"/>
+        </ChildContent>
+    </Card>
+
+    <Card Title="@L["DatePickerLabel"]" Style="margin-bottom: 24px;">
+        <ChildContent>
+            <div style="margin-bottom: 16px;">
+                <DatePicker @bind-Value="_selectedDate" Placeholder="@L["DatePickerLabel"].Value" Style="width: 100%;"/>
+            </div>
+            <div>
+                <div style="margin-bottom: 8px;">
+                    <Text>@L["TimePickerLabel"]:</Text>
+                </div>
+                <TimePicker @bind-Value="_selectedTime" Placeholder="@L["TimePickerLabel"].Value" Style="width: 100%;"/>
+            </div>
+        </ChildContent>
+    </Card>
+
+    <Card Title="@L["CalendarLabel"]" Style="margin-bottom: 24px;">
+        <ChildContent>
+            <Calendar FullScreen="false"/>
+        </ChildContent>
+    </Card>
+
+    <Card Title="@L["TableTitle"]">
+        <ChildContent>
+            <Table TItem="SampleData" DataSource="_sampleData">
+                <PropertyColumn Property="c => c.Name" Title="@L["ColumnName"]"/>
+                <PropertyColumn Property="c => c.Date" Title="@L["ColumnDate"]" Format="yyyy-MM-dd"/>
+                <PropertyColumn Property="c => c.IsActive" Title="@L["ColumnStatus"]">
+                    <Template>
+                        <Tag Color="@(context.IsActive ? "green" : "red")">
+                            @(context.IsActive ? L["StatusActive"] : L["StatusInactive"])
+                        </Tag>
+                    </Template>
+                </PropertyColumn>
+            </Table>
+        </ChildContent>
+    </Card>
 </div>
+
+@code {
+    private DateTime? _selectedDate = DateTime.Now;
+    private DateTime? _selectedTime = DateTime.Now;
+
+    private readonly List<SampleData> _sampleData = new()
+    {
+        new SampleData { Name = "Item 1", Date = DateTime.Now.AddDays(-1), IsActive = true },
+        new SampleData { Name = "Item 2", Date = DateTime.Now.AddDays(-2), IsActive = false },
+        new SampleData { Name = "Item 3", Date = DateTime.Now.AddDays(-3), IsActive = true },
+    };
+
+    public class SampleData
+    {
+        public string Name { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+}

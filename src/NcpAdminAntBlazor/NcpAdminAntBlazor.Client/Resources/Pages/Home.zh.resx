@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Title" xml:space="preserve">
+        <value>主页</value>
+    </data>
+    <data name="Welcome" xml:space="preserve">
+        <value>欢迎使用 NcpAdminBlazor</value>
+    </data>
+    <data name="Description" xml:space="preserve">
+        <value>这是国际化和本地化功能的演示。</value>
+    </data>
+    <data name="CurrentLanguage" xml:space="preserve">
+        <value>当前语言</value>
+    </data>
+    <data name="ChangeLanguage" xml:space="preserve">
+        <value>切换语言</value>
+    </data>
+    <data name="DatePickerLabel" xml:space="preserve">
+        <value>选择日期</value>
+    </data>
+    <data name="TimePickerLabel" xml:space="preserve">
+        <value>选择时间</value>
+    </data>
+    <data name="CalendarLabel" xml:space="preserve">
+        <value>日历组件</value>
+    </data>
+    <data name="TableTitle" xml:space="preserve">
+        <value>示例数据表格</value>
+    </data>
+    <data name="ColumnName" xml:space="preserve">
+        <value>名称</value>
+    </data>
+    <data name="ColumnDate" xml:space="preserve">
+        <value>日期</value>
+    </data>
+    <data name="ColumnStatus" xml:space="preserve">
+        <value>状态</value>
+    </data>
+    <data name="StatusActive" xml:space="preserve">
+        <value>激活</value>
+    </data>
+    <data name="StatusInactive" xml:space="preserve">
+        <value>未激活</value>
+    </data>
+    <data name="EmptyDataText" xml:space="preserve">
+        <value>暂无数据</value>
+    </data>
+    <data name="PaginationInfo" xml:space="preserve">
+        <value>共 {0} 条</value>
+    </data>
+</root>

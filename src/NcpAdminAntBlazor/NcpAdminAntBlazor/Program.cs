@@ -1,5 +1,7 @@
 using BitzArt.Blazor.Cookies;
+using Microsoft.AspNetCore.Localization;
 using NcpAdminAntBlazor.Client;
+using NcpAdminAntBlazor.Client.Services;
 using NcpAdminAntBlazor.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,10 +33,35 @@ app.UseHttpsRedirection();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+var cultureOptions = app.Services.GetRequiredService<ICultureOptions>();
+var supportedCultures = cultureOptions.SupportedCultures;
+var defaultCulture = cultureOptions.DefaultCulture;
+
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(defaultCulture)
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(NcpAdminAntBlazor.Client._Imports).Assembly);
+
+app.MapGet("/Culture/Set", (string? culture, string redirectUri, HttpContext httpContext) =>
+{
+    if (!string.IsNullOrEmpty(culture))
+    {
+        httpContext.Response.Cookies.Append(
+            CookieRequestCultureProvider.DefaultCookieName,
+            CookieRequestCultureProvider.MakeCookieValue(
+                new RequestCulture(culture, culture)));
+    }
+
+    return Results.LocalRedirect(redirectUri);
+});
 
 #pragma warning disable S6966
 app.Run();

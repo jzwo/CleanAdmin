@@ -7,4 +7,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddClientServices();
 builder.AddBlazorCookies();
 
-await builder.Build().RunAsync();
+var host = builder.Build();
+
+await host.SetCulture();
+
+await host.RunAsync();

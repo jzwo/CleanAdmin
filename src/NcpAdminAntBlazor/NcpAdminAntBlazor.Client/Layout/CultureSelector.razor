@@ -1,0 +1,42 @@
+@using NcpAdminAntBlazor.Client.Services
+@inject ICultureOptions CultureOptions
+@inject ICultureService CultureService
+
+<Dropdown Placement="@Placement.BottomRight">
+    <Overlay>
+        <Menu OnMenuItemClicked="ApplySelectedCultureAsync"
+              DefaultSelectedKeys="@([_selectedCulture?.Name])">
+            @foreach (var culture in _supportedCultures)
+            {
+                <MenuItem Key="@culture.Name">
+                    @culture.NativeName
+                </MenuItem>
+            }
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        <Icon Component="@IconHelper.TailwindIcon("icon-[heroicons-outline--translate]")"/>
+    </ChildContent>
+</Dropdown>
+
+@code{
+    private CultureInfo[] _supportedCultures = [];
+    private CultureInfo? _selectedCulture;
+
+    protected override void OnInitialized()
+    {
+        var supportedCultures = CultureOptions.SupportedCultures;
+        _supportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToArray();
+        _selectedCulture = CultureInfo.CurrentCulture;
+    }
+
+    private async Task ApplySelectedCultureAsync(MenuItem arg)
+    {
+        var cultureName = arg.Key;
+        if (!CultureInfo.CurrentCulture.Name.Equals(cultureName))
+        {
+            await CultureService.SetCultureAsync(cultureName);
+        }
+    }
+
+}
