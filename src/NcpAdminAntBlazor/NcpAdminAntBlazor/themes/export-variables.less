@@ -1,0 +1,291 @@
+// 将 Ant Design Less 变量导出为 CSS 变量
+// 使用方式：在 CSS 中使用 var(--ant-primary-color) 等变量
+
+:root {
+  // ==================== 主题色 ====================
+  --ant-primary-color: @primary-color;
+  --ant-primary-color-hover: @primary-color-hover;
+  --ant-primary-color-active: @primary-color-active;
+  --ant-primary-color-outline: @primary-color-outline;
+  --ant-primary-1: @primary-1;
+  --ant-primary-2: @primary-2;
+  --ant-primary-3: @primary-3;
+  --ant-primary-4: @primary-4;
+  --ant-primary-5: @primary-5;
+  --ant-primary-6: @primary-6;
+  --ant-primary-7: @primary-7;
+  --ant-primary-8: @primary-8;
+  --ant-primary-9: @primary-9;
+  --ant-primary-10: @primary-10;
+
+  // ==================== 功能色 ====================
+  --ant-success-color: @success-color;
+  --ant-success-color-hover: @success-color-hover;
+  --ant-success-color-active: @success-color-active;
+  --ant-success-color-outline: @success-color-outline;
+
+  --ant-warning-color: @warning-color;
+  --ant-warning-color-hover: @warning-color-hover;
+  --ant-warning-color-active: @warning-color-active;
+  --ant-warning-color-outline: @warning-color-outline;
+
+  --ant-error-color: @error-color;
+  --ant-error-color-hover: @error-color-hover;
+  --ant-error-color-active: @error-color-active;
+  --ant-error-color-outline: @error-color-outline;
+
+  --ant-info-color: @info-color;
+
+  // ==================== 链接色 ====================
+  --ant-link-color: @link-color;
+  --ant-link-hover-color: @link-hover-color;
+  --ant-link-active-color: @link-active-color;
+
+  // ==================== 文字色 ====================
+  --ant-text-color: @text-color;
+  --ant-text-color-secondary: @text-color-secondary;
+  --ant-text-color-inverse: @text-color-inverse;
+  --ant-heading-color: @heading-color;
+  --ant-text-color-dark: @text-color-dark;
+  --ant-text-color-secondary-dark: @text-color-secondary-dark;
+  --ant-disabled-color: @disabled-color;
+  --ant-disabled-color-dark: @disabled-color-dark;
+
+  // ==================== 背景色 ====================
+  --ant-body-background: @body-background;
+  --ant-component-background: @component-background;
+  --ant-background-color-light: @background-color-light;
+  --ant-background-color-base: @background-color-base;
+  --ant-item-hover-bg: @item-hover-bg;
+  --ant-item-active-bg: @item-active-bg;
+
+  // ==================== 边框色 ====================
+  --ant-border-color-base: @border-color-base;
+  --ant-border-color-split: @border-color-split;
+  --ant-border-color-inverse: @border-color-inverse;
+
+  // ==================== 圆角 ====================
+  --ant-border-radius-base: @border-radius-base;
+  --ant-border-radius-sm: @border-radius-sm;
+  --ant-border-radius-lg: @border-radius-lg;
+
+  // ==================== 阴影 ====================
+  --ant-box-shadow-base: @box-shadow-base;
+  --ant-shadow-1-up: @shadow-1-up;
+  --ant-shadow-1-down: @shadow-1-down;
+  --ant-shadow-1-left: @shadow-1-left;
+  --ant-shadow-1-right: @shadow-1-right;
+  --ant-shadow-2: @shadow-2;
+  --ant-shadow-color: @shadow-color;
+
+  // ==================== 字体 ====================
+  --ant-font-family: @font-family;
+  --ant-code-family: @code-family;
+  --ant-font-size-base: @font-size-base;
+  --ant-font-size-lg: @font-size-lg;
+  --ant-font-size-sm: @font-size-sm;
+  --ant-line-height-base: @line-height-base;
+
+  // ==================== 标题字体大小 ====================
+  --ant-heading-1-size: @heading-1-size;
+  --ant-heading-2-size: @heading-2-size;
+  --ant-heading-3-size: @heading-3-size;
+  --ant-heading-4-size: @heading-4-size;
+  --ant-heading-5-size: @heading-5-size;
+
+  // ==================== 高度 ====================
+  --ant-height-base: @height-base;
+  --ant-height-lg: @height-lg;
+  --ant-height-sm: @height-sm;
+
+  // ==================== 间距 ====================
+  --ant-padding-lg: @padding-lg;
+  --ant-padding-md: @padding-md;
+  --ant-padding-sm: @padding-sm;
+  --ant-padding-xs: @padding-xs;
+  --ant-padding-xss: @padding-xss;
+  --ant-margin-lg: @margin-lg;
+  --ant-margin-md: @margin-md;
+  --ant-margin-sm: @margin-sm;
+  --ant-margin-xs: @margin-xs;
+  --ant-margin-xss: @margin-xss;
+
+  // ==================== 布局 ====================
+  --ant-layout-body-background: @layout-body-background;
+  --ant-layout-header-background: @layout-header-background;
+  --ant-layout-header-height: @layout-header-height;
+  --ant-layout-header-padding: @layout-header-padding;
+  --ant-layout-header-color: @layout-header-color;
+  --ant-layout-footer-padding: @layout-footer-padding;
+  --ant-layout-footer-background: @layout-footer-background;
+  --ant-layout-sider-background: @layout-sider-background;
+  --ant-layout-trigger-height: @layout-trigger-height;
+  --ant-layout-trigger-background: @layout-trigger-background;
+  --ant-layout-trigger-color: @layout-trigger-color;
+  --ant-layout-zero-trigger-width: @layout-zero-trigger-width;
+  --ant-layout-zero-trigger-height: @layout-zero-trigger-height;
+
+  // ==================== 动画 ====================
+  --ant-animation-duration-slow: @animation-duration-slow;
+  --ant-animation-duration-base: @animation-duration-base;
+  --ant-animation-duration-fast: @animation-duration-fast;
+  --ant-ease-base-out: @ease-base-out;
+  --ant-ease-base-in: @ease-base-in;
+  --ant-ease-out: @ease-out;
+  --ant-ease-in: @ease-in;
+  --ant-ease-in-out: @ease-in-out;
+  --ant-ease-out-back: @ease-out-back;
+  --ant-ease-in-back: @ease-in-back;
+  --ant-ease-in-out-back: @ease-in-out-back;
+  --ant-ease-out-circ: @ease-out-circ;
+  --ant-ease-in-circ: @ease-in-circ;
+  --ant-ease-in-out-circ: @ease-in-out-circ;
+  --ant-ease-out-quint: @ease-out-quint;
+  --ant-ease-in-quint: @ease-in-quint;
+  --ant-ease-in-out-quint: @ease-in-out-quint;
+
+  // ==================== 表格 ====================
+  --ant-table-bg: @table-bg;
+  --ant-table-header-bg: @table-header-bg;
+  --ant-table-header-color: @table-header-color;
+  --ant-table-header-sort-bg: @table-header-sort-bg;
+  --ant-table-body-sort-bg: @table-body-sort-bg;
+  --ant-table-row-hover-bg: @table-row-hover-bg;
+  --ant-table-selected-row-color: @table-selected-row-color;
+  --ant-table-selected-row-bg: @table-selected-row-bg;
+  --ant-table-expanded-row-bg: @table-expanded-row-bg;
+  --ant-table-padding-vertical: @table-padding-vertical;
+  --ant-table-padding-horizontal: @table-padding-horizontal;
+  --ant-table-padding-vertical-md: @table-padding-vertical-md;
+  --ant-table-padding-horizontal-md: @table-padding-horizontal-md;
+  --ant-table-padding-vertical-sm: @table-padding-vertical-sm;
+  --ant-table-padding-horizontal-sm: @table-padding-horizontal-sm;
+  --ant-table-border-color: @table-border-color;
+  --ant-table-border-radius-base: @table-border-radius-base;
+  --ant-table-footer-bg: @table-footer-bg;
+  --ant-table-footer-color: @table-footer-color;
+
+  // ==================== 按钮 ====================
+  --ant-btn-font-weight: @btn-font-weight;
+  --ant-btn-border-radius-base: @btn-border-radius-base;
+  --ant-btn-border-radius-sm: @btn-border-radius-sm;
+  --ant-btn-border-width: @btn-border-width;
+  --ant-btn-border-style: @btn-border-style;
+  --ant-btn-shadow: @btn-shadow;
+  --ant-btn-primary-shadow: @btn-primary-shadow;
+  --ant-btn-text-shadow: @btn-text-shadow;
+  --ant-btn-primary-color: @btn-primary-color;
+  --ant-btn-primary-bg: @btn-primary-bg;
+  --ant-btn-default-color: @btn-default-color;
+  --ant-btn-default-bg: @btn-default-bg;
+  --ant-btn-default-border: @btn-default-border;
+  --ant-btn-danger-color: @btn-danger-color;
+  --ant-btn-danger-bg: @btn-danger-bg;
+  --ant-btn-danger-border: @btn-danger-border;
+  --ant-btn-disable-color: @btn-disable-color;
+  --ant-btn-disable-bg: @btn-disable-bg;
+  --ant-btn-disable-border: @btn-disable-border;
+  --ant-btn-height-base: @btn-height-base;
+  --ant-btn-height-lg: @btn-height-lg;
+  --ant-btn-height-sm: @btn-height-sm;
+  --ant-btn-padding-horizontal-base: @btn-padding-horizontal-base;
+  --ant-btn-padding-horizontal-lg: @btn-padding-horizontal-lg;
+  --ant-btn-padding-horizontal-sm: @btn-padding-horizontal-sm;
+
+  // ==================== 输入框 ====================
+  --ant-input-height-base: @input-height-base;
+  --ant-input-height-lg: @input-height-lg;
+  --ant-input-height-sm: @input-height-sm;
+  --ant-input-padding-horizontal: @input-padding-horizontal;
+  --ant-input-padding-horizontal-base: @input-padding-horizontal-base;
+  --ant-input-padding-horizontal-sm: @input-padding-horizontal-sm;
+  --ant-input-padding-horizontal-lg: @input-padding-horizontal-lg;
+  --ant-input-padding-vertical-base: @input-padding-vertical-base;
+  --ant-input-padding-vertical-sm: @input-padding-vertical-sm;
+  --ant-input-padding-vertical-lg: @input-padding-vertical-lg;
+  --ant-input-placeholder-color: @input-placeholder-color;
+  --ant-input-color: @input-color;
+  --ant-input-icon-color: @input-icon-color;
+  --ant-input-border-color: @input-border-color;
+  --ant-input-bg: @input-bg;
+  --ant-input-addon-bg: @input-addon-bg;
+  --ant-input-hover-border-color: @input-hover-border-color;
+  --ant-input-disabled-bg: @input-disabled-bg;
+  --ant-input-outline-offset: @input-outline-offset;
+
+  // ==================== 卡片 ====================
+  --ant-card-head-color: @card-head-color;
+  --ant-card-head-background: @card-head-background;
+  --ant-card-head-font-size: @card-head-font-size;
+  --ant-card-head-font-size-sm: @card-head-font-size-sm;
+  --ant-card-head-padding: @card-head-padding;
+  --ant-card-head-padding-sm: @card-head-padding-sm;
+  --ant-card-head-height: @card-head-height;
+  --ant-card-head-height-sm: @card-head-height-sm;
+  --ant-card-inner-head-padding: @card-inner-head-padding;
+  --ant-card-padding-base: @card-padding-base;
+  --ant-card-padding-base-sm: @card-padding-base-sm;
+  --ant-card-actions-background: @card-actions-background;
+  --ant-card-actions-li-margin: @card-actions-li-margin;
+  --ant-card-skeleton-bg: @card-skeleton-bg;
+  --ant-card-background: @card-background;
+  --ant-card-shadow: @card-shadow;
+  --ant-card-radius: @card-radius;
+
+  // ==================== 菜单 ====================
+  --ant-menu-bg: @menu-bg;
+  --ant-menu-popup-bg: @menu-popup-bg;
+  --ant-menu-item-color: @menu-item-color;
+  --ant-menu-inline-toplevel-item-height: @menu-inline-toplevel-item-height;
+  --ant-menu-item-height: @menu-item-height;
+  --ant-menu-item-group-height: @menu-item-group-height;
+  --ant-menu-collapsed-width: @menu-collapsed-width;
+  --ant-menu-item-font-size: @menu-item-font-size;
+  --ant-menu-item-boundary-margin: @menu-item-boundary-margin;
+  --ant-menu-item-padding-horizontal: @menu-item-padding-horizontal;
+  --ant-menu-item-padding: @menu-item-padding;
+  --ant-menu-horizontal-line-height: @menu-horizontal-line-height;
+  --ant-menu-icon-margin-right: @menu-icon-margin-right;
+  --ant-menu-icon-size: @menu-icon-size;
+  --ant-menu-icon-size-lg: @menu-icon-size-lg;
+  --ant-menu-item-group-title-color: @menu-item-group-title-color;
+  --ant-menu-item-group-title-font-size: @menu-item-group-title-font-size;
+  --ant-menu-item-active-bg: @menu-item-active-bg;
+  --ant-menu-item-active-border-width: @menu-item-active-border-width;
+  --ant-menu-highlight-color: @menu-highlight-color;
+  --ant-menu-highlight-danger-color: @menu-highlight-danger-color;
+  --ant-menu-dark-color: @menu-dark-color;
+  --ant-menu-dark-danger-color: @menu-dark-danger-color;
+  --ant-menu-dark-bg: @menu-dark-bg;
+  --ant-menu-dark-arrow-color: @menu-dark-arrow-color;
+  --ant-menu-dark-inline-submenu-bg: @menu-dark-inline-submenu-bg;
+  --ant-menu-dark-highlight-color: @menu-dark-highlight-color;
+  --ant-menu-dark-item-active-bg: @menu-dark-item-active-bg;
+  --ant-menu-dark-item-active-danger-bg: @menu-dark-item-active-danger-bg;
+  --ant-menu-dark-selected-item-icon-color: @menu-dark-selected-item-icon-color;
+  --ant-menu-dark-selected-item-text-color: @menu-dark-selected-item-text-color;
+  --ant-menu-dark-item-hover-bg: @menu-dark-item-hover-bg;
+
+  // ==================== 模态框 ====================
+  --ant-modal-header-padding: @modal-header-padding;
+  --ant-modal-header-close-size: @modal-header-close-size;
+  --ant-modal-header-border-width: @modal-header-border-width;
+  --ant-modal-header-border-style: @modal-header-border-style;
+  --ant-modal-header-title-line-height: @modal-header-title-line-height;
+  --ant-modal-header-title-font-size: @modal-header-title-font-size;
+  --ant-modal-header-border-color-split: @modal-header-border-color-split;
+  --ant-modal-header-bg: @modal-header-bg;
+  --ant-modal-body-padding: @modal-body-padding;
+  --ant-modal-footer-bg: @modal-footer-bg;
+  --ant-modal-footer-border-color-split: @modal-footer-border-color-split;
+  --ant-modal-footer-border-style: @modal-footer-border-style;
+  --ant-modal-footer-padding-vertical: @modal-footer-padding-vertical;
+  --ant-modal-footer-padding-horizontal: @modal-footer-padding-horizontal;
+  --ant-modal-footer-border-width: @modal-footer-border-width;
+  --ant-modal-mask-bg: @modal-mask-bg;
+  --ant-modal-confirm-body-padding: @modal-confirm-body-padding;
+  --ant-modal-heading-color: @modal-heading-color;
+  --ant-modal-close-color: @modal-close-color;
+  --ant-modal-content-bg: @modal-content-bg;
+  --ant-modal-border-radius: @modal-border-radius;
+}

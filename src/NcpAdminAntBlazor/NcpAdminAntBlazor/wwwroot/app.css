@@ -1,7 +1,7 @@
 @import "tailwindcss" source(none) important;
 @theme {
     /* 在这里定义你的设计系统变量 */
-    --color-border: #e4e4e7;
+    --color-border: var(--ant-border-color-base);
 }
 @plugin "@iconify/tailwind4";
 /* Use source(none) to completely disable automatic source detection */
