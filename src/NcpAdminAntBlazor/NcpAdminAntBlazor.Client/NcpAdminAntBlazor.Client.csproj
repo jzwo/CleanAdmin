@@ -11,6 +11,7 @@
 
     <ItemGroup>
         <PackageReference Include="AntDesign" />
+        <PackageReference Include="BitzArt.Blazor.Cookies.Client" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly"/>
     </ItemGroup>
 

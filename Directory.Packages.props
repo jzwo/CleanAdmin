@@ -122,6 +122,8 @@
     <PackageVersion Include="AntDesign.Charts" Version="0.9.0" />
     <PackageVersion Include="AntDesign.Extensions.Localization" Version="1.5.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageVersion Include="BitzArt.Blazor.Cookies.Client" Version="1.5.1" />
+    <PackageVersion Include="BitzArt.Blazor.Cookies.Server" Version="1.5.1" />
     <PackageVersion Include="MudBlazor" Version="8.15.0" />
     <PackageVersion Include="MudBlazor.Translations" Version="2.7.0" />
     <PackageVersion Include="MudBlazor.Markdown" Version="8.11.0" />

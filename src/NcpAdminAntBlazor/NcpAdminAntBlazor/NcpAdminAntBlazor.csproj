@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\NcpAdminAntBlazor.Client\NcpAdminAntBlazor.Client.csproj"/>
+        <PackageReference Include="BitzArt.Blazor.Cookies.Server" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server"/>
     </ItemGroup>
 

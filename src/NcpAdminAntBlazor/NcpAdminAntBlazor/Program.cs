@@ -1,3 +1,4 @@
+using BitzArt.Blazor.Cookies;
 using NcpAdminAntBlazor.Client;
 using NcpAdminAntBlazor.Components;
 
@@ -8,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddClientServices();
+builder.AddBlazorCookies();
 
 var app = builder.Build();
 

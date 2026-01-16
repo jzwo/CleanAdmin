@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JsRuntime
+@inject Services.ThemeService ThemeService
+@implements IDisposable
 
 <Layout Class="h-dvh">
     <Sider @bind-Collapsed="@_collapsed"
@@ -51,7 +53,9 @@
                             OnClick="@ToggleBrowserFullscreen"/>
                     </SpaceItem>
                     <SpaceItem>
-                        <Icon Component="@IconHelper.TailwindIcon("icon-[tabler--moon-filled]")"/>
+                        <Icon
+                            Component="@IconHelper.TailwindIcon(ThemeService.IsDark ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
+                            OnClick="@ToggleTheme"/>
                     </SpaceItem>
                 </Space>
             </div>
@@ -86,7 +90,15 @@
             _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
                 "./js/AppLayout.js");
             await _jsModule.InvokeVoidAsync("registerFullscreenHandler", _dotNetRef);
+
+            // 订阅主题变化事件
+            ThemeService.OnThemeChanged += OnThemeChanged;
         }
+    }
+
+    private void OnThemeChanged()
+    {
+        StateHasChanged();
     }
 
     [JSInvokable]
@@ -111,6 +123,16 @@
         // 状态由 fullscreenchange 事件监听器自动更新
     }
 
+    private async Task ToggleTheme()
+    {
+        await ThemeService.ToggleThemeAsync();
+    }
+
+    public void Dispose()
+    {
+        ThemeService.OnThemeChanged -= OnThemeChanged;
+        _dotNetRef?.Dispose();
+    }
 
 }
 
