@@ -90,7 +90,8 @@ public class ThemeService(ICookieService cookieService, IJSRuntime jsRuntime)
     private async Task SaveThemeToCookieAsync(ThemeMode theme)
     {
         var themeValue = theme == ThemeMode.Dark ? "dark" : "light";
-        await cookieService.SetAsync(ThemeCookieKey, themeValue);
+        var expiration = DateTimeOffset.UtcNow.AddYears(1);
+        await cookieService.SetAsync(ThemeCookieKey, themeValue, expiration, sameSiteMode: SameSiteMode.Strict);
     }
 
     private async Task ApplyThemeToDocumentAsync(ThemeMode theme)

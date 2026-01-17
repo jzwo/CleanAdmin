@@ -1,0 +1,55 @@
+﻿<Dropdown Class="flex items-center">
+    <Overlay>
+        <Menu OnMenuItemClicked="@OnItemSelected">
+            @foreach (var avatarItem in MenuItems)
+            {
+                if (avatarItem.IsDivider)
+                {
+                    <MenuDivider/>
+                }
+                else
+                {
+                    <MenuItem Key="@avatarItem.Key">
+                        <Icon Type="@avatarItem.IconType" Theme="@avatarItem.IconTheme"/>
+                        @avatarItem.Option
+                    </MenuItem>
+                }
+            }
+        </Menu>
+    </Overlay>
+    <ChildContent>
+        @if (string.IsNullOrEmpty(Avatar))
+        {
+            <Avatar Size="@AvatarSize.Default" Icon="user"/>
+        }
+        else
+        {
+            <Avatar Size="@AvatarSize.Small" Src="@Avatar" Alt="avatar"/>
+        }
+    </ChildContent>
+</Dropdown>
+
+@code
+{
+    [Parameter] public string? Avatar { get; set; }
+    [Parameter] public EventCallback<MenuItem> OnItemSelected { get; set; }
+
+    [Parameter]
+    public IEnumerable<AvatarMenuItem> MenuItems { get; set; } =
+    [
+        new() { Key = "center", IconType = "user", Option = "个人中心" },
+        new() { Key = "setting", IconType = "setting", Option = "个人中心" },
+        new() { IsDivider = true },
+        new() { Key = "logout", IconType = "logout", Option = "退出登录" }
+    ];
+
+    public class AvatarMenuItem
+    {
+        public string? Key { get; set; }
+        public string? IconType { get; set; }
+        public IconThemeType IconTheme { get; set; } = IconThemeType.Outline;
+        public string? Option { get; set; }
+        public bool IsDivider { get; set; }
+    }
+
+}

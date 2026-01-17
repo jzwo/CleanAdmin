@@ -4,7 +4,7 @@
 @using NcpAdminAntBlazor.Client.Services
 @implements IDisposable
 
-<Layout Class="h-dvh">
+<Layout Class="h-dvh overflow-hidden">
     <Sider @bind-Collapsed="@_collapsed"
            CollapsedWidth="48"
            Class="border-r border-border bg-sider">
@@ -32,7 +32,7 @@
             <div class="h-12 px-4 border-b border-border items-center flex justify-between">
 
                 @* 左侧区域 *@
-                <Space Class="h-full" Size="@("24")">
+                <Space Size="@("24")">
                     <SpaceItem>
                         <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"
                               OnClick="@CollapseToggle"/>
@@ -47,7 +47,7 @@
                     </SpaceItem>
                 </Space>
                 @* 右侧区域 *@
-                <Space Class="h-full" Size="@("24")">
+                <Space Size="@("24")">
                     <SpaceItem>
                         <Icon
                             Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
@@ -61,6 +61,9 @@
                             Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
                             OnClick="@ToggleBrowserFullscreen"/>
                     </SpaceItem>
+                    <SpaceItem>
+                        <AvatarDropdown/>
+                    </SpaceItem>
                 </Space>
             </div>
 
@@ -70,7 +73,9 @@
             </div>
 
         </Header>
-        <Content>@Body</Content>
+        <Content Class="overflow-auto">
+            @Body
+        </Content>
         <Footer>Footer</Footer>
     </Layout>
 </Layout>
