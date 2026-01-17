@@ -1,7 +1,10 @@
 ﻿@using System.Globalization
 @using Microsoft.AspNetCore.Localization
+@using NcpAdminAntBlazor.Client.Services
+@inject ThemeService ThemeService
+
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="@(IsDark ? "dark" : "light")">
 
 <head>
     <meta charset="utf-8"/>
@@ -10,8 +13,7 @@
     <ResourcePreloader/>
     <link rel="stylesheet" href="@Assets["tailwind.css"]"/>
     <link rel="stylesheet" href="@Assets["NcpAdminAntBlazor.styles.css"]"/>
-    <link rel="stylesheet" href="@Assets["theme/dark.css"]"/>
-
+    <link id="@ThemeService.ThemeLinkId" rel="stylesheet" href="@(_themeCssPath)"/>
     <ImportMap/>
     <HeadOutlet @rendermode="PageRenderMode"/>
 </head>
@@ -30,15 +32,26 @@
     [CascadingParameter] private HttpContext HttpContext { get; set; } = null!;
 
     private static IComponentRenderMode PageRenderMode => InteractiveServer;
+    
+    private ThemeMode _currentThemeMode = ThemeMode.Dark;
+    private bool IsDark => _currentThemeMode == ThemeMode.Dark;
+    private string _themeCssPath = string.Empty;
 
     protected override void OnInitialized()
     {
-        HttpContext?.Response.Cookies.Append(
+        // 设置本地化 Cookie
+        HttpContext.Response.Cookies.Append(
             CookieRequestCultureProvider.DefaultCookieName,
             CookieRequestCultureProvider.MakeCookieValue(
                 new RequestCulture(
                     CultureInfo.CurrentCulture,
                     CultureInfo.CurrentUICulture)));
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentThemeMode = await ThemeService.GetThemeAsync();
+        _themeCssPath = ThemeService.GetThemeCssPath(_currentThemeMode);
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JsRuntime
-@inject Services.ThemeService ThemeService
+@inject ThemeService ThemeService
+@using NcpAdminAntBlazor.Client.Services
 @implements IDisposable
 
 <Layout Class="h-dvh">
@@ -49,7 +50,7 @@
                 <Space Class="h-full" Size="@("24")">
                     <SpaceItem>
                         <Icon
-                            Component="@IconHelper.TailwindIcon(ThemeService.IsDark ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
+                            Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
                             OnClick="@ToggleTheme"/>
                     </SpaceItem>
                     <SpaceItem>
@@ -79,6 +80,12 @@
     private bool _isBrowserFullscreen;
     private DotNetObjectReference<MainLayout>? _dotNetRef;
     private IJSObjectReference? _jsModule;
+    private bool _isDarkMode;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isDarkMode = await ThemeService.GetIsDarkAsync();
+    }
 
     private void CollapseToggle()
     {
@@ -93,15 +100,7 @@
             _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
                 "./js/AppLayout.js");
             await _jsModule.InvokeVoidAsync("registerFullscreenHandler", _dotNetRef);
-
-            // 订阅主题变化事件
-            ThemeService.OnThemeChanged += OnThemeChanged;
         }
-    }
-
-    private void OnThemeChanged()
-    {
-        StateHasChanged();
     }
 
     [JSInvokable]
@@ -128,12 +127,12 @@
 
     private async Task ToggleTheme()
     {
-        await ThemeService.ToggleThemeAsync();
+        _isDarkMode = !_isDarkMode;
+        await ThemeService.SetThemeAsync(_isDarkMode ? ThemeMode.Dark : ThemeMode.Light);
     }
 
     public void Dispose()
     {
-        ThemeService.OnThemeChanged -= OnThemeChanged;
         _dotNetRef?.Dispose();
     }
 

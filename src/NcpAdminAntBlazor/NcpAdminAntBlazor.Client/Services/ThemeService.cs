@@ -3,78 +3,110 @@ using Microsoft.JSInterop;
 
 namespace NcpAdminAntBlazor.Client.Services;
 
+public enum ThemeMode
+{
+    Light,
+    Dark
+}
+
 public class ThemeService(ICookieService cookieService, IJSRuntime jsRuntime)
 {
+    public const string ThemeLinkId = "theme-link";
     private const string ThemeCookieKey = "app-theme";
-    private bool? _isDark;
+    private const string ThemeCssPathTemplate = "theme/{0}.css";
+    private const ThemeMode DefaultTheme = ThemeMode.Dark;
 
-    public event Action? OnThemeChanged;
+    private ThemeMode? _currentTheme;
+    private bool _isInitialized;
 
-    public bool IsDark => _isDark ?? true; // 默认暗色主题
+    private ThemeMode CurrentTheme => _currentTheme ?? DefaultTheme;
 
-    public async Task InitializeAsync()
+    /// <summary>
+    /// 初始化主题，从 Cookie 读取用户偏好
+    /// </summary>
+    private async Task<ThemeMode> InitializeAsync()
     {
-        try
-        {
-            var cookie = await cookieService.GetAsync(ThemeCookieKey);
-            var storedTheme = cookie?.Value;
-            _isDark = storedTheme switch
-            {
-                "dark" => true,
-                "light" => false,
-                _ => true // 默认暗色
-            };
-            await UpdateHtmlClassAsync();
-        }
-        catch
-        {
-            _isDark = true;
-        }
+        if (_isInitialized)
+            return CurrentTheme;
+
+        var cookie = await cookieService.GetAsync(ThemeCookieKey);
+        _currentTheme = ParseThemeFromCookie(cookie?.Value);
+        _isInitialized = true;
+
+        return CurrentTheme;
     }
 
-    public async Task ToggleThemeAsync()
+    /// <summary>
+    /// 获取当前主题（确保已初始化）
+    /// </summary>
+    public async Task<ThemeMode> GetThemeAsync()
     {
-        _isDark = !_isDark;
-        await SaveThemeAsync();
-        await UpdateHtmlClassAsync();
-        OnThemeChanged?.Invoke();
+        if (!_isInitialized)
+            return await InitializeAsync();
+
+        return CurrentTheme;
     }
 
-    public async Task SetThemeAsync(bool isDark)
+    /// <summary>
+    /// 获取是否为暗色主题（确保已初始化）
+    /// </summary>
+    public async Task<bool> GetIsDarkAsync()
     {
-        if (_isDark == isDark) return;
-        
-        _isDark = isDark;
-        await SaveThemeAsync();
-        await UpdateHtmlClassAsync();
-        OnThemeChanged?.Invoke();
+        var theme = await GetThemeAsync();
+        return theme == ThemeMode.Dark;
     }
 
-    private async Task SaveThemeAsync()
+    public static string GetThemeCssPath(ThemeMode theme)
     {
-        try
-        {
-            var themeValue = _isDark == true ? "dark" : "light";
-            // Cookie 设置为 365 天过期
-            var expirationDate = DateTimeOffset.UtcNow.AddDays(365);
-            await cookieService.SetAsync(ThemeCookieKey, themeValue, expirationDate);
-        }
-        catch
-        {
-            // 忽略存储错误
-        }
+        var themeName = GetThemeName(theme);
+        return string.Format(ThemeCssPathTemplate, themeName);
     }
 
-    private async Task UpdateHtmlClassAsync()
+    /// <summary>
+    /// 设置指定主题
+    /// </summary>
+    public async Task SetThemeAsync(ThemeMode theme)
     {
-        try
-        {
-            var themeClass = _isDark == true ? "dark" : "light";
-            await jsRuntime.InvokeVoidAsync("eval", $"document.documentElement.className = '{themeClass}'");
-        }
-        catch
-        {
-            // 忽略更新错误
-        }
+        if (_currentTheme == theme && _isInitialized)
+            return;
+
+        _currentTheme = theme;
+        _isInitialized = true;
+
+        await SaveThemeToCookieAsync(theme);
+        await ApplyThemeToDocumentAsync(theme);
     }
+
+    private static ThemeMode ParseThemeFromCookie(string? cookieValue)
+    {
+        return cookieValue?.ToLowerInvariant() switch
+        {
+            "dark" => ThemeMode.Dark,
+            "light" => ThemeMode.Light,
+            _ => DefaultTheme
+        };
+    }
+
+    private async Task SaveThemeToCookieAsync(ThemeMode theme)
+    {
+        var themeValue = theme == ThemeMode.Dark ? "dark" : "light";
+        await cookieService.SetAsync(ThemeCookieKey, themeValue);
+    }
+
+    private async Task ApplyThemeToDocumentAsync(ThemeMode theme)
+    {
+        var themeName = GetThemeName(theme);
+
+        // 更新 HTML 根元素的 class
+        await jsRuntime.InvokeVoidAsync("eval",
+            $"document.documentElement.className = '{themeName}'");
+
+        // 更新主题 CSS 文件链接
+        var href = string.Format(ThemeCssPathTemplate, themeName);
+        await jsRuntime.InvokeVoidAsync("eval",
+            $"document.getElementById('{ThemeLinkId}')?.setAttribute('href', '{href}')");
+    }
+
+    private static string GetThemeName(ThemeMode theme) =>
+        theme == ThemeMode.Dark ? "dark" : "light";
 }
