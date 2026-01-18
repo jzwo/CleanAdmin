@@ -26,55 +26,48 @@
         <NavMenu></NavMenu>
     </Sider>
     <Layout>
-        <Header Class="flex flex-col h-22 bg-appbar px-0">
+        <Header Class="h-12 px-4 border-b border-border items-center flex justify-between bg-appbar">
 
-            @* 顶部操作栏 *@
-            <div class="h-12 px-4 border-b border-border items-center flex justify-between">
 
-                @* 左侧区域 *@
-                <Space Size="@("24")">
-                    <SpaceItem>
-                        <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"
-                              OnClick="@CollapseToggle"/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Breadcrumb AutoGenerate>
-                            <BreadcrumbItem Href="/">Home</BreadcrumbItem>
-                        </Breadcrumb>
-                    </SpaceItem>
-                </Space>
-                @* 右侧区域 *@
-                <Space Size="@("24")">
-                    <SpaceItem>
-                        <Icon
-                            Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
-                            OnClick="@ToggleTheme"/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <CultureSelector/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Icon
-                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
-                            OnClick="@ToggleBrowserFullscreen"/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <AvatarDropdown/>
-                    </SpaceItem>
-                </Space>
-            </div>
-
-            @* 标签页区域 *@
-            <div class="h-10 items-center pb-0 border-b border-border">
-                <ChromeStyleReuseTabs></ChromeStyleReuseTabs>
-            </div>
-
+            @* 左侧区域 *@
+            <Space Size="@("24")">
+                <SpaceItem>
+                    <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"
+                          OnClick="@CollapseToggle"/>
+                </SpaceItem>
+                <SpaceItem>
+                    <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
+                </SpaceItem>
+                <SpaceItem>
+                    <Breadcrumb AutoGenerate>
+                        <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                    </Breadcrumb>
+                </SpaceItem>
+            </Space>
+            @* 右侧区域 *@
+            <Space Size="@("24")">
+                <SpaceItem>
+                    <Icon
+                        Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
+                        OnClick="@ToggleTheme"/>
+                </SpaceItem>
+                <SpaceItem>
+                    <CultureSelector/>
+                </SpaceItem>
+                <SpaceItem>
+                    <Icon
+                        Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
+                        OnClick="@ToggleBrowserFullscreen"/>
+                </SpaceItem>
+                <SpaceItem>
+                    <AvatarDropdown/>
+                </SpaceItem>
+            </Space>
         </Header>
-        <Content Class="overflow-auto">
-            @Body
+        <Content>
+            <ChromeStyleReuseTabs>
+                @Body
+            </ChromeStyleReuseTabs>
         </Content>
         <Footer>Footer</Footer>
     </Layout>

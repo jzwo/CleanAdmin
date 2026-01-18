@@ -24,14 +24,21 @@
 
 /* --- 3. 选中（激活）状态样式 --- */
 ::deep .rounded-menu .ant-menu-item-selected {
-    background-color: var(--color-activebackground); /* 激活时的背景色 */
+    background-color: var(--color-item-active-bg); /* 激活时的背景色 */
 }
 
-/* ================= 3. 仅在【折叠】时应用的样式 ================= */
-::deep .rounded-menu.ant-menu-inline-collapsed .ant-menu-item,
-::deep .rounded-menu.ant-menu-inline-collapsed .ant-menu-submenu-title {
-    /* 计算折叠时图标居中的宽度与内边距*/
-    margin: 4px 4px !important;
-    width: calc(100% - 8px) !important;
-    padding: 0 calc(50% - 16px / 2 - 4px) !important; /* 计算居中 */
+/* --- 4. 悬停状态样式 --- */
+/* 仅对非激活状态的菜单项应用 hover 样式 */
+::deep .rounded-menu .ant-menu-item:not(.ant-menu-item-selected):hover,
+::deep .rounded-menu .ant-menu-submenu-title:hover {
+    background-color: var(--color-item-hover-bg) !important; /* hover 时的背景色 */
+    color: inherit !important; /* 保持文字颜色不变 */
 }
+
+/* --- 5. 子菜单箭头颜色 --- */
+/* 使箭头颜色与文本颜色一致 */
+::deep .rounded-menu .ant-menu-submenu-arrow {
+    color: currentColor !important;
+}
+
+

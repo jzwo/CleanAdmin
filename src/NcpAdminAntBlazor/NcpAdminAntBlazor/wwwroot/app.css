@@ -6,8 +6,9 @@
     --color-sider: #ffffff;
     --color-appbar: #ffffff;
     --color-text: var(--ant-text-color);
-    --color-activebackground: var(--ant-primary-1);
     --radius-borderbase: var(--ant-border-radius-base);
+    --color-item-hover-bg: var(--ant-item-hover-bg);
+    --color-item-active-bg: var(--ant-item-active-bg);
 }
 
 @layer base {

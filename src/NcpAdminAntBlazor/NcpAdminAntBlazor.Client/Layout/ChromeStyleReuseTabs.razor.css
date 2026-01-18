@@ -1,134 +1,129 @@
 /* =================================================================
-   1. 变量定义
+   1. 核心容器与变量 (直接作用于 TabBarClass)
    ================================================================= */
-.chrome-tabs-wrapper {
-    /* 1. 对应 @primary-color-hover (Palette 5) 
-       如果你的项目中没有 --ant-primary-5 变量，请手动换成具体颜色值 
-    */
-    --chrome-bg-hover: transparent;
-
-    /* 2. 对应 @primary-color-active (Palette 7) 
-    */
-    --chrome-bg-active: var(--color-activebackground);
-
-    /* 3. 设置轨道背景为继承 (transparent) 
-    */
-    --chrome-bg-bar: transparent;
-
-    /* 几何设置 (保持不变) */
+/* 关键点：必须使用 ::deep 开头，因为这个类名现在位于子组件内部。
+   这也保证了变量只在 TabBar 内部生效，绝不会影响下面的 Content。
+*/
+::deep .chrome-tabs-bar {
+    /* --- 变量定义移到这里 --- */
+    --chrome-bg-hover: var(--color-item-hover-bg);
+    --chrome-bg-active: var(--color-item-active-bg);
     --chrome-radius: var(--radius-borderbase);
-    --chrome-curve-size: 10px;
+    --chrome-curve-size: var(--radius-borderbase);
+    --chrome-divider-color: var(--color-border);
+
+    /* --- 原本针对 .ant-tabs-nav 的样式写在这里 --- */
+    margin: 0 !important;
+    border-bottom: none !important;
+
+    /* 这一行确保 nav 不会因为 gap 撑大 */
+    display: flex;
 }
 
 /* =================================================================
-   2. 轨道与容器
+   2. 轨道与内部元素
    ================================================================= */
-/* 修正边距 */
-::deep .ant-tabs-nav {
-    margin: 0 !important;
-}
+/* 所有的选择器都基于 .chrome-tabs-bar 向下查找 */
 
-/* 轨道背景：改为透明以实现继承 */
-::deep .ant-tabs-nav-wrap {
-    background-color: var(--chrome-bg-bar); /* 现在是 transparent */
+::deep .chrome-tabs-bar .ant-tabs-nav-wrap {
     padding: 5px 8px 0 8px;
     border-bottom: none !important;
 }
 
-/* 移除间隙 */
-::deep .ant-tabs-nav-list {
+::deep .chrome-tabs-bar .ant-tabs-nav-list {
     gap: 0 !important;
 }
 
-/* 移除底线 */
-::deep .ant-tabs-nav::before { display: none !important; }
+/* 移除 nav 下面的伪元素线条 */
+::deep .chrome-tabs-bar::before {
+    display: none !important;
+}
 
 /* =================================================================
    3. Tab 基础样式
    ================================================================= */
-::deep .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab {
+/* 注意层级：.chrome-tabs-bar 本身就是 nav，所以直接找下面的 .ant-tabs-tab */
+::deep .chrome-tabs-bar .ant-tabs-tab {
     border: none !important;
-    background: transparent; /* 默认背景透明，即继承 */
+    background: transparent !important;
     margin: 0 !important;
     padding: 6px 18px;
     border-radius: var(--chrome-radius) var(--chrome-radius) 0 0 !important;
     position: relative;
     transition: none !important;
     overflow: visible !important;
-
-    /* [关键修改] 已移除 color, font-weight 等文字样式 */
 }
 
 /* =================================================================
    4. 状态样式 (激活 & 悬停)
    ================================================================= */
-/* A. 激活状态 */
-::deep .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab-active {
+::deep .chrome-tabs-bar .ant-tabs-tab-active {
     background-color: var(--chrome-bg-active) !important;
     z-index: 10;
-    /* [关键修改] 已移除 color, font-weight */
 }
 
-/* B. 悬停状态 (非激活) */
-::deep .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab:hover:not(.ant-tabs-tab-active) {
-    background-color: var(--chrome-bg-hover);
+::deep .chrome-tabs-bar .ant-tabs-tab:hover:not(.ant-tabs-tab-active) {
+    color: inherit !important;
+    background-color: var(--chrome-bg-hover) !important;
     z-index: 5;
-    /* [关键修改] 已移除 color */
 }
 
 /* =================================================================
    5. 魔法部分：反向圆角 (Swoop Effect)
    ================================================================= */
-/* 5.1 形状与重置 */
-::deep .ant-tabs-tab-active::before,
-::deep .ant-tabs-tab-active::after,
-::deep .ant-tabs-tab:hover::before,
-::deep .ant-tabs-tab:hover::after {
+/* 使用径向渐变避免透明度重叠问题 */
+::deep .chrome-tabs-bar .ant-tabs-tab-active::before,
+::deep .chrome-tabs-bar .ant-tabs-tab-active::after,
+::deep .chrome-tabs-bar .ant-tabs-tab:hover::before,
+::deep .chrome-tabs-bar .ant-tabs-tab:hover::after {
     content: '' !important;
     position: absolute;
     bottom: 0 !important;
     width: var(--chrome-curve-size) !important;
     height: var(--chrome-curve-size) !important;
-    border-radius: 100% !important;
     z-index: 1;
     pointer-events: none;
     transition: none !important;
-
     top: auto !important;
     transform: none !important;
-    background-color: transparent !important;
     opacity: 1 !important;
     display: block !important;
 }
 
-/* 5.2 位置定位 */
-::deep .ant-tabs-tab-active::before, ::deep .ant-tabs-tab:hover::before {
+/* 位置定位 */
+::deep .chrome-tabs-bar .ant-tabs-tab-active::before,
+::deep .chrome-tabs-bar .ant-tabs-tab:hover::before {
     left: calc(var(--chrome-curve-size) * -1) !important;
 }
-::deep .ant-tabs-tab-active::after, ::deep .ant-tabs-tab:hover::after {
+
+::deep .chrome-tabs-bar .ant-tabs-tab-active::after,
+::deep .chrome-tabs-bar .ant-tabs-tab:hover::after {
     right: calc(var(--chrome-curve-size) * -1) !important;
 }
 
-/* 5.3 颜色填充 - 激活 (使用变量 --chrome-bg-active) */
-::deep .ant-tabs-tab-active::before { box-shadow: 5px 5px 0 var(--chrome-bg-active) !important; }
-::deep .ant-tabs-tab-active::after  { box-shadow: -5px 5px 0 var(--chrome-bg-active) !important; }
+/* 使用径向渐变填充 - 激活状态 */
+::deep .chrome-tabs-bar .ant-tabs-tab-active::before {
+    background: radial-gradient(circle at 0 0, transparent var(--chrome-curve-size), var(--chrome-bg-active) var(--chrome-curve-size)) !important;
+}
 
-/* 5.4 颜色填充 - 悬浮 (使用变量 --chrome-bg-hover) */
-::deep .ant-tabs-tab:hover:not(.ant-tabs-tab-active)::before { box-shadow: 5px 5px 0 var(--chrome-bg-hover) !important; }
-::deep .ant-tabs-tab:hover:not(.ant-tabs-tab-active)::after  { box-shadow: -5px 5px 0 var(--chrome-bg-hover) !important; }
+::deep .chrome-tabs-bar .ant-tabs-tab-active::after {
+    background: radial-gradient(circle at 100% 0, transparent var(--chrome-curve-size), var(--chrome-bg-active) var(--chrome-curve-size)) !important;
+}
 
-/* 5.5 Active + Hover 补丁 (保持激活颜色) */
-::deep .ant-tabs-tab-active:hover::after {
-    right: calc(var(--chrome-curve-size) * -1) !important;
-    box-shadow: -5px 5px 0 var(--chrome-bg-active) !important;
-    opacity: 1 !important;
-    display: block !important;
+/* 使用径向渐变填充 - 悬停状态 */
+::deep .chrome-tabs-bar .ant-tabs-tab:hover:not(.ant-tabs-tab-active)::before {
+    background: radial-gradient(circle at 0 0, transparent var(--chrome-curve-size), var(--chrome-bg-hover) var(--chrome-curve-size)) !important;
+}
+
+::deep .chrome-tabs-bar .ant-tabs-tab:hover:not(.ant-tabs-tab-active)::after {
+    background: radial-gradient(circle at 100% 0, transparent var(--chrome-curve-size), var(--chrome-bg-hover) var(--chrome-curve-size)) !important;
 }
 
 /* =================================================================
-   6. 分割线逻辑
+   6. 分割线
    ================================================================= */
-::deep .ant-tabs-tab:not(.ant-tabs-tab-active):not(:hover)::after {
+/* 只在非激活、非悬停、且有下一个tab时显示分割线（自动排除最后一个tab） */
+::deep .chrome-tabs-bar .ant-tabs-tab:not(.ant-tabs-tab-active):not(:hover):has(+ .ant-tabs-tab)::after {
     content: "";
     position: absolute;
     right: 0;
@@ -136,14 +131,28 @@
     transform: translateY(-50%);
     height: 16px;
     width: 1px;
-    background-color: #909090; /* 分割线颜色保持灰色，或者你也想改成 inherited? */
+    background-color: var(--chrome-divider-color);
     z-index: 1;
-    border-radius: 0;
-    box-shadow: none;
 }
 
-::deep .ant-tabs-tab:not(.ant-tabs-tab-active):has(+ .ant-tabs-tab:hover)::after,
-::deep .ant-tabs-tab:not(.ant-tabs-tab-active):has(+ .ant-tabs-tab-active)::after,
-::deep .ant-tabs-tab:not(.ant-tabs-tab-active):last-of-type::after {
+/* 当下一个tab处于激活或悬停状态时，隐藏当前tab的分割线 */
+::deep .chrome-tabs-bar .ant-tabs-tab:not(.ant-tabs-tab-active):has(+ .ant-tabs-tab:hover)::after,
+::deep .chrome-tabs-bar .ant-tabs-tab:not(.ant-tabs-tab-active):has(+ .ant-tabs-tab-active)::after {
     display: none !important;
+}
+
+
+/* 关键！使用 '>' (直接子元素选择器)
+   这样只有 layout-tabs 直属的 holder 会受影响。
+   嵌套在深层的 Tabs (因为没有 layout-tabs 类，或者不是直属子级) 就不会受影响。
+*/
+::deep .layout-tabs > .ant-tabs-content-holder {
+    flex: 1; /* 抢占剩余空间 */
+    height: 0; /* 关键：允许被压缩，防止被子内容撑破 */
+    overflow: hidden; /* 关键：切断溢出，强制让内部的 overflow-y-auto 生效 */
+}
+
+/* 3. 确保高度一直传递到最底层的 TabPane */
+::deep .layout-tabs  > .ant-tabs-content-holder > .ant-tabs-content {
+    height: 100%;
 }

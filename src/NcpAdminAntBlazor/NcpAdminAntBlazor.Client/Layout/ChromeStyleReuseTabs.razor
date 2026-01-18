@@ -1,9 +1,19 @@
-<div class="chrome-tabs-wrapper @Class">
-    <ReuseTabs></ReuseTabs>
+<div class="h-full">
+    <ReuseTabs Class="layout-tabs h-full flex flex-col"
+               TabBarClass="chrome-tabs-bar shrink-0 border-b border-border bg-appbar"
+               TabPaneClass="h-full">
+        <Body>
+        @ChildContent
+        </Body>
+        <TabPaneTemplate>
+            <Content Class="h-full p-3 overflow-auto">
+                @context.Body
+            </Content>
+        </TabPaneTemplate>
+    </ReuseTabs>
 </div>
 
 @code {
-    [Parameter]
-    public string Class { get; set;  }= string.Empty;
-
+    [Parameter] public string Class { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 }
