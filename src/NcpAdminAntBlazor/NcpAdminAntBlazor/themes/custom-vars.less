@@ -1,3 +1,13 @@
-@border-radius-base: 10px; // 主圆角（按钮、输入框等）
-@border-radius-sm: 4px; // 小圆角
-@border-radius-lg: 8px; // 大圆角（弹窗、卡片等）
+// 1. 小圆角：用于 Tag 标签、迷你按钮
+@border-radius-sm: 4px;
+
+// 2. 主圆角：用于 Button、Input、Select
+@border-radius-base: 8px;
+
+// 3. 大圆角：用于 Card 卡片、Modal 弹窗
+@border-radius-lg: 12px;
+
+// 样式补丁
+.ant-input-affix-wrapper > .ant-input {
+  border-radius: 0 !important;
+}

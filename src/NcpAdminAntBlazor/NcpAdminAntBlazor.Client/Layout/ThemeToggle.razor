@@ -1,0 +1,21 @@
+@inject ThemeService ThemeService
+
+<Icon
+    Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
+    OnClick="@ToggleTheme"/>
+
+@code {
+    private bool _isDarkMode;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isDarkMode = await ThemeService.GetIsDarkAsync();
+    }
+
+    private async Task ToggleTheme()
+    {
+        _isDarkMode = !_isDarkMode;
+        await ThemeService.SetThemeAsync(_isDarkMode ? ThemeMode.Dark : ThemeMode.Light);
+    }
+
+}

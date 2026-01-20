@@ -1,0 +1,21 @@
+@inherits LayoutComponentBase
+
+<div class="min-h-screen flex items-center justify-center bg-body-bg">
+    <div class="w-full max-w-md p-8 bg-bg-base rounded-lg shadow-lg">
+        <div class="text-center mb-8 relative">
+            <Icon Type="user" Class="text-5xl"/>
+            <Title Level="2" Class="mt-4">Clean 管理系统</Title>
+            <div class="absolute top-0 right-0 flex items-center gap-4">
+                <ThemeToggle/>
+                <CultureSelector/>
+            </div>
+        </div>
+        <div>
+            @Body
+        </div>
+    </div>
+</div>
+
+@code
+{
+}

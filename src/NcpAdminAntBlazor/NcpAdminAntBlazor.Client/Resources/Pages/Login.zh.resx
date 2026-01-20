@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PageTitle" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="UsernamePlaceholder" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="PasswordPlaceholder" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>记住我</value>
+  </data>
+  <data name="ForgotPassword" xml:space="preserve">
+    <value>忘记密码?</value>
+  </data>
+  <data name="ConfirmButton" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="CodeLogin" xml:space="preserve">
+    <value>验证码登录</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>注册账号</value>
+  </data>
+</root>

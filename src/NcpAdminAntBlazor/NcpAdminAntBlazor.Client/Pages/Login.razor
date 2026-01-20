@@ -1,0 +1,99 @@
+@page "/login"
+@layout AuthLayout
+@using System.ComponentModel.DataAnnotations
+@using Console = System.Console
+@inject IStringLocalizer<Login> L
+
+<PageTitle>@L["PageTitle"]</PageTitle>
+
+<Title Level="4" Class="mb-6">密码登录</Title>
+
+<Form Model="@_model"
+      OnFinish="OnFinish"
+      OnFinishFailed="OnFinishFailed">
+    <FormItem>
+        <AntDesign.Input @bind-Value="@context.Username"
+                         Placeholder="@L["UsernamePlaceholder"].Value"
+                         Size="InputSize.Large">
+            <Prefix>
+                <Icon Type="user"/>
+            </Prefix>
+        </AntDesign.Input>
+    </FormItem>
+
+    <FormItem>
+        <InputPassword @bind-Value="@context.Password"
+                       Placeholder="@L["PasswordPlaceholder"].Value"
+                       Size="InputSize.Large"
+                       VisibilityToggle="true">
+            <Prefix>
+                <Icon Type="lock"/>
+            </Prefix>
+        </InputPassword>
+    </FormItem>
+
+    <FormItem>
+        <Flex Justify="FlexJustify.SpaceBetween" Align="FlexAlign.Center">
+            <Checkbox @bind-Value="_model.RememberMe">
+                @L["RememberMe"]
+            </Checkbox>
+            <a href="#">@L["ForgotPassword"]</a>
+        </Flex>
+    </FormItem>
+
+    <FormItem>
+        <Button Type="ButtonType.Primary"
+                HtmlType="submit"
+                Block="true"
+                Size="ButtonSize.Large"
+                Loading="@_loading">
+            @L["ConfirmButton"]
+        </Button>
+    </FormItem>
+
+    <FormItem>
+        <Flex Gap="FlexGap.Middle">
+            <Button Block="true" Size="ButtonSize.Large">
+                @L["CodeLogin"]
+            </Button>
+            <Button Block="true" Size="ButtonSize.Large">
+                @L["Register"]
+            </Button>
+        </Flex>
+    </FormItem>
+</Form>
+
+@code {
+    private LoginModel _model = new();
+    private bool _loading = false;
+
+    public class LoginModel
+    {
+        [Required(ErrorMessage = "请输入用户名")] public string Username { get; set; } = "";
+
+        [Required(ErrorMessage = "请输入密码")] public string Password { get; set; } = "";
+
+        public bool RememberMe { get; set; } = false;
+    }
+
+    private async Task OnFinish(EditContext editContext)
+    {
+        _loading = true;
+        try
+        {
+            // TODO: 实现登录逻辑
+            await Task.Delay(1000);
+            Console.WriteLine($"登录成功: {_model.Username}");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void OnFinishFailed(EditContext editContext)
+    {
+        Console.WriteLine("表单验证失败");
+    }
+
+}

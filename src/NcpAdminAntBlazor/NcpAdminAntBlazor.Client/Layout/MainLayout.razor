@@ -1,8 +1,6 @@
 ﻿@inherits LayoutComponentBase
-@using NcpAdminAntBlazor.Client.Services
 @using Console = System.Console
 
-@inject ThemeService ThemeService
 @inject Document Document
 
 @implements IDisposable
@@ -33,7 +31,6 @@
         <Layout>
             <Header Class="h-12 px-4 border-b border-border items-center flex justify-between bg-appbar">
 
-
                 @* 左侧区域 *@
                 <Space Size="@("24")">
                     <SpaceItem>
@@ -52,9 +49,7 @@
                 @* 右侧区域 *@
                 <Space Size="@("24")">
                     <SpaceItem>
-                        <Icon
-                            Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
-                            OnClick="@ToggleTheme"/>
+                        <ThemeToggle/>
                     </SpaceItem>
                     <SpaceItem>
                         <CultureSelector/>
@@ -82,17 +77,10 @@
 @code {
     private bool _collapsed;
 
-    private bool _isDarkMode;
-
     private ElementReference _layoutContainer;
 
     private bool _isBrowserFullscreen;
     private Action<object>? _fullscreenHandler;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _isDarkMode = await ThemeService.GetIsDarkAsync();
-    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -120,7 +108,6 @@
         _collapsed = !_collapsed;
     }
 
-
     private async Task ToggleBrowserFullscreen()
     {
         if (!_isBrowserFullscreen)
@@ -133,13 +120,7 @@
             await Document.ExitFullscreen();
         }
     }
-
-    private async Task ToggleTheme()
-    {
-        _isDarkMode = !_isDarkMode;
-        await ThemeService.SetThemeAsync(_isDarkMode ? ThemeMode.Dark : ThemeMode.Light);
-    }
-
+    
     public void Dispose()
     {
         if (_fullscreenHandler == null) return;
