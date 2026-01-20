@@ -67,12 +67,14 @@ public static class AuthEndpoints
             principal, 
             authProperties);
 
+        // 存储 Token 时传递 RememberMe 参数，用于控制缓存过期策略
         await userTokenStore.StoreTokenAsync(new UserTokenData(
             request.UserId,
             request.AccessToken,
             request.RefreshToken,
             request.AccessTokenExpiry,
-            request.RefreshTokenExpiry));
+            request.RefreshTokenExpiry,
+            request.RememberMe));
 
         return Results.Ok(new { message = "Authentication cookie set successfully" });
     }

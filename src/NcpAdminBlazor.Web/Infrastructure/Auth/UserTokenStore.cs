@@ -56,9 +56,17 @@ public class UserTokenStore(HybridCache cache, IUserTokenRefresher userTokenRefr
     public async Task StoreTokenAsync(UserTokenData tokenData)
     {
         var key = GetCacheKey(tokenData.UserId);
+        
+        // 根据 RememberMe 设置不同的缓存过期策略
+        // - RememberMe=true: 缓存到 RefreshToken 过期（支持长期会话）
+        // - RememberMe=false: 缓存到 AccessToken 过期（会话级别，避免内存泄漏）
+        var expiration = tokenData.RememberMe
+            ? tokenData.RefreshTokenExpiresAt - DateTimeOffset.UtcNow
+            : tokenData.AccessTokenExpiresAt - DateTimeOffset.UtcNow;
+        
         var entryOptions = new HybridCacheEntryOptions
         {
-            Expiration = tokenData.RefreshTokenExpiresAt - DateTimeOffset.UtcNow,
+            Expiration = expiration,
             LocalCacheExpiration = LocalCacheExpiration
         };
 
@@ -113,7 +121,10 @@ public class UserTokenStore(HybridCache cache, IUserTokenRefresher userTokenRefr
             }
 
             // 执行刷新
-            var newTokenData = await userTokenRefresher.RefreshTokenAsync(userId, tokenData.RefreshToken);
+            var newTokenData = await userTokenRefresher.RefreshTokenAsync(
+                userId, 
+                tokenData.RefreshToken, 
+                tokenData.RememberMe); // 传递原始的 RememberMe 设置
 
             if (newTokenData is not null)
             {

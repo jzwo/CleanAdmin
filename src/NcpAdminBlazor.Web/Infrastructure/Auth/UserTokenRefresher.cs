@@ -13,11 +13,13 @@ public interface IUserTokenRefresher
     /// </summary>
     /// <param name="userId">用户标识</param>
     /// <param name="refreshToken">刷新令牌</param>
+    /// <param name="rememberMe">是否记住登录状态（影响刷新后的缓存策略）</param>
     /// <param name="cancellationToken">取消令牌</param>
     /// <returns>刷新后的令牌数据，刷新失败时返回 null</returns>
     Task<UserTokenData?> RefreshTokenAsync(
         string userId,
         string refreshToken,
+        bool rememberMe = true,
         CancellationToken cancellationToken = default);
 }
 
@@ -34,6 +36,7 @@ public class UserTokenRefresher(
     public async Task<UserTokenData?> RefreshTokenAsync(
         string userId,
         string refreshToken,
+        bool rememberMe = true,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(userId);
@@ -87,7 +90,8 @@ public class UserTokenRefresher(
                 AccessToken: response.Data.AccessToken,
                 RefreshToken: response.Data.RefreshToken,
                 AccessTokenExpiresAt: response.Data.AccessTokenExpiry.Value,
-                RefreshTokenExpiresAt: response.Data.RefreshTokenExpiry.Value
+                RefreshTokenExpiresAt: response.Data.RefreshTokenExpiry.Value,
+                RememberMe: rememberMe // 保持原有的 RememberMe 设置
             );
         }
         catch (OperationCanceledException ex)

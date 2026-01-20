@@ -5,4 +5,5 @@ public record UserTokenData(
     string AccessToken,
     string RefreshToken,
     DateTimeOffset AccessTokenExpiresAt,
-    DateTimeOffset RefreshTokenExpiresAt);
+    DateTimeOffset RefreshTokenExpiresAt,
+    bool RememberMe = true); // 默认为 true 保持向后兼容
