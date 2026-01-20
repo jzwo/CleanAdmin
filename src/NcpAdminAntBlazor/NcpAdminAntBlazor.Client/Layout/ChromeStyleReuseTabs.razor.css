@@ -15,9 +15,6 @@
     /* --- 原本针对 .ant-tabs-nav 的样式写在这里 --- */
     margin: 0 !important;
     border-bottom: none !important;
-
-    /* 这一行确保 nav 不会因为 gap 撑大 */
-    display: flex;
 }
 
 /* =================================================================
@@ -26,7 +23,7 @@
 /* 所有的选择器都基于 .chrome-tabs-bar 向下查找 */
 
 ::deep .chrome-tabs-bar .ant-tabs-nav-wrap {
-    padding: 5px 8px 0 8px;
+    padding: 3px 8px 0 8px;
     border-bottom: none !important;
 }
 
@@ -47,7 +44,7 @@
     border: none !important;
     background: transparent !important;
     margin: 0 !important;
-    padding: 6px 18px;
+    padding: 6px 18px !important;
     border-radius: var(--chrome-radius) var(--chrome-radius) 0 0 !important;
     position: relative;
     transition: none !important;
