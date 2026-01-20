@@ -1,6 +1,7 @@
 @page "/login"
 @layout AuthLayout
-@using System.ComponentModel.DataAnnotations
+@using Blazilla
+@using FluentValidation
 @using Console = System.Console
 @inject IStringLocalizer<Login> L
 
@@ -9,8 +10,8 @@
 <Title Level="4" Class="mb-6">密码登录</Title>
 
 <Form Model="@_model"
-      OnFinish="OnFinish"
-      OnFinishFailed="OnFinishFailed">
+      OnFinish="OnFinish">
+    <FluentValidator />
     <FormItem>
         <AntDesign.Input @bind-Value="@context.Username"
                          Placeholder="@L["UsernamePlaceholder"].Value"
@@ -64,16 +65,16 @@
 </Form>
 
 @code {
-    private LoginModel _model = new();
-    private bool _loading = false;
+    private readonly LoginModel _model = new();
+    private bool _loading;
 
     public class LoginModel
     {
-        [Required(ErrorMessage = "请输入用户名")] public string Username { get; set; } = "";
+        public string Username { get; set; } = "";
 
-        [Required(ErrorMessage = "请输入密码")] public string Password { get; set; } = "";
+        public string Password { get; set; } = "";
 
-        public bool RememberMe { get; set; } = false;
+        public bool RememberMe { get; set; }
     }
 
     private async Task OnFinish(EditContext editContext)
@@ -90,10 +91,16 @@
             _loading = false;
         }
     }
-
-    private void OnFinishFailed(EditContext editContext)
+    public class LoginModelValidator : AbstractValidator<LoginModel>
     {
-        Console.WriteLine("表单验证失败");
-    }
+        public LoginModelValidator()
+        {
+            RuleFor(p => p.Username)
+                .NotEmpty().WithMessage("Username name is required")
+                .MaximumLength(50).WithMessage("Username cannot exceed 50 characters");
 
+            RuleFor(p => p.Password)
+                .NotEmpty().WithMessage("Password is required");
+        }
+    }
 }

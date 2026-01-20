@@ -121,6 +121,7 @@
     <!-- Blazor Libraries -->
     <PackageVersion Include="AntDesign" Version="1.5.1" />
     <PackageVersion Include="AntDesign.Charts" Version="0.9.0" />
+    <PackageVersion Include="Blazilla" Version="2.2.1" />
     <PackageVersion Include="Blazored.LocalStorage" Version="4.5.0" />
     <PackageVersion Include="Bit.Butil" Version="10.3.0" />
     <PackageVersion Include="BitzArt.Blazor.Cookies.Client" Version="1.5.1" />

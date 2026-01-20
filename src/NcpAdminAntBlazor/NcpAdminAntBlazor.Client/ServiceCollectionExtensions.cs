@@ -1,4 +1,5 @@
 using Bit.Butil;
+using Blazilla.Extensions;
 using NcpAdminAntBlazor.Client.Services;
 
 namespace NcpAdminAntBlazor.Client;
@@ -14,5 +15,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<ICultureOptions, CultureOptions>();
         services.AddScoped<ICultureService, CultureService>();
         services.AddSingleton<IMenuService, MenuService>();
+        services.AddValidatorsFromAssemblyContaining<Program>();
     }
 }
