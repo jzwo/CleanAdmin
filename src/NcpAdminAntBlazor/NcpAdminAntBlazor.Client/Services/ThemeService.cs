@@ -97,10 +97,18 @@ public class ThemeService(ICookieService cookieService, IJSRuntime jsRuntime)
     private async Task ApplyThemeToDocumentAsync(ThemeMode theme)
     {
         var themeName = GetThemeName(theme);
-
-        // 更新 HTML 根元素的 class
-        await jsRuntime.InvokeVoidAsync("eval",
-            $"document.documentElement.className = '{themeName}'");
+        if (theme == ThemeMode.Dark)
+        {
+            // 设置 HTML 根元素的 class
+            await jsRuntime.InvokeVoidAsync("eval",
+                $"document.documentElement.className = '{themeName}'");
+        }
+        else
+        {
+            // 移除 HTML 根元素的 class 属性
+            await jsRuntime.InvokeVoidAsync("eval",
+                "document.documentElement.removeAttribute('class')");
+        }
 
         // 更新主题 CSS 文件链接
         var href = string.Format(ThemeCssPathTemplate, themeName);
