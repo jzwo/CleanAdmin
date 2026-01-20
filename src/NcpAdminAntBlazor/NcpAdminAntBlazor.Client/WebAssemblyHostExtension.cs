@@ -14,7 +14,7 @@ public static class WebAssemblyHostExtension
     public static async Task SetCulture(this WebAssemblyHost host)
     {
         var cultureService = host.Services.GetRequiredService<ICultureService>();
-        var culture = await cultureService.GetStoredOrDefalutCultureInfoAsync();
+        var culture = await cultureService.GetStoredOrDefaultCultureInfoAsync();
         CultureInfo.DefaultThreadCurrentCulture = culture;
         CultureInfo.DefaultThreadCurrentUICulture = culture;
     }

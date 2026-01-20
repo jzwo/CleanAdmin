@@ -1,5 +1,5 @@
 using System.Globalization;
-using Blazored.LocalStorage;
+using Bit.Butil;
 using Microsoft.AspNetCore.Components;
 
 namespace NcpAdminAntBlazor.Client.Services;
@@ -7,18 +7,18 @@ namespace NcpAdminAntBlazor.Client.Services;
 public interface ICultureService
 {
     public Task SetCultureAsync(string culture);
-    public Task<CultureInfo> GetStoredOrDefalutCultureInfoAsync();
+    public Task<CultureInfo> GetStoredOrDefaultCultureInfoAsync();
 }
 
 public class CultureService(
     ICultureOptions cultureOptions,
-    ILocalStorageService localStorageService,
+    LocalStorage localStorage,
     NavigationManager navigationManager)
     : ICultureService
 {
     public async Task SetCultureAsync(string culture)
     {
-        await localStorageService.SetItemAsync(cultureOptions.LocalStorageKey, culture);
+        await localStorage.SetItem(cultureOptions.LocalStorageKey, culture);
         var uri = new Uri(navigationManager.Uri)
             .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
         var cultureEscaped = Uri.EscapeDataString(culture);
@@ -29,9 +29,9 @@ public class CultureService(
             forceLoad: true);
     }
 
-    public async Task<CultureInfo> GetStoredOrDefalutCultureInfoAsync()
+    public async Task<CultureInfo> GetStoredOrDefaultCultureInfoAsync()
     {
-        var storedCultureName = await localStorageService.GetItemAsync<string?>(cultureOptions.LocalStorageKey);
+        var storedCultureName = await localStorage.GetItem(cultureOptions.LocalStorageKey);
         return !string.IsNullOrEmpty(storedCultureName)
             ? new CultureInfo(storedCultureName)
             : new CultureInfo(cultureOptions.DefaultCulture);

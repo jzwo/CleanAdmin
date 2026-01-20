@@ -1,88 +1,118 @@
 ﻿@inherits LayoutComponentBase
-@inject IJSRuntime JsRuntime
-@inject ThemeService ThemeService
 @using NcpAdminAntBlazor.Client.Services
+@using Console = System.Console
+
+@inject ThemeService ThemeService
+@inject Document Document
+
 @implements IDisposable
 
-<Layout Class="h-dvh overflow-hidden">
-    <Sider @bind-Collapsed="@_collapsed"
-           CollapsedWidth="48"
-           Class="border-r border-border bg-sider">
-        <div class="flex items-center justify-center h-16">
-            <div class="flex items-center gap-2">
-                <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.3"/>
-                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                </svg>
-                @if (!_collapsed)
-                {
-                    <span class="text-xl font-bold text-text">NcpAdmin</span>
-                }
+<div @ref="_layoutContainer" class="h-dvh w-dvw">
+    <Layout Class="h-dvh overflow-hidden">
+        <Sider @bind-Collapsed="@_collapsed"
+               CollapsedWidth="48"
+               Class="border-r border-border bg-sider">
+            <div class="flex items-center justify-center h-16">
+                <div class="flex items-center gap-2">
+                    <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.3"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    @if (!_collapsed)
+                    {
+                        <span class="text-xl font-bold text-text">NcpAdmin</span>
+                    }
+                </div>
             </div>
-        </div>
-        <NavMenu></NavMenu>
-    </Sider>
-    <Layout>
-        <Header Class="h-12 px-4 border-b border-border items-center flex justify-between bg-appbar">
+            <NavMenu></NavMenu>
+        </Sider>
+        <Layout>
+            <Header Class="h-12 px-4 border-b border-border items-center flex justify-between bg-appbar">
 
 
-            @* 左侧区域 *@
-            <Space Size="@("24")">
-                <SpaceItem>
-                    <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"
-                          OnClick="@CollapseToggle"/>
-                </SpaceItem>
-                <SpaceItem>
-                    <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
-                </SpaceItem>
-                <SpaceItem>
-                    <Breadcrumb AutoGenerate>
-                        <BreadcrumbItem Href="/">Home</BreadcrumbItem>
-                    </Breadcrumb>
-                </SpaceItem>
-            </Space>
-            @* 右侧区域 *@
-            <Space Size="@("24")">
-                <SpaceItem>
-                    <Icon
-                        Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
-                        OnClick="@ToggleTheme"/>
-                </SpaceItem>
-                <SpaceItem>
-                    <CultureSelector/>
-                </SpaceItem>
-                <SpaceItem>
-                    <Icon
-                        Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
-                        OnClick="@ToggleBrowserFullscreen"/>
-                </SpaceItem>
-                <SpaceItem>
-                    <AvatarDropdown/>
-                </SpaceItem>
-            </Space>
-        </Header>
-        <Content>
-            <ChromeStyleReuseTabs>
-                @Body
-            </ChromeStyleReuseTabs>
-        </Content>
-        <Footer>Footer</Footer>
+                @* 左侧区域 *@
+                <Space Size="@("24")">
+                    <SpaceItem>
+                        <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"
+                              OnClick="@CollapseToggle"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Breadcrumb AutoGenerate>
+                            <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                        </Breadcrumb>
+                    </SpaceItem>
+                </Space>
+                @* 右侧区域 *@
+                <Space Size="@("24")">
+                    <SpaceItem>
+                        <Icon
+                            Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
+                            OnClick="@ToggleTheme"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <CultureSelector/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Icon
+                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
+                            OnClick="@ToggleBrowserFullscreen"/>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <AvatarDropdown/>
+                    </SpaceItem>
+                </Space>
+            </Header>
+            <Content>
+                <ChromeStyleReuseTabs>
+                    @Body
+                </ChromeStyleReuseTabs>
+            </Content>
+            <Footer>Footer</Footer>
+        </Layout>
     </Layout>
-</Layout>
+</div>
 
 @code {
     private bool _collapsed;
-    private bool _isBrowserFullscreen;
-    private DotNetObjectReference<MainLayout>? _dotNetRef;
-    private IJSObjectReference? _jsModule;
+
     private bool _isDarkMode;
+
+    private ElementReference _layoutContainer;
+
+    private bool _isBrowserFullscreen;
+    private Action<object>? _fullscreenHandler;
 
     protected override async Task OnInitializedAsync()
     {
         _isDarkMode = await ThemeService.GetIsDarkAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _fullscreenHandler = async void (_) =>
+            {
+                try
+                {
+                    _isBrowserFullscreen = await _layoutContainer.Matches(":fullscreen");
+                    StateHasChanged();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error checking fullscreen state: {ex.Message}");
+                }
+            };
+
+            await Document.AddEventListener("fullscreenchange", _fullscreenHandler);
+        }
     }
 
     private void CollapseToggle()
@@ -90,37 +120,18 @@
         _collapsed = !_collapsed;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _dotNetRef = DotNetObjectReference.Create(this);
-            _jsModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import",
-                "./js/AppLayout.js");
-            await _jsModule.InvokeVoidAsync("registerFullscreenHandler", _dotNetRef);
-        }
-    }
-
-    [JSInvokable]
-    public void OnBrowserFullscreenChanged(bool isFullscreen)
-    {
-        _isBrowserFullscreen = isFullscreen;
-        StateHasChanged();
-    }
 
     private async Task ToggleBrowserFullscreen()
     {
-        if (_jsModule is null) return;
-
-        if (_isBrowserFullscreen)
+        if (!_isBrowserFullscreen)
         {
-            await _jsModule.InvokeVoidAsync("exitFullscreen");
+            var options = new FullScreenOptions { NavigationUI = FullScreenNavigationUI.Show };
+            await _layoutContainer.RequestFullScreen(options);
         }
         else
         {
-            await _jsModule.InvokeVoidAsync("enterFullscreen");
+            await Document.ExitFullscreen();
         }
-        // 状态由 fullscreenchange 事件监听器自动更新
     }
 
     private async Task ToggleTheme()
@@ -131,7 +142,8 @@
 
     public void Dispose()
     {
-        _dotNetRef?.Dispose();
+        if (_fullscreenHandler == null) return;
+        Document.RemoveEventListener("fullscreenchange", _fullscreenHandler);
     }
 
 }
