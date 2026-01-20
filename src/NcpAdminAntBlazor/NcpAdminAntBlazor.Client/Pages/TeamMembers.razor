@@ -1,0 +1,92 @@
+@page "/team-members"
+
+<PageTitle>成员管理</PageTitle>
+
+<div style="padding: 24px;">
+    <Card Title="成员管理" Style="margin-bottom: 24px;">
+        <Extra>
+            <Space>
+                <SpaceItem>
+                    <Select TItemValue="int" TItem="string" Style="width: 200px;" Placeholder="选择团队">
+                        <SelectOptions>
+                            @foreach (var team in _teams)
+                            {
+                                <SelectOption TItemValue="int" TItem="string" Value="@team.Id" Label="@team.Name"/>
+                            }
+                        </SelectOptions>
+                    </Select>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">
+                        添加成员
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </Extra>
+        <ChildContent>
+            <Table TItem="TeamMemberItem" DataSource="@_members" Loading="@_loading">
+                <PropertyColumn Property="c => c.Id" Title="ID"/>
+                <PropertyColumn Property="c => c.Name" Title="姓名"/>
+                <PropertyColumn Property="c => c.Email" Title="邮箱"/>
+                <PropertyColumn Property="c => c.Role" Title="团队角色"/>
+                <PropertyColumn Property="c => c.JoinDate" Title="加入时间" Format="yyyy-MM-dd"/>
+                <ActionColumn Title="操作">
+                    <Space>
+                        <SpaceItem>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link">编辑</Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>移除</Button>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </Table>
+        </ChildContent>
+    </Card>
+</div>
+
+@code {
+    private bool _loading;
+    private List<TeamMemberItem> _members = new();
+    private List<TeamOption> _teams = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _teams = new List<TeamOption>
+        {
+            new TeamOption { Id = 1, Name = "开发团队" },
+            new TeamOption { Id = 2, Name = "测试团队" },
+            new TeamOption { Id = 3, Name = "运维团队" }
+        };
+        
+        await LoadMembersAsync();
+    }
+
+    private async Task LoadMembersAsync()
+    {
+        _loading = true;
+        await Task.Delay(500); // 模拟加载
+        _members = new List<TeamMemberItem>
+        {
+            new TeamMemberItem { Id = 1, Name = "张三", Email = "zhangsan@example.com", Role = "团队负责人", JoinDate = DateTime.Now.AddMonths(-6) },
+            new TeamMemberItem { Id = 2, Name = "李四", Email = "lisi@example.com", Role = "高级工程师", JoinDate = DateTime.Now.AddMonths(-4) },
+            new TeamMemberItem { Id = 3, Name = "王五", Email = "wangwu@example.com", Role = "工程师", JoinDate = DateTime.Now.AddMonths(-2) }
+        };
+        _loading = false;
+    }
+
+    public class TeamMemberItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public DateTime JoinDate { get; set; }
+    }
+
+    public class TeamOption
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+}

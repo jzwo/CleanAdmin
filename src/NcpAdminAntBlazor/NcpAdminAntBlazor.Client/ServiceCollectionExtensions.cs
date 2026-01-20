@@ -13,5 +13,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ThemeService>();
         services.AddSingleton<ICultureOptions, CultureOptions>();
         services.AddScoped<ICultureService, CultureService>();
+        services.AddSingleton<IMenuService, MenuService>();
     }
 }

@@ -1,38 +1,86 @@
+@using NcpAdminAntBlazor.Client.Services
+@inject IMenuService MenuService
+@inject NavigationManager Navigation
+
 <div>
-    <Menu DefaultSelectedKeys=@(new[] { "1" }) Mode="MenuMode.Inline" Class="rounded-menu bg-transparent">
-        <MenuItem Key="1">
-            <Icon Type="@IconType.Outline.PieChart" />
-            <span>Option 1</span>
-        </MenuItem>
-        <MenuItem Key="2">
-            <Icon Type="@IconType.Outline.Desktop" />
-            <span>Option 2</span>
-        </MenuItem>
-        @{
-            RenderFragment sub1Title =
-            @<span>
-                    <Icon Type="@IconType.Outline.User" />
-                    <span>User</span>
-            </span>;
+    <Menu DefaultSelectedKeys=@(new[] { GetSelectedKey() }) Mode="MenuMode.Inline" Class="rounded-menu bg-transparent">
+        @foreach (var item in MenuService.GetMenuItems())
+        {
+            @RenderMenuItem(item)
         }
-        <SubMenu Key="sub1" TitleTemplate=sub1Title>
-            <MenuItem Key="3">Tom</MenuItem>
-            <MenuItem Key="4">Bill</MenuItem>
-            <MenuItem Key="5">Alex</MenuItem>
-        </SubMenu>
-        @{
-            RenderFragment sub2Title =
-            @<span>
-                    <Icon Type="@IconType.Outline.Team" />
-                    <span>Team</span>
-            </span>;
-        }
-        <SubMenu Key="sub2" TitleTemplate=sub2Title>
-            <MenuItem Key="6">Team 1</MenuItem>
-            <MenuItem Key="8">Team 2</MenuItem>
-        </SubMenu>
-        <MenuItem Key="9">
-            <Icon Type="@IconType.Outline.File" />
-        </MenuItem>
     </Menu>
 </div>
+
+@code {
+    private RenderFragment RenderMenuItem(MenuItemModel item) => __builder =>
+    {
+        if (item.IsSubMenu)
+        {
+            RenderFragment subMenuTitle = @<span>
+                @if (!string.IsNullOrEmpty(item.Icon))
+                {
+                    <Icon Type="@GetIconType(item.Icon)" />
+                }
+                <span>@item.Title</span>
+            </span>;
+
+            <SubMenu Key="@item.Key" TitleTemplate="@subMenuTitle">
+                @foreach (var child in item.Children)
+                {
+                    @RenderMenuItem(child)
+                }
+            </SubMenu>
+        }
+        else
+        {
+            <MenuItem Key="@item.Key" OnClick="@(() => NavigateToRoute(item.Route))">
+                @if (!string.IsNullOrEmpty(item.Icon))
+                {
+                    <Icon Type="@GetIconType(item.Icon)" />
+                }
+                <span>@item.Title</span>
+            </MenuItem>
+        }
+    };
+
+    private string GetIconType(string icon)
+    {
+        return icon.ToLowerInvariant() switch
+        {
+            "pie-chart" => IconType.Outline.PieChart,
+            "desktop" => IconType.Outline.Desktop,
+            "user" => IconType.Outline.User,
+            "team" => IconType.Outline.Team,
+            "file" => IconType.Outline.File,
+            _ => IconType.Outline.QuestionCircle
+        };
+    }
+
+    private void NavigateToRoute(string? route)
+    {
+        if (!string.IsNullOrEmpty(route))
+        {
+            Navigation.NavigateTo(route);
+        }
+    }
+
+    private string GetSelectedKey()
+    {
+        var currentPath = new Uri(Navigation.Uri).AbsolutePath;
+        var menuItems = MenuService.GetMenuItems();
+        
+        foreach (var item in menuItems)
+        {
+            if (item.Route == currentPath)
+                return item.Key;
+                
+            foreach (var child in item.Children)
+            {
+                if (child.Route == currentPath)
+                    return child.Key;
+            }
+        }
+        
+        return menuItems.FirstOrDefault()?.Key ?? "dashboard";
+    }
+}

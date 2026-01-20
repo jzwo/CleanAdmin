@@ -1,0 +1,96 @@
+@page "/files"
+
+<PageTitle>文件管理</PageTitle>
+
+<div style="padding: 24px;">
+    <Card Title="文件管理" Style="margin-bottom: 24px;">
+        <Extra>
+            <Space>
+                <SpaceItem>
+                    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Upload">
+                        上传文件
+                    </Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Icon="@IconType.Outline.FolderAdd">
+                        新建文件夹
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </Extra>
+        <ChildContent>
+            <Table TItem="FileItem" DataSource="@_files" Loading="@_loading">
+                <PropertyColumn Property="c => c.Name" Title="文件名">
+                    <Space>
+                        <SpaceItem>
+                            <Icon Type="@GetFileIcon(context.Type)"/>
+                        </SpaceItem>
+                        <SpaceItem>
+                            @context.Name
+                        </SpaceItem>
+                    </Space>
+                </PropertyColumn>
+                <PropertyColumn Property="c => c.Size" Title="大小"/>
+                <PropertyColumn Property="c => c.Type" Title="类型"/>
+                <PropertyColumn Property="c => c.ModifiedDate" Title="修改时间" Format="yyyy-MM-dd HH:mm"/>
+                <PropertyColumn Property="c => c.Owner" Title="所有者"/>
+                <ActionColumn Title="操作">
+                    <Space>
+                        <SpaceItem>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Icon="@IconType.Outline.Download">下载</Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Icon="@IconType.Outline.ShareAlt">分享</Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger Icon="@IconType.Outline.Delete">删除</Button>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </Table>
+        </ChildContent>
+    </Card>
+</div>
+
+@code {
+    private bool _loading;
+    private List<FileItem> _files = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        await Task.Delay(500); // 模拟加载
+        _files = new List<FileItem>
+        {
+            new FileItem { Id = 1, Name = "项目文档.docx", Size = "2.5 MB", Type = "文档", ModifiedDate = DateTime.Now.AddDays(-1), Owner = "张三" },
+            new FileItem { Id = 2, Name = "设计图.png", Size = "5.8 MB", Type = "图片", ModifiedDate = DateTime.Now.AddDays(-2), Owner = "李四" },
+            new FileItem { Id = 3, Name = "数据分析.xlsx", Size = "1.2 MB", Type = "表格", ModifiedDate = DateTime.Now.AddDays(-3), Owner = "王五" },
+            new FileItem { Id = 4, Name = "演示文稿.pptx", Size = "8.3 MB", Type = "演示", ModifiedDate = DateTime.Now.AddDays(-5), Owner = "张三" },
+            new FileItem { Id = 5, Name = "代码归档.zip", Size = "25.6 MB", Type = "压缩包", ModifiedDate = DateTime.Now.AddDays(-7), Owner = "李四" }
+        };
+        _loading = false;
+    }
+
+    private string GetFileIcon(string type)
+    {
+        return type switch
+        {
+            "文档" => IconType.Outline.FileWord,
+            "图片" => IconType.Outline.FileImage,
+            "表格" => IconType.Outline.FileExcel,
+            "演示" => IconType.Outline.FilePpt,
+            "压缩包" => IconType.Outline.FileZip,
+            _ => IconType.Outline.File
+        };
+    }
+
+    public class FileItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Size { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public DateTime ModifiedDate { get; set; }
+        public string Owner { get; set; } = string.Empty;
+    }
+}
