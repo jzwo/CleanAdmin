@@ -25,6 +25,8 @@
 /* You can use @source "path" to manually specify a source */
 /* view more:https://tailwindcss.com/docs/detecting-classes-in-source-files#disabling-automatic-detection */
 @source "../Components";
-@source "../../NcpAdminAntBlazor.Client"
+@source "../../NcpAdminAntBlazor.Client/Pages";
+@source "../../NcpAdminAntBlazor.Client/Layout";
+@source "../../NcpAdminAntBlazor.Client/Components";
 
 

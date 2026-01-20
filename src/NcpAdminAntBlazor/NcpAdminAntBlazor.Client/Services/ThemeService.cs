@@ -13,7 +13,7 @@ public class ThemeService(ICookieService cookieService, IJSRuntime jsRuntime)
 {
     public const string ThemeLinkId = "theme-link";
     private const string ThemeCookieKey = "app-theme";
-    private const string ThemeCssPathTemplate = "theme/{0}.css";
+    private const string ThemeCssPathTemplate = "styles/{0}.css";
     private const ThemeMode DefaultTheme = ThemeMode.Dark;
 
     private ThemeMode? _currentTheme;

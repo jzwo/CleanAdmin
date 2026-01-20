@@ -9,16 +9,16 @@
     "@tailwindcss/cli": "^4.1.18",
     "gulp": "^5.0.1",
     "gulp-clean-css": "^4.3.0",
-    "gulp-concat-css": "^3.1.0",
+    "gulp-footer": "^2.1.0",
     "gulp-less": "^5.0.0",
+    "gulp-plumber": "^1.2.1",
     "gulp-rename": "^2.1.0",
     "less-plugin-npm-import": "^2.1.0",
-    "tailwindcss": "^4.1.18",
-    "through2": "^4.0.2"
+    "tailwindcss": "^4.1.18"
   },
   "scripts": {
     "build:css": "npx @tailwindcss/cli -i wwwroot/app.css -o wwwroot/tailwind.css",
     "watch:css": "npx @tailwindcss/cli -i wwwroot/app.css -o wwwroot/tailwind.css --watch",
-    "gulp:theme": "gulp themes --gulpfile ./gulp.theme.js"
+    "gulp:theme": "gulp styles --gulpfile ./gulp.theme.js"
   }
 }
