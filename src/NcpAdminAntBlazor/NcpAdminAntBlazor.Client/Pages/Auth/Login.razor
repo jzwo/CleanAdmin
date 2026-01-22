@@ -1,9 +1,8 @@
 @page "/login"
-@layout AuthLayout
-@using Blazilla
-@using FluentValidation
 @using Console = System.Console
 @inject IStringLocalizer<Login> L
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
 
 <PageTitle>@L["PageTitle"]</PageTitle>
 
@@ -11,7 +10,7 @@
 
 <Form Model="@_model"
       OnFinish="OnFinish">
-    <FluentValidator />
+    <FluentValidator/>
     <FormItem>
         <AntDesign.Input @bind-Value="@context.Username"
                          Placeholder="@L["UsernamePlaceholder"].Value"
@@ -43,7 +42,7 @@
     </FormItem>
 
     <FormItem>
-        <Button Type="ButtonType.Primary"
+        <Button Type="@ButtonType.Primary"
                 HtmlType="submit"
                 Block="true"
                 Size="ButtonSize.Large"
@@ -65,17 +64,20 @@
 </Form>
 
 @code {
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+
     private readonly LoginModel _model = new();
     private bool _loading;
 
-    public class LoginModel
+    protected override async Task OnInitializedAsync()
     {
-        public string Username { get; set; } = "";
-
-        public string Password { get; set; } = "";
-
-        public bool RememberMe { get; set; }
+        var state = await AuthStateProvider.GetAuthenticationStateAsync();
+        if (state.User.Identity?.IsAuthenticated is true)
+        {
+            NavigationManager.NavigateTo(Home.PageUri);
+        }
     }
+
 
     private async Task OnFinish(EditContext editContext)
     {
@@ -91,16 +93,6 @@
             _loading = false;
         }
     }
-    public class LoginModelValidator : AbstractValidator<LoginModel>
-    {
-        public LoginModelValidator()
-        {
-            RuleFor(p => p.Username)
-                .NotEmpty().WithMessage("Username name is required")
-                .MaximumLength(50).WithMessage("Username cannot exceed 50 characters");
 
-            RuleFor(p => p.Password)
-                .NotEmpty().WithMessage("Password is required");
-        }
-    }
+
 }
