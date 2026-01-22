@@ -1,5 +1,6 @@
 using BitzArt.Blazor.Cookies;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
 using NcpAdminAntBlazor.Client;
 using NcpAdminAntBlazor.Client.Services;
 using NcpAdminAntBlazor.Components;
@@ -10,8 +11,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+
 builder.Services.AddClientServices();
 builder.AddBlazorCookies();
+
+builder.Services.AddOptions<RequestLocalizationOptions>()
+    .Configure<IOptions<CultureOptions>>((locOptions, cultureConfig) =>
+    {
+        var settings = cultureConfig.Value;
+        locOptions.SetDefaultCulture(settings.DefaultCulture);
+        locOptions.AddSupportedCultures(settings.SupportedCultures);
+        locOptions.AddSupportedUICultures(settings.SupportedCultures);
+    });
 
 var app = builder.Build();
 
@@ -34,16 +45,7 @@ app.UseAntiforgery();
 
 app.MapStaticAssets();
 
-var cultureOptions = app.Services.GetRequiredService<ICultureOptions>();
-var supportedCultures = cultureOptions.SupportedCultures;
-var defaultCulture = cultureOptions.DefaultCulture;
-
-var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(defaultCulture)
-    .AddSupportedCultures(supportedCultures)
-    .AddSupportedUICultures(supportedCultures);
-
-app.UseRequestLocalization(localizationOptions);
+app.UseRequestLocalization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

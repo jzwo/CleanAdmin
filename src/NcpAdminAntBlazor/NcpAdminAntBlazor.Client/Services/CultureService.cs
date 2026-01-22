@@ -1,8 +1,16 @@
 using System.Globalization;
 using Bit.Butil;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 
 namespace NcpAdminAntBlazor.Client.Services;
+
+public class CultureOptions
+{
+    public string LocalStorageKey { get; set; } = "BlazorCulture";
+    public string DefaultCulture { get; set; } = "zh-CN";
+    public string[] SupportedCultures { get; set; } = ["zh-CN", "en-US"];
+}
 
 public interface ICultureService
 {
@@ -11,14 +19,14 @@ public interface ICultureService
 }
 
 public class CultureService(
-    ICultureOptions cultureOptions,
+    IOptions<CultureOptions> cultureOptions,
     LocalStorage localStorage,
     NavigationManager navigationManager)
     : ICultureService
 {
     public async Task SetCultureAsync(string culture)
     {
-        await localStorage.SetItem(cultureOptions.LocalStorageKey, culture);
+        await localStorage.SetItem(cultureOptions.Value.LocalStorageKey, culture);
         var uri = new Uri(navigationManager.Uri)
             .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
         var cultureEscaped = Uri.EscapeDataString(culture);
@@ -31,9 +39,9 @@ public class CultureService(
 
     public async Task<CultureInfo> GetStoredOrDefaultCultureInfoAsync()
     {
-        var storedCultureName = await localStorage.GetItem(cultureOptions.LocalStorageKey);
+        var storedCultureName = await localStorage.GetItem(cultureOptions.Value.LocalStorageKey);
         return !string.IsNullOrEmpty(storedCultureName)
             ? new CultureInfo(storedCultureName)
-            : new CultureInfo(cultureOptions.DefaultCulture);
+            : new CultureInfo(cultureOptions.Value.DefaultCulture);
     }
 }

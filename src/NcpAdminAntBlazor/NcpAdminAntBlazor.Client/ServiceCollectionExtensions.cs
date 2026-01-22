@@ -12,7 +12,12 @@ public static class ServiceCollectionExtensions
         services.AddBitButilServices();
         services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
         services.AddScoped<ThemeService>();
-        services.AddSingleton<ICultureOptions, CultureOptions>();
+        services.Configure<CultureOptions>(options =>
+        {
+            options.LocalStorageKey = "BlazorCulture";
+            options.DefaultCulture = "zh-CN";
+            options.SupportedCultures = ["zh-CN", "en-US"];
+        });
         services.AddScoped<ICultureService, CultureService>();
         services.AddSingleton<IMenuService, MenuService>();
         services.AddValidatorsFromAssemblyContaining<Program>();
