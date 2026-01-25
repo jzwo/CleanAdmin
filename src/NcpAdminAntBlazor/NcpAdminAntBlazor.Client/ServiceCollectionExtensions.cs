@@ -1,5 +1,6 @@
 using Bit.Butil;
 using Blazilla.Extensions;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 using NcpAdminAntBlazor.Client.Infrastructure.Http;
@@ -27,37 +28,45 @@ public static class ServiceCollectionExtensions
     }
 
     /// <summary>
+    /// 注册认证相关的基础服务 (Storage, AuthState, Refresher)
+    /// </summary>
+    public static IServiceCollection AddClientAuthentication(this IServiceCollection services)
+    {
+        services.AddScoped<IUserTokenStore, UserTokenStore>();
+        services.AddScoped<IUserTokenRefresher, UserTokenRefresher>();
+
+        services.AddAuthorizationCore();
+        services.AddCascadingAuthenticationState();
+
+        services.AddScoped<JwtAuthStateProvider>();
+        services.AddScoped<AuthenticationStateProvider>(sp =>
+            sp.GetRequiredService<JwtAuthStateProvider>());
+
+        return services;
+    }
+
+    /// <summary>
     /// 添加 Kiota API 客户端
     /// </summary>
     /// <param name="services">服务集合</param>
     /// <param name="baseUrl">API 基础地址</param>
-    /// <param name="configureClient">配置 HttpClient 管道的委托（可选），用于添加自定义 Handler</param>
     /// <returns>服务集合（用于链式调用）</returns>
     public static IServiceCollection AddKiotaClient(
         this IServiceCollection services,
-        string baseUrl,
-        Action<IHttpClientBuilder>? configureClient = null)
+        string baseUrl)
     {
-        // 1. 注册认证提供程序，默认使用匿名认证提供程序
-        services.AddScoped<IAuthenticationProvider, AnonymousAuthenticationProvider>();
-
-        // 2. 注册 Kiota 核心服务
+        services.AddScoped<IAccessTokenProvider, AccessTokenProvider>();
+        services.AddScoped<BaseBearerTokenAuthenticationProvider>();
+        services.AddScoped<IAuthenticationProvider, BearerTokenAuthenticationProvider>();
+        services.AddTransient<ClientUnauthorizedHandler>();
         services.AddKiotaHandlers();
-
-        // 3. 注册 Factory 和 HttpClient
-        var builder = services.AddHttpClient<ApiClientFactory>((_, client) =>
+        var httpClientBuilder = services.AddHttpClient<ApiClientFactory>((_, client) =>
             {
-                // 设置基础地址和其他 HttpClient 配置
                 client.BaseAddress = new Uri(baseUrl);
             })
-            .AttachKiotaHandlers(); // 挂载 Kiota 必须的 Handler
+            .AttachKiotaHandlers();
+        httpClientBuilder.AddHttpMessageHandler<ClientUnauthorizedHandler>();
 
-        // 4. 【关键】执行外部传入的配置逻辑
-        // 这里允许调用者挂载 1个、2个 或 N个 任意的 Handler
-        // 例如: 401 拦截器、日志记录器、重试策略等
-        configureClient?.Invoke(builder);
-
-        // 5. 注册最终生成的 Client
         services.AddTransient(sp => sp.GetRequiredService<ApiClientFactory>().GetClient());
 
         return services;
