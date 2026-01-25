@@ -15,6 +15,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddClientServices();
 builder.AddBlazorCookies();
 
+builder.Services.AddClientAuthentication();
+
 builder.Services.AddOptions<RequestLocalizationOptions>()
     .Configure<IOptions<CultureOptions>>((locOptions, cultureConfig) =>
     {
