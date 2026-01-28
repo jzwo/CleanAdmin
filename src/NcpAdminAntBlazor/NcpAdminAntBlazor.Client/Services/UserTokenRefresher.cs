@@ -11,7 +11,7 @@ public interface IUserTokenRefresher
 
 public class UserTokenRefresher(
     IUserTokenStore userTokenStore,
-    ApiClient apiClient,
+    Lazy<ApiClient> lazyApiClient,
     JwtAuthStateProvider authStateProvider,
     ILogger<UserTokenRefresher> logger)
     : IUserTokenRefresher
@@ -68,7 +68,7 @@ public class UserTokenRefresher(
         try
         {
             logger.LogInformation("🔄 Starting token refresh for User:{UserId}", userId);
-
+            var apiClient = lazyApiClient.Value;
             var response = await apiClient.Api.Auth.RefreshToken.PostAsync(
                 new()
                 {
@@ -87,7 +87,7 @@ public class UserTokenRefresher(
                 );
 
                 await userTokenStore.StoreUserTokenAsync(newToken, isPersistent, cancellationToken);
-                
+
                 authStateProvider.NotifyStateChanged();
 
                 logger.LogInformation("✅ Token refreshed successfully.");

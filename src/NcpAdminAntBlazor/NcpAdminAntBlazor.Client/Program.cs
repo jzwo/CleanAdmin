@@ -8,7 +8,7 @@ builder.Services.AddClientServices();
 builder.AddBlazorCookies();
 
 builder.Services.AddClientAuthentication();
-builder.Services.AddKiotaClient(builder.HostEnvironment.BaseAddress);
+builder.Services.AddKiotaClient(new(builder.HostEnvironment.BaseAddress));
 
 var host = builder.Build();
 

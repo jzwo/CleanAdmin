@@ -3,7 +3,8 @@ using Microsoft.Kiota.Abstractions.Authentication;
 
 namespace NcpAdminAntBlazor.Client.Infrastructure.Http;
 
-public sealed class BearerTokenAuthenticationProvider(IAuthenticationProvider authenticationProvider)
+public sealed class BearerTokenAuthenticationProvider(
+    BaseBearerTokenAuthenticationProvider baseBearerTokenAuthenticationProvider)
     : IAuthenticationProvider
 {
     public async Task AuthenticateRequestAsync(
@@ -16,7 +17,7 @@ public sealed class BearerTokenAuthenticationProvider(IAuthenticationProvider au
             return;
         }
 
-        await authenticationProvider.AuthenticateRequestAsync(request, additionalAuthenticationContext,
+        await baseBearerTokenAuthenticationProvider.AuthenticateRequestAsync(request, additionalAuthenticationContext,
             cancellationToken);
     }
 }

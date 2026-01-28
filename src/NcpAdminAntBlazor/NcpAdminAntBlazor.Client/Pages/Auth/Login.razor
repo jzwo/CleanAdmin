@@ -1,8 +1,12 @@
 @page "/login"
-@using Console = System.Console
+@using NcpAdminAntBlazor.Client.ApiSdk
+@using NcpAdminAntBlazor.Client.Infrastructure.Http
 @inject IStringLocalizer<Login> L
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
+@inject ApiClient ApiClient
+@inject JwtAuthStateProvider JwtAuthStateProvider
+@inject IMessageService MessageService
 
 <PageTitle>@L["PageTitle"]</PageTitle>
 
@@ -84,9 +88,30 @@
         _loading = true;
         try
         {
-            // TODO: 实现登录逻辑
-            await Task.Delay(1000);
-            Console.WriteLine($"登录成功: {_model.Username}");
+            var response = await ApiClient.Api.Auth.Login.PostAsync(new()
+            {
+                Username = _model.Username,
+                Password = _model.Password
+            }, config => config.Options.Add(AnonymousRequestOption.Instance));
+            if (response is
+                {
+                    Success: true,
+                    Data: { } data
+                })
+            {
+                await JwtAuthStateProvider.NotifyLoginAsync(
+                    new UserToken(
+                        data?.UserId ?? string.Empty,
+                        data?.AccessToken ?? string.Empty,
+                        data?.AccessTokenExpiry ?? DateTimeOffset.MinValue,
+                        data?.RefreshToken ?? string.Empty,
+                        data?.RefreshTokenExpiry ?? DateTimeOffset.MinValue
+                    ),
+                    _model.RememberMe);
+                NavigationManager.NavigateTo(!string.IsNullOrWhiteSpace(ReturnUrl) ? ReturnUrl! : Home.PageUri);
+            }
+
+            _ = MessageService.ErrorAsync(response?.Message ?? "登录失败");
         }
         finally
         {

@@ -1,10 +1,20 @@
 ﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
 
 @inject IStringLocalizer<Home> L
 
 <PageTitle>@L["Title"]</PageTitle>
 
 <div style="padding: 24px;">
+    <AuthorizeView>
+        <Authorized>
+            <p style="color:green">系统认为：你已登录！(用户: @context?.User?.Identity?.Name)</p>
+        </Authorized>
+        <NotAuthorized>
+            <p style="color:red">系统认为：你未登录</p>
+        </NotAuthorized>
+    </AuthorizeView>
     <Card Title="@L["Welcome"]" Style="margin-bottom: 24px;">
         <ChildContent>
             <div style="margin-bottom: 16px;">
