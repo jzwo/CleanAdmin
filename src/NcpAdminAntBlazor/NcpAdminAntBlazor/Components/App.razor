@@ -32,7 +32,7 @@
 @code {
     [CascadingParameter] private HttpContext HttpContext { get; set; } = null!;
 
-    private static IComponentRenderMode PageRenderMode => InteractiveServer;
+    private static IComponentRenderMode PageRenderMode => new InteractiveServerRenderMode(prerender: false);
 
     private ThemeMode _currentThemeMode = ThemeMode.Dark;
     private bool IsDark => _currentThemeMode == ThemeMode.Dark;

@@ -54,6 +54,10 @@ builder.AddBlazorCookies();
 
 builder.Services.AddClientAuthentication();
 
+#pragma warning disable S1075
+builder.Services.AddKiotaClient(new("https+http://apiservice"));
+#pragma warning restore S1075
+
 builder.Services.AddOptions<RequestLocalizationOptions>()
     .Configure<IOptions<CultureOptions>>((locOptions, cultureConfig) =>
     {
@@ -96,7 +100,8 @@ app.UseRequestLocalization();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(NcpAdminAntBlazor.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(NcpAdminAntBlazor.Client._Imports).Assembly)
+    .AllowAnonymous();
 
 app.MapGet("/Culture/Set", (string? culture, string redirectUri, HttpContext httpContext) =>
 {

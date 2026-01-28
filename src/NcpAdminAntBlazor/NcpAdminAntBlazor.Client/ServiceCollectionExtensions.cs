@@ -3,6 +3,7 @@ using Blazilla.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
+using NcpAdminAntBlazor.Client.ApiSdk;
 using NcpAdminAntBlazor.Client.Infrastructure.Http;
 using NcpAdminAntBlazor.Client.Services;
 
@@ -53,7 +54,7 @@ public static class ServiceCollectionExtensions
     /// <returns>服务集合（用于链式调用）</returns>
     public static IServiceCollection AddKiotaClient(
         this IServiceCollection services,
-        string baseUrl)
+        Uri baseUrl)
     {
         services.AddScoped<IAccessTokenProvider, AccessTokenProvider>();
         services.AddScoped<BaseBearerTokenAuthenticationProvider>();
@@ -62,13 +63,13 @@ public static class ServiceCollectionExtensions
         services.AddKiotaHandlers();
         var httpClientBuilder = services.AddHttpClient<ApiClientFactory>((_, client) =>
             {
-                client.BaseAddress = new Uri(baseUrl);
+                client.BaseAddress = baseUrl;
             })
             .AttachKiotaHandlers();
         httpClientBuilder.AddHttpMessageHandler<ClientUnauthorizedHandler>();
 
-        services.AddTransient(sp => sp.GetRequiredService<ApiClientFactory>().GetClient());
-
+        services.AddTransient<ApiClient>(sp => sp.GetRequiredService<ApiClientFactory>().GetClient());
+        services.AddTransient<Lazy<ApiClient>>(sp => new Lazy<ApiClient>(sp.GetRequiredService<ApiClient>));
         return services;
     }
 
