@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
 using NcpAdminAntBlazor.Client.ApiSdk;
+using NcpAdminAntBlazor.Client.Infrastructure.Auth;
 using NcpAdminAntBlazor.Client.Infrastructure.Http;
 using NcpAdminAntBlazor.Client.Services;
 
-namespace NcpAdminAntBlazor.Client;
+namespace NcpAdminAntBlazor.Client.Extensions;
 
 public static class ServiceCollectionExtensions
 {

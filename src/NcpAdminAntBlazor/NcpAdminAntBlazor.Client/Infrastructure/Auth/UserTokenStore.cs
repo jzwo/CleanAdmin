@@ -1,7 +1,7 @@
-using Bit.Butil;
 using System.Text.Json;
+using Bit.Butil;
 
-namespace NcpAdminAntBlazor.Client.Services;
+namespace NcpAdminAntBlazor.Client.Infrastructure.Auth;
 
 public interface IUserTokenStore
 {

@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
 using NcpAdminAntBlazor.Client.Helpers;
 
-namespace NcpAdminAntBlazor.Client.Services;
+namespace NcpAdminAntBlazor.Client.Infrastructure.Auth;
 
 public class JwtAuthStateProvider(IUserTokenStore tokenStore) : AuthenticationStateProvider
 {

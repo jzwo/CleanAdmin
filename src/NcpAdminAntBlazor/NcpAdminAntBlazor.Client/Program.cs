@@ -1,12 +1,8 @@
 using BitzArt.Blazor.Cookies;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using NcpAdminAntBlazor.Client;
+using NcpAdminAntBlazor.Client.Extensions;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
-
-builder.Services.AddAuthorizationCore();
-builder.Services.AddAuthenticationStateDeserialization();
-builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddClientServices();
 builder.AddBlazorCookies();

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using NcpAdminAntBlazor.Client.Pages.Auth;
 
-namespace NcpAdminAntBlazor.Client.Infrastructure;
+namespace NcpAdminAntBlazor.Client.Extensions;
 
 /// <summary>
 /// NavigationManager 扩展方法

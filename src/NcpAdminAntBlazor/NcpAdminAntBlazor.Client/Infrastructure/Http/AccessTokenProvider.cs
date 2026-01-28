@@ -2,7 +2,8 @@ using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Kiota.Abstractions.Authentication;
 using NcpAdminAntBlazor.Client.Exceptions;
-using NcpAdminAntBlazor.Client.Services;
+using NcpAdminAntBlazor.Client.Extensions;
+using NcpAdminAntBlazor.Client.Infrastructure.Auth;
 
 namespace NcpAdminAntBlazor.Client.Infrastructure.Http;
 

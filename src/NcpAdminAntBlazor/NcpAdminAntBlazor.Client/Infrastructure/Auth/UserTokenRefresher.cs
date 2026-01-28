@@ -2,7 +2,7 @@ using NcpAdminAntBlazor.Client.ApiSdk;
 using NcpAdminAntBlazor.Client.Exceptions;
 using NcpAdminAntBlazor.Client.Infrastructure.Http;
 
-namespace NcpAdminAntBlazor.Client.Services;
+namespace NcpAdminAntBlazor.Client.Infrastructure.Auth;
 
 public interface IUserTokenRefresher
 {

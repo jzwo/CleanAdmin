@@ -2,7 +2,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using NcpAdminAntBlazor.Client.Services;
 
-namespace NcpAdminAntBlazor.Client;
+namespace NcpAdminAntBlazor.Client.Extensions;
 
 public static class WebAssemblyHostExtension
 {

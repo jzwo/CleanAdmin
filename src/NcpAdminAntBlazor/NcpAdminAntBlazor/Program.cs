@@ -1,7 +1,7 @@
 using BitzArt.Blazor.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
-using NcpAdminAntBlazor.Client;
+using NcpAdminAntBlazor.Client.Extensions;
 using NcpAdminAntBlazor.Client.Services;
 using NcpAdminAntBlazor.Components;
 
