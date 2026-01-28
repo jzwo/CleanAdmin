@@ -2,6 +2,7 @@
 @using Console = System.Console
 
 @inject Document Document
+@inject NavigationManager NavigationManager
 
 @implements IDisposable
 
@@ -38,7 +39,7 @@
                               OnClick="@CollapseToggle"/>
                     </SpaceItem>
                     <SpaceItem>
-                        <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
+                        <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")" OnClick="@ReloadPage"/>
                     </SpaceItem>
                     <SpaceItem>
                         <Breadcrumb AutoGenerate>
@@ -104,6 +105,11 @@
     private void CollapseToggle()
     {
         _collapsed = !_collapsed;
+    }
+
+    private void ReloadPage()
+    {
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 
     private async Task ToggleBrowserFullscreen()
