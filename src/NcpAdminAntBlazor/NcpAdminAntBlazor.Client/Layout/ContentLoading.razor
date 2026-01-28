@@ -1,0 +1,29 @@
+@* 
+    This component is used to display a loading indicator while the Blazor WebAssembly app is loading.
+    It checks if the renderer is interactive (i.e., the app has fully loaded) and displays the ChildContent
+    only when it is. Otherwise, it shows a loading indicator.
+    view more：https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-9.0#global-interactive-webassembly-rendering-without-prerendering
+ *@
+@if (!RendererInfo.IsInteractive)
+{
+    <!-- OPTIONAL ...
+    <HeadContent>
+        <style>
+            ...
+        </style>
+    </HeadContent>
+    -->
+    <div class="flex justify-center items-center w-full h-full min-h-screen p-4 box-border">
+        <img src="@(IsDark ? "images/loading-dark.svg" : "images/loading-light.svg")" alt="Loading..."
+             class="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] h-auto"/>
+    </div>
+}
+else
+{
+    @ChildContent
+}
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [CascadingParameter(Name = "IsDark")] public bool IsDark { get; set; }
+}

@@ -1,9 +1,8 @@
 using FluentValidation;
-using NcpAdminAntBlazor.Client.ApiSdk.Models;
 
 namespace NcpAdminAntBlazor.Client.Pages.Auth;
 
-public class LoginModelValidator : AbstractValidator<NcpAdminBlazorApiServiceEndpointsAuthenticationLoginRequest>
+public class LoginModelValidator : AbstractValidator<LoginModel>
 {
     public LoginModelValidator()
     {
