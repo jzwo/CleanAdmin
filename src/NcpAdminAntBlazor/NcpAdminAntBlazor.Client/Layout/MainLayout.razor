@@ -65,9 +65,7 @@
                 </Space>
             </Header>
             <Content>
-                <ChromeStyleReuseTabs>
-                    @Body
-                </ChromeStyleReuseTabs>
+                <ChromeStyleReuseTabs/>
             </Content>
             <Footer>Footer</Footer>
         </Layout>
@@ -120,7 +118,7 @@
             await Document.ExitFullscreen();
         }
     }
-    
+
     public void Dispose()
     {
         if (_fullscreenHandler == null) return;

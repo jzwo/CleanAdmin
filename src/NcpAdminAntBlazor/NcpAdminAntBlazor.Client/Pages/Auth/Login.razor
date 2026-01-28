@@ -70,7 +70,11 @@
 @code {
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
-    private readonly LoginModel _model = new();
+    private readonly LoginModel _model = new()
+    {
+        Username = "admin",
+        Password = "admin123456"
+    };
     private bool _loading;
 
     protected override async Task OnInitializedAsync()
@@ -110,8 +114,10 @@
                     _model.RememberMe);
                 NavigationManager.NavigateTo(!string.IsNullOrWhiteSpace(ReturnUrl) ? ReturnUrl! : Home.PageUri);
             }
-
-            _ = MessageService.ErrorAsync(response?.Message ?? "登录失败");
+            else
+            {
+                _ = MessageService.ErrorAsync(response?.Message ?? "登录失败");
+            }
         }
         finally
         {

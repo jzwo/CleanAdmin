@@ -11,6 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\NcpAdminAntBlazor\NcpAdminAntBlazor\NcpAdminAntBlazor.csproj" />
         <ProjectReference Include="..\NcpAdminBlazor.ApiService\NcpAdminBlazor.ApiService.csproj"/>
         <ProjectReference Include="..\NcpAdminBlazor.MigrationService\NcpAdminBlazor.MigrationService.csproj" />
     </ItemGroup>

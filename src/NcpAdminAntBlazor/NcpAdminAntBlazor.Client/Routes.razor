@@ -2,11 +2,13 @@
 <Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
         <ContentLoading>
-            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(DefaultLayout)">
-                <NotAuthorized>
-                    <RedirectToLogin/>
-                </NotAuthorized>
-            </AuthorizeRouteView>
+            <CascadingValue Value="routeData">
+                <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(DefaultLayout)">
+                    <NotAuthorized>
+                        <RedirectToLogin/>
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+            </CascadingValue>
         </ContentLoading>
         <FocusOnNavigate RouteData="routeData" Selector="h1"/>
     </Found>

@@ -42,10 +42,10 @@ var apiService = builder.AddProject<Projects.NcpAdminBlazor_ApiService>("apiserv
     .WaitForCompletion(migrationService)
     .PublishAsDockerComposeService((_, service) => { service.Restart = "always"; });
 
-// builder.AddProject<Projects.NcpAdminBlazor_Web>("webfrontend")
-//     .WithExternalHttpEndpoints()
-//     .WithHttpHealthCheck("/health")
-//     .WithReference(apiService)
-//     .WaitFor(apiService).PublishAsDockerComposeService((_, service) => { service.Restart = "always"; });
+builder.AddProject<Projects.NcpAdminAntBlazor>("webfrontend")
+    .WithExternalHttpEndpoints()
+    .WithHttpHealthCheck("/health")
+    .WithReference(apiService)
+    .WaitFor(apiService).PublishAsDockerComposeService((_, service) => { service.Restart = "always"; });
 
 await builder.Build().RunAsync();
