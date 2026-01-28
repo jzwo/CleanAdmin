@@ -2,7 +2,6 @@ using AntDesign;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Kiota.Abstractions.Authentication;
 using NcpAdminAntBlazor.Client.Exceptions;
-using NcpAdminAntBlazor.Client.Pages.Auth;
 using NcpAdminAntBlazor.Client.Services;
 
 namespace NcpAdminAntBlazor.Client.Infrastructure.Http;
@@ -28,8 +27,7 @@ public sealed class AccessTokenProvider(
         catch (UserRequiresLoginException ex)
         {
             await messageService.ErrorAsync(ex.Message);
-            var returnUrl = Uri.EscapeDataString(navigationManager.Uri);
-            navigationManager.NavigateTo($"{Login.PageUri}?returnUrl={returnUrl}");
+            navigationManager.NavigateToLogin();
             throw;
         }
     }
