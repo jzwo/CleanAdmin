@@ -1,11 +1,13 @@
 ﻿@using NcpAdminAntBlazor.Client.Pages.Auth
 <Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(DefaultLayout)">
-            <NotAuthorized>
-                <RedirectToLogin/>
-            </NotAuthorized>
-        </AuthorizeRouteView>
+        <ContentLoading>
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(DefaultLayout)">
+                <NotAuthorized>
+                    <RedirectToLogin/>
+                </NotAuthorized>
+            </AuthorizeRouteView>
+        </ContentLoading>
         <FocusOnNavigate RouteData="routeData" Selector="h1"/>
     </Found>
 </Router>
