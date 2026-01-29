@@ -7,6 +7,7 @@ using NcpAdminAntBlazor.Client.ApiSdk;
 using NcpAdminAntBlazor.Client.Infrastructure.Auth;
 using NcpAdminAntBlazor.Client.Infrastructure.Http;
 using NcpAdminAntBlazor.Client.Services;
+using NcpAdminAntBlazor.Client.Services.State;
 
 namespace NcpAdminAntBlazor.Client.Extensions;
 
@@ -27,6 +28,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICultureService, CultureService>();
         services.AddSingleton<IMenuService, MenuService>();
         services.AddValidatorsFromAssemblyContaining<Program>();
+        services.AddScoped<FullscreenState>();
     }
 
     /// <summary>

@@ -1,4 +1,7 @@
+@using NcpAdminAntBlazor.Client.Services.State
 @inject ReuseTabsService ReuseTabsService
+@inject FullscreenState FullscreenState
+@implements IDisposable
 
 <div class="h-full">
     <ReuseTabs Class="layout-tabs h-full flex flex-col"
@@ -14,9 +17,9 @@
                 <Button Type="@ButtonType.Text" OnClick="@ReloadPage">
                     <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
                 </Button>
-                <Button Type="@ButtonType.Text">
+                <Button Type="@ButtonType.Text" OnClick="@ToggleFullscreen">
                     <Icon
-                        Type="@(IconType.Outline.FullscreenExit)"/>
+                        Component="@(FullscreenState.IsFullscreen ? IconHelper.TailwindIcon("icon-[mingcute--fullscreen-exit-line]") : IconHelper.TailwindIcon("icon-[mingcute--fullscreen-line]"))"/>
                 </Button>
             </div>
         </TabBarExtraContent>
@@ -26,9 +29,29 @@
 @code {
     [Parameter] public string Class { get; set; } = string.Empty;
 
+    protected override void OnInitialized()
+    {
+        FullscreenState.OnChanged += OnFullscreenStateChanged;
+    }
+
+    private void OnFullscreenStateChanged()
+    {
+        StateHasChanged();
+    }
+
     private void ReloadPage()
     {
         ReuseTabsService.ReloadPage();
+    }
+
+    private void ToggleFullscreen()
+    {
+        FullscreenState.IsFullscreen = !FullscreenState.IsFullscreen;
+    }
+
+    public void Dispose()
+    {
+        FullscreenState.OnChanged -= OnFullscreenStateChanged;
     }
 
 }

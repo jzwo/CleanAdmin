@@ -1,56 +1,63 @@
 ﻿@inherits LayoutComponentBase
 @using Console = System.Console
+@using NcpAdminAntBlazor.Client.Services.State
 
 @inject Document Document
+@inject FullscreenState FullscreenState
 
 @implements IDisposable
 
 <div @ref="_layoutContainer" class="h-dvh w-dvw">
     <Layout Class="h-dvh overflow-hidden">
-        <Sider @bind-Collapsed="@_collapsed"
-               CollapsedWidth="48"
-               Class="border-r border-border bg-sider">
-            <div class="flex items-center justify-center h-16">
-                <div class="flex items-center gap-2">
-                    <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.3"/>
-                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round"/>
-                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round"/>
-                    </svg>
-                    @if (!_collapsed)
-                    {
-                        <span class="text-xl font-bold text-text">NcpAdmin</span>
-                    }
+        @if (!FullscreenState.IsFullscreen)
+        {
+            <Sider @bind-Collapsed="@_collapsed"
+                   CollapsedWidth="48"
+                   Class="border-r border-border bg-sider">
+                <div class="flex items-center justify-center h-16">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.3"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                  stroke-linejoin="round"/>
+                        </svg>
+                        @if (!_collapsed)
+                        {
+                            <span class="text-xl font-bold text-text">NcpAdmin</span>
+                        }
+                    </div>
                 </div>
-            </div>
-            <NavMenu></NavMenu>
-        </Sider>
+                <NavMenu></NavMenu>
+            </Sider>
+        }
         <Layout>
-            <Header Class="h-12 px-2 border-b border-border items-center flex bg-appbar">
-                <Button Type="@ButtonType.Text" OnClick="@CollapseToggle">
-                    <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"/>
-                </Button>
-                <Breadcrumb Class="flex-1 overflow-hidden ml-2" AutoGenerate>
-                    <BreadcrumbItem Href="/">Home</BreadcrumbItem>
-                </Breadcrumb>
-
-                <div class="h-full flex items-center justify-end">
-                    <ThemeToggle/>
-                    <CultureSelector/>
-                    <Button Type="@ButtonType.Text" OnClick="@ToggleBrowserFullscreen">
-                        <Icon
-                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"/>
+            @if (!FullscreenState.IsFullscreen)
+            {
+                <Header Class="h-12 px-2 border-b border-border items-center flex bg-appbar">
+                    <Button Type="@ButtonType.Text" OnClick="@CollapseToggle">
+                        <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"/>
                     </Button>
-                    <AvatarDropdown/>
-                </div>
-            </Header>
+                    <Breadcrumb Class="flex-1 overflow-hidden ml-2" AutoGenerate>
+                        <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                    </Breadcrumb>
+
+                    <div class="h-full flex items-center justify-end">
+                        <ThemeToggle/>
+                        <CultureSelector/>
+                        <Button Type="@ButtonType.Text" OnClick="@ToggleBrowserFullscreen">
+                            <Icon
+                                Component="@(_isBrowserFullscreen ? IconHelper.TailwindIcon("icon-[gridicons--fullscreen-exit]") : IconHelper.TailwindIcon("icon-[gridicons--fullscreen]"))"/>
+                        </Button>
+                        <AvatarDropdown/>
+                    </div>
+                </Header>
+            }
             <Content>
                 <ChromeStyleReuseTabs/>
             </Content>
-            <Footer>Footer</Footer>
         </Layout>
     </Layout>
 </div>
@@ -81,7 +88,14 @@
             };
 
             await Document.AddEventListener("fullscreenchange", _fullscreenHandler);
+
+            FullscreenState.OnChanged += OnFullscreenStateChanged;
         }
+    }
+
+    private void OnFullscreenStateChanged()
+    {
+        StateHasChanged();
     }
 
     private void CollapseToggle()
@@ -104,8 +118,12 @@
 
     public void Dispose()
     {
-        if (_fullscreenHandler == null) return;
-        Document.RemoveEventListener("fullscreenchange", _fullscreenHandler);
+        if (_fullscreenHandler != null)
+        {
+            Document.RemoveEventListener("fullscreenchange", _fullscreenHandler);
+        }
+
+        FullscreenState.OnChanged -= OnFullscreenStateChanged;
     }
 
 }
