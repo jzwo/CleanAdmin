@@ -3,7 +3,7 @@
 @inject JwtAuthStateProvider JwtAuthStateProvider
 @inject NavigationManager NavigationManager
 
-<Dropdown Class="flex items-center">
+<Dropdown  Trigger="@(new[] { Trigger.Click })">
     <Overlay>
         <Menu>
             <MenuItem Key="center">
@@ -19,7 +19,12 @@
     </Overlay>
 
     <ChildContent>
-        <Avatar Size="@AvatarSize.Default" Icon="user"/>
+        <Button Type="@ButtonType.Text">
+            <div class="flex items-center justify-center gap-2">
+                <Avatar Size="@AvatarSize.Small" Icon="user"/>
+                <span class="text-sm font-medium">Admin</span>
+            </div>
+        </Button>
     </ChildContent>
 </Dropdown>
 

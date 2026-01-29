@@ -1,15 +1,34 @@
+@inject ReuseTabsService ReuseTabsService
+
 <div class="h-full">
     <ReuseTabs Class="layout-tabs h-full flex flex-col"
-               TabBarClass="chrome-tabs-bar shrink-0 border-b border-border bg-appbar"
+               TabBarClass="chrome-tabs-bar shrink-0 border-b border-border bg-appbar px-3"
                TabPaneClass="h-full">
         <TabPaneTemplate>
             <Content Class="h-full p-3 overflow-auto">
                 @context.Body
             </Content>
         </TabPaneTemplate>
+        <TabBarExtraContent>
+            <div class="flex justify-end">
+                <Button Type="@ButtonType.Text" OnClick="@ReloadPage">
+                    <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
+                </Button>
+                <Button Type="@ButtonType.Text">
+                    <Icon
+                        Type="@(IconType.Outline.FullscreenExit)"/>
+                </Button>
+            </div>
+        </TabBarExtraContent>
     </ReuseTabs>
 </div>
 
 @code {
     [Parameter] public string Class { get; set; } = string.Empty;
+
+    private void ReloadPage()
+    {
+        ReuseTabsService.ReloadPage();
+    }
+
 }

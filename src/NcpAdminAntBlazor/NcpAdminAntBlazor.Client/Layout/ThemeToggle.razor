@@ -1,8 +1,8 @@
 @inject ThemeService ThemeService
-
-<Icon
-    Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"
-    OnClick="@ToggleTheme"/>
+<Button Type="@ButtonType.Text" OnClick="@ToggleTheme">
+    <Icon
+        Component="@IconHelper.TailwindIcon(_isDarkMode ? "icon-[tabler--moon-filled]" : "icon-[tabler--sun-filled]")"/>
+</Button>
 
 @code {
     private bool _isDarkMode;

@@ -2,7 +2,6 @@
 @using Console = System.Console
 
 @inject Document Document
-@inject NavigationManager NavigationManager
 
 @implements IDisposable
 
@@ -30,40 +29,23 @@
             <NavMenu></NavMenu>
         </Sider>
         <Layout>
-            <Header Class="h-12 px-4 border-b border-border items-center flex justify-between bg-appbar">
+            <Header Class="h-12 px-2 border-b border-border items-center flex bg-appbar">
+                <Button Type="@ButtonType.Text" OnClick="@CollapseToggle">
+                    <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"/>
+                </Button>
+                <Breadcrumb Class="flex-1 overflow-hidden ml-2" AutoGenerate>
+                    <BreadcrumbItem Href="/">Home</BreadcrumbItem>
+                </Breadcrumb>
 
-                @* 左侧区域 *@
-                <Space Size="@("24")">
-                    <SpaceItem>
-                        <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"
-                              OnClick="@CollapseToggle"/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")" OnClick="@ReloadPage"/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <Breadcrumb AutoGenerate>
-                            <BreadcrumbItem Href="/">Home</BreadcrumbItem>
-                        </Breadcrumb>
-                    </SpaceItem>
-                </Space>
-                @* 右侧区域 *@
-                <Space Size="@("24")">
-                    <SpaceItem>
-                        <ThemeToggle/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <CultureSelector/>
-                    </SpaceItem>
-                    <SpaceItem>
+                <div class="h-full flex items-center justify-end">
+                    <ThemeToggle/>
+                    <CultureSelector/>
+                    <Button Type="@ButtonType.Text" OnClick="@ToggleBrowserFullscreen">
                         <Icon
-                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"
-                            OnClick="@ToggleBrowserFullscreen"/>
-                    </SpaceItem>
-                    <SpaceItem>
-                        <AvatarDropdown/>
-                    </SpaceItem>
-                </Space>
+                            Type="@(_isBrowserFullscreen ? IconType.Outline.FullscreenExit : IconType.Outline.Fullscreen)"/>
+                    </Button>
+                    <AvatarDropdown/>
+                </div>
             </Header>
             <Content>
                 <ChromeStyleReuseTabs/>
@@ -105,11 +87,6 @@
     private void CollapseToggle()
     {
         _collapsed = !_collapsed;
-    }
-
-    private void ReloadPage()
-    {
-        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
     }
 
     private async Task ToggleBrowserFullscreen()
