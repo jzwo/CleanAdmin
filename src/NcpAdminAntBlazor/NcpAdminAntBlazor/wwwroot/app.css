@@ -2,7 +2,7 @@
 
 @theme {
     /* 在这里定义你的设计系统变量 */
-    --color-border: var(--ant-border-color-base);
+    --color-border: var(--ant-border-color-split);
     --color-sider: #ffffff;
     --color-appbar: #ffffff;
     --color-body-bg: var(--ant-layout-body-background);

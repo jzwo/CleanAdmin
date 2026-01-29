@@ -41,4 +41,11 @@
     color: currentColor !important;
 }
 
+/* ================= 仅在【折叠】时应用的样式 ================= */
+::deep .rounded-menu.ant-menu-inline-collapsed .ant-menu-item,
+::deep .rounded-menu.ant-menu-inline-collapsed .ant-menu-submenu-title {
+    margin: 4px 4px !important;
+    width: calc(100% - 8px) !important;
+    padding: 0 calc(50% - 16px / 2 - 4px) !important; /* 计算居中 */
+}
 
