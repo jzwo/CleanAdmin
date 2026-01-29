@@ -8,6 +8,7 @@ using NcpAdminAntBlazor.Client.Infrastructure.Auth;
 namespace NcpAdminAntBlazor.Client.Infrastructure.Http;
 
 public sealed class AccessTokenProvider(
+    IUserTokenStore userTokenStore,
     IUserTokenRefresher userTokenRefresher,
     NavigationManager navigationManager,
     MessageService messageService)
@@ -22,8 +23,33 @@ public sealed class AccessTokenProvider(
     {
         try
         {
-            var token = await userTokenRefresher.GetRefreshedAccessTokenAsync(cancellationToken);
-            return token;
+            var (userToken, isPersistent) = await userTokenStore.GetUserTokenAsync(cancellationToken);
+
+            if (userToken is null)
+            {
+                throw new UserRequiresLoginException("No local token found.");
+            }
+
+            if (userToken.IsAccessTokenValid)
+            {
+                return userToken.AccessToken;
+            }
+
+            if (!userToken.IsRefreshTokenValid)
+            {
+                await userTokenStore.ClearUserTokenAsync(cancellationToken);
+                throw new UserRequiresLoginException("Refresh token expired.");
+            }
+
+            var refreshedToken = await userTokenRefresher.RefreshTokenAsync(
+                userToken.UserId,
+                userToken.RefreshToken,
+                isPersistent,
+                cancellationToken);
+
+            return refreshedToken?.AccessToken is null
+                ? throw new UserRequiresLoginException("Token refresh failed.")
+                : refreshedToken.AccessToken;
         }
         catch (UserRequiresLoginException ex)
         {

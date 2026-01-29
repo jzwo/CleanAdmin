@@ -1,54 +1,25 @@
 using NcpAdminAntBlazor.Client.ApiSdk;
-using NcpAdminAntBlazor.Client.Exceptions;
 using NcpAdminAntBlazor.Client.Infrastructure.Http;
 
 namespace NcpAdminAntBlazor.Client.Infrastructure.Auth;
 
 public interface IUserTokenRefresher
 {
-    Task<string> GetRefreshedAccessTokenAsync(CancellationToken cancellationToken = default);
+    Task<UserToken?> RefreshTokenAsync(string userId, string refreshToken, bool isPersistent, CancellationToken cancellationToken = default);
 }
 
 public class UserTokenRefresher(
-    IUserTokenStore userTokenStore,
     Lazy<ApiClient> lazyApiClient,
+    IUserTokenStore userTokenStore,
     JwtAuthStateProvider authStateProvider,
     ILogger<UserTokenRefresher> logger)
     : IUserTokenRefresher
 {
     private Task<UserToken?>? _currentRefreshTask;
-
     private readonly Lock _refreshLock = new();
 
-    public async Task<string> GetRefreshedAccessTokenAsync(CancellationToken cancellationToken = default)
-    {
-        var (userToken, isPersistent) = await userTokenStore.GetUserTokenAsync(cancellationToken);
-
-        if (userToken is null)
-        {
-            throw new UserRequiresLoginException("No local token found.");
-        }
-
-        if (userToken.IsAccessTokenValid)
-        {
-            return userToken.AccessToken;
-        }
-
-        if (!userToken.IsRefreshTokenValid)
-        {
-            await userTokenStore.ClearUserTokenAsync(cancellationToken);
-            throw new UserRequiresLoginException("Refresh token expired.");
-        }
-
-        var refreshedToken =
-            await RefreshUserTokenOnceAsync(userToken.UserId, userToken.RefreshToken, isPersistent, cancellationToken);
-
-        return refreshedToken?.AccessToken
-               ?? throw new UserRequiresLoginException("Token refresh failed.");
-    }
-
-    private Task<UserToken?> RefreshUserTokenOnceAsync(string userId, string refreshToken, bool isPersistent,
-        CancellationToken cancellationToken)
+    public Task<UserToken?> RefreshTokenAsync(string userId, string refreshToken, bool isPersistent,
+        CancellationToken cancellationToken = default)
     {
         lock (_refreshLock)
         {
