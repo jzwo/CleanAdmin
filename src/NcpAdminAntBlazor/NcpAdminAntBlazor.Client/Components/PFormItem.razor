@@ -1,0 +1,215 @@
+@implements IDisposable
+
+
+<GridCol Span="@Span"
+         Xs="@Xs"
+         Sm="@Sm"
+         Md="@Md"
+         Lg="@Lg"
+         Xl="@Xl"
+         Xxl="@Xxl"
+         Class="@(IsVisible ? null : "hidden")">
+    <FormItem Label="@Label"
+              LabelTemplate="@LabelTemplate"
+              LabelAlign="@LabelAlign"
+              LabelStyle="@LabelStyle"
+              LabelCol="@LabelCol"
+              WrapperCol="@WrapperCol"
+              Required="@Required"
+              NoStyle="@NoStyle"
+              Rules="@Rules"
+              HasFeedback="@HasFeedback"
+              ShowFeedbackOnError="@ShowFeedbackOnError"
+              ValidateStatus="@ValidateStatus"
+              Help="@Help"
+              ToolTip="@ToolTip"
+              Class="@Class"
+              Style="@Style">
+        @ChildContent
+    </FormItem>
+</GridCol>
+
+@code {
+
+    /// <summary>
+    /// 父级 PForm 组件
+    /// </summary>
+    [CascadingParameter]
+    public IPForm? Parent { get; set; }
+
+    /// <summary>
+    /// 是否总是显示（不受折叠影响）
+    /// </summary>
+    [Parameter]
+    public bool AlwaysShow { get; set; }
+
+    /// <summary>
+    /// 判断是否应该显示
+    /// </summary>
+    private bool IsVisible => Parent?.ShouldShowField(this) ?? true;
+
+    protected override void OnInitialized()
+    {
+        Parent?.AddField(this);
+    }
+
+    public void Dispose()
+    {
+        Parent?.RemoveField(this);
+    }
+
+    #region GridCol Parameters
+
+    /// <summary>
+    /// 栅格占位格数 (1-24)
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<string, int> Span { get; set; } = 24;
+
+    /// <summary>
+    /// &lt;576px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<int, EmbeddedProperty> Xs { get; set; }
+
+    /// <summary>
+    /// ≥576px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<int, EmbeddedProperty> Sm { get; set; }
+
+    /// <summary>
+    /// ≥768px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<int, EmbeddedProperty> Md { get; set; }
+
+    /// <summary>
+    /// ≥992px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<int, EmbeddedProperty> Lg { get; set; }
+
+    /// <summary>
+    /// ≥1200px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<int, EmbeddedProperty> Xl { get; set; }
+
+    /// <summary>
+    /// ≥1600px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<int, EmbeddedProperty> Xxl { get; set; }
+
+    #endregion
+
+    #region FormItem Parameters
+
+    /// <summary>
+    /// 标签文本
+    /// </summary>
+    [Parameter]
+    public string? Label { get; set; }
+
+    /// <summary>
+    /// 自定义标签模板
+    /// </summary>
+    [Parameter]
+    public RenderFragment? LabelTemplate { get; set; }
+
+    /// <summary>
+    /// 标签列布局
+    /// </summary>
+    [Parameter]
+    public ColLayoutParam? LabelCol { get; set; }
+
+    /// <summary>
+    /// 标签对齐方式
+    /// </summary>
+    [Parameter]
+    public AntLabelAlignType? LabelAlign { get; set; }
+
+    /// <summary>
+    /// 标签样式
+    /// </summary>
+    [Parameter]
+    public string? LabelStyle { get; set; }
+
+    /// <summary>
+    /// 输入框列布局
+    /// </summary>
+    [Parameter]
+    public ColLayoutParam? WrapperCol { get; set; }
+
+    /// <summary>
+    /// 是否必填
+    /// </summary>
+    [Parameter]
+    public bool Required { get; set; }
+
+    /// <summary>
+    /// 无样式，作为纯字段控件使用
+    /// </summary>
+    [Parameter]
+    public bool NoStyle { get; set; }
+
+    /// <summary>
+    /// 校验规则
+    /// </summary>
+    [Parameter]
+    public FormValidationRule[]? Rules { get; set; }
+
+    /// <summary>
+    /// 是否显示校验状态图标
+    /// </summary>
+    [Parameter]
+    public bool HasFeedback { get; set; }
+
+    /// <summary>
+    /// 是否在错误时显示反馈图标
+    /// </summary>
+    [Parameter]
+    public bool ShowFeedbackOnError { get; set; }
+
+    /// <summary>
+    /// 校验状态
+    /// </summary>
+    [Parameter]
+    public FormValidateStatus ValidateStatus { get; set; }
+
+    /// <summary>
+    /// 提示信息
+    /// </summary>
+    [Parameter]
+    public string? Help { get; set; }
+
+    /// <summary>
+    /// 标签提示信息
+    /// </summary>
+    [Parameter]
+    public string? ToolTip { get; set; }
+
+    /// <summary>
+    /// 样式类
+    /// </summary>
+    [Parameter]
+    public string? Class { get; set; }
+
+    /// <summary>
+    /// 内联样式
+    /// </summary>
+    [Parameter]
+    public string? Style { get; set; }
+
+    /// <summary>
+    /// 子内容
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    #endregion
+
+}
+
+

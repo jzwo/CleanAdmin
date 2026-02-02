@@ -1,65 +1,31 @@
 @page "/User"
 @using NcpAdminAntBlazor.Client.ApiSdk
 @using NcpAdminAntBlazor.Client.ApiSdk.Models
+@using NcpAdminAntBlazor.Client.Components
 @inject ApiClient ApiClient
 @inject IMessageService MessageService
 
 <PageTitle>用户管理</PageTitle>
 
 <div class="h-full flex flex-col">
-    <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
-        <Form Model="@_searchModel"
-              Layout="FormLayout.Inline"
-              LabelColSpan="6"
-              WrapperColSpan="18"
-              OnFinish="OnSearch">
-            <GridRow Gutter="@((24, 12))">
-                <GridCol Span="6">
-                    <FormItem Label="用户名">
-                        <Input @bind-Value="@context.Username" Placeholder="请输入用户名" AllowClear/>
-                    </FormItem>
-                </GridCol>
-                <GridCol Span="6">
-                    <FormItem Label="真实姓名">
-                        <Input @bind-Value="@context.RealName" Placeholder="请输入真实姓名" AllowClear/>
-                    </FormItem>
-                </GridCol>
-                <GridCol Span="6">
-                    <FormItem Label="邮箱">
-                        <Input @bind-Value="@context.Email" Placeholder="请输入邮箱" AllowClear/>
-                    </FormItem>
-                </GridCol>
-                <GridCol Span="6">
-                    <FormItem Label="手机号">
-                        <Input @bind-Value="@context.Phone" Placeholder="请输入手机号" AllowClear/>
-                    </FormItem>
-                </GridCol>
-                <div class="flex flex-1 justify-end">
-                    <FormItem>
-                        <Space>
-                            <SpaceItem>
-                                <Button Type="@ButtonType.Primary" HtmlType="submit"
-                                        Icon="@IconType.Outline.Search">
-                                    查询
-                                </Button>
-                            </SpaceItem>
-                            <SpaceItem>
-                                <Button OnClick="OnReset" Icon="@IconType.Outline.Reload">
-                                    重置
-                                </Button>
-                            </SpaceItem>
-                            <SpaceItem>
-                                <Button OnClick="OnReset" Class="px-0" Type="@ButtonType.Link">
-                                    展开
-                                    <Icon Type="@IconType.Outline.Down"></Icon>
-                                </Button>
-                            </SpaceItem>
-                        </Space>
-                    </FormItem>
-                </div>
-            </GridRow>
-        </Form>
-    </div>
+    <PSearchForm TModel="SearchModel"
+                 Model="@_searchModel"
+                 Loading="@_loading"
+                 OnFinish="OnSearch"
+                 OnReset="OnReset">
+        <PFormItem Label="用户名" Span="8">
+            <Input @bind-Value="@context.Username" Placeholder="请输入用户名" AllowClear/>
+        </PFormItem>
+        <PFormItem Label="真实姓名" Span="8">
+            <Input @bind-Value="@context.RealName" Placeholder="请输入真实姓名" AllowClear/>
+        </PFormItem>
+        <PFormItem Label="邮箱" Span="8">
+            <Input @bind-Value="@context.Email" Placeholder="请输入邮箱" AllowClear/>
+        </PFormItem>
+        <PFormItem Label="手机号" Span="8">
+            <Input @bind-Value="@context.Phone" Placeholder="请输入手机号" AllowClear/>
+        </PFormItem>
+    </PSearchForm>
 
     <div class="px-4 py-2 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
         <Table TItem="NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto"
@@ -68,28 +34,32 @@
                AutoHeight
                Loading="@_loading"
                Total="_total">
-            <TitleTemplate>
-                <div class="flex items-center justify-between">
-                    <div class="pl-1 text-base font-medium">
-                        用户列表
-                    </div>
-                    <Space Class="pr-1">
-                        <SpaceItem>
-                            <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">
-                                新增
-                            </Button>
-                        </SpaceItem>
-                        <SpaceItem>
-                            <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Search"
-                                    Shape="ButtonShape.Circle"></Button>
-                        </SpaceItem>
-                        <SpaceItem>
-                            <Button Icon="@IconType.Outline.Reload" OnClick="LoadDataAsync" Shape="ButtonShape.Circle">
-                            </Button>
-                        </SpaceItem>
-                    </Space>
-                </div>
-            </TitleTemplate>
+            @* <TitleTemplate> *@
+            @*     <div class="flex items-center justify-between"> *@
+            @*         <div class="pl-1 text-base font-medium"> *@
+            @*             用户列表 *@
+            @*         </div> *@
+            @*         <Space Class="pr-1"> *@
+            @*             <SpaceItem> *@
+            @*                 <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus"> *@
+            @*                     新增 *@
+            @*                 </Button> *@
+            @*             </SpaceItem> *@
+            @*             <SpaceItem> *@
+            @*                 <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Search" *@
+            @*                         Shape="ButtonShape.Circle"></Button> *@
+            @*             </SpaceItem> *@
+            @*             <SpaceItem> *@
+            @*                 <Button Icon="@IconType.Outline.Reload" OnClick="LoadDataAsync" Shape="ButtonShape.Circle"> *@
+            @*                 </Button> *@
+            @*             </SpaceItem> *@
+            @*             <SpaceItem> *@
+            @*                 <Button Icon="@IconType.Outline.Setting" Shape="ButtonShape.Circle"> *@
+            @*                 </Button> *@
+            @*             </SpaceItem> *@
+            @*         </Space> *@
+            @*     </div> *@
+            @* </TitleTemplate> *@
             <PaginationTemplate>
                 <Pagination Class="@(context.PaginationClass + " mb-2 justify-end")"
                             Size="PaginationSize.Small"
@@ -100,12 +70,14 @@
                             OnChange="context.HandlePageChange"/>
             </PaginationTemplate>
             <ChildContent>
-                <PropertyColumn ColIndex="" Fixed="" Property="c => c.Username" Title="用户名"/>
-                <PropertyColumn ColIndex="" Fixed="" Property="c => c.RealName" Title="真实姓名"/>
-                <PropertyColumn ColIndex="" Fixed="" Property="c => c.Email" Title="邮箱"/>
-                <PropertyColumn ColIndex="" Fixed="" Property="c => c.Phone" Title="手机号"/>
-                <PropertyColumn ColIndex="" Fixed="" Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
-                <ActionColumn ColIndex="" Fixed="" Title="操作" Width="180">
+                <PropertyColumn Property="c => c.Username" Title="用户名"/>
+                <PropertyColumn Property="c => c.RealName" Title="真实姓名"/>
+                <PropertyColumn Property="c => c.Email" Title="邮箱"/>
+                <PropertyColumn Property="c => c.Phone" Title="手机号"/>
+                <PropertyColumn Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
+
+                @* <PGenerateColumns HideColumnsByName="@(["Id"])"></PGenerateColumns> *@
+                <ActionColumn Title="操作" Width="180">
                     <Space>
                         <SpaceItem>
                             <Button Size="@ButtonSize.Small" Type="@ButtonType.Link">
@@ -180,7 +152,7 @@
         }
     }
 
-    private async Task OnSearch(EditContext editContext)
+    private async Task OnSearch(EditContext model)
     {
         _pageIndex = 1;
         await LoadDataAsync();

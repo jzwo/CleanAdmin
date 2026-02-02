@@ -1,0 +1,13 @@
+<div class="h-full flex flex-col">
+    @if (QueryType != null)
+    {
+        <PTableSearch TSearchModel="QueryType" OnSearch="OnSearch" OnReset="OnReset"/>
+    }
+    <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
+    </div>
+</div>
+<h3>PTable</h3>
+
+@code {
+    [Parameter] public Type? QueryType { get; set; }
+}

@@ -1,0 +1,356 @@
+@typeparam TModel where TModel : class, new()
+@implements IPForm
+
+<CascadingValue Value="(IPForm)this" IsFixed="true">
+    <Form @ref="_form"
+          Model="@Model"
+          Layout="@Layout"
+          LabelColSpan="@LabelColSpan"
+          WrapperColSpan="@WrapperColSpan"
+        
+          Size="@Size"
+          RequiredMark="@RequiredMark"
+          ValidateOnChange="@ValidateOnChange"
+          Loading="@Loading"
+          OnFinish="HandleFinish"
+          OnFinishFailed="HandleFinishFailed"
+          OnFieldChanged="HandleFieldChanged"
+          Class="@Class"
+          Style="@Style">
+        <FluentValidator/>
+        @if (Validator != null)
+        {
+            @Validator
+        }
+        <GridRow Class="@GridClass" Gutter="@Gutter">
+            @ChildContent(context)
+        </GridRow>
+        @if (FooterContent != null)
+        {
+            @FooterContent
+        }
+        else if (ShowDefaultFooter)
+        {
+            <FormItem WrapperCol="@GetFooterWrapperCol()">
+                <Space>
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" HtmlType="submit" Loading="@Loading">
+                            @SubmitText
+                        </Button>
+                    </SpaceItem>
+                    @if (ShowResetButton)
+                    {
+                        <SpaceItem>
+                            <Button OnClick="HandleReset" Disabled="@Loading">
+                                @ResetText
+                            </Button>
+                        </SpaceItem>
+                    }
+                </Space>
+            </FormItem>
+        }
+    </Form>
+</CascadingValue>
+
+@code {
+    private Form<TModel>? _form;
+    private readonly List<PFormItem> _fields = new();
+
+    #region Collapse Parameters
+
+    /// <summary>
+    /// 是否启用折叠功能
+    /// </summary>
+    [Parameter]
+    public bool Collapsible { get; set; }
+
+    /// <summary>
+    /// 是否折叠状态
+    /// </summary>
+    [Parameter]
+    public bool Collapsed { get; set; } = true;
+
+    /// <summary>
+    /// 折叠时显示的字段数量
+    /// </summary>
+    [Parameter]
+    public int CollapseCount { get; set; } = 2;
+
+    #endregion
+
+    #region Form Parameters
+
+    /// <summary>
+    /// 表单模型
+    /// </summary>
+    [Parameter, EditorRequired]
+    public TModel Model { get; set; } = new();
+
+    /// <summary>
+    /// 表单布局
+    /// </summary>
+    [Parameter]
+    public FormLayout Layout { get; set; } = FormLayout.Horizontal;
+
+    /// <summary>
+    /// 标签列宽度
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<string, int> LabelColSpan { get; set; } = 6;
+
+    /// <summary>
+    /// 输入框列宽度
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<string, int> WrapperColSpan { get; set; } = 18;
+
+    /// <summary>
+    /// 标签列布局
+    /// </summary>
+    [Parameter]
+    public ColLayoutParam LabelCol { get; set; } = new();
+
+    /// <summary>
+    /// 输入框列布局
+    /// </summary>
+    [Parameter]
+    public ColLayoutParam WrapperCol { get; set; } = new();
+
+    /// <summary>
+    /// 标签对齐方式
+    /// </summary>
+    [Parameter]
+    public AntLabelAlignType? LabelAlign { get; set; }
+
+    /// <summary>
+    /// 表单大小
+    /// </summary>
+    [Parameter]
+    public FormSize? Size { get; set; }
+
+    /// <summary>
+    /// 必填标记显示方式
+    /// </summary>
+    [Parameter]
+    public FormRequiredMark RequiredMark { get; set; } = FormRequiredMark.Required;
+
+    /// <summary>
+    /// 是否在值改变时验证
+    /// </summary>
+    [Parameter]
+    public bool ValidateOnChange { get; set; } = true;
+
+    /// <summary>
+    /// 是否正在加载
+    /// </summary>
+    [Parameter]
+    public bool Loading { get; set; }
+
+    /// <summary>
+    /// 自定义验证器
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Validator { get; set; }
+
+    /// <summary>
+    /// 表单内容（在GridRow内部渲染）
+    /// </summary>
+    [Parameter, EditorRequired]
+    public RenderFragment<TModel> ChildContent { get; set; } = default!;
+
+    /// <summary>
+    /// 自定义底部内容
+    /// </summary>
+    [Parameter]
+    public RenderFragment? FooterContent { get; set; }
+
+    /// <summary>
+    /// 样式类
+    /// </summary>
+    [Parameter]
+    public string? Class { get; set; }
+
+    /// <summary>
+    /// 内联样式
+    /// </summary>
+    [Parameter]
+    public string? Style { get; set; }
+
+    #endregion
+
+    #region Grid Parameters
+    
+    [Parameter] 
+    public string? GridClass { get; set; }
+
+    /// <summary>
+    /// Grid行间隔 (水平间隔, 垂直间隔)
+    /// </summary>
+    [Parameter]
+    public (int, int) Gutter { get; set; } = (16, 16);
+
+    #endregion
+
+    #region Footer Parameters
+
+    /// <summary>
+    /// 是否显示默认底部按钮
+    /// </summary>
+    [Parameter]
+    public bool ShowDefaultFooter { get; set; } = true;
+
+    /// <summary>
+    /// 是否显示重置按钮
+    /// </summary>
+    [Parameter]
+    public bool ShowResetButton { get; set; } = true;
+
+    /// <summary>
+    /// 提交按钮文字
+    /// </summary>
+    [Parameter]
+    public string SubmitText { get; set; } = "提交";
+
+    /// <summary>
+    /// 重置按钮文字
+    /// </summary>
+    [Parameter]
+    public string ResetText { get; set; } = "重置";
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// 表单提交成功时触发
+    /// </summary>
+    [Parameter]
+    public EventCallback<EditContext> OnFinish { get; set; }
+
+    /// <summary>
+    /// 表单提交失败时触发
+    /// </summary>
+    [Parameter]
+    public EventCallback<EditContext> OnFinishFailed { get; set; }
+
+    /// <summary>
+    /// 表单字段改变时触发
+    /// </summary>
+    [Parameter]
+    public EventCallback<FieldChangedEventArgs> OnFieldChanged { get; set; }
+
+    /// <summary>
+    /// 重置事件
+    /// </summary>
+    [Parameter]
+    public EventCallback OnReset { get; set; }
+
+    #endregion
+
+    /// <summary>
+    /// 获取表单引用
+    /// </summary>
+    public Form<TModel>? GetForm() => _form;
+
+    /// <summary>
+    /// 提交表单
+    /// </summary>
+    public void Submit() => _form?.Submit();
+
+    /// <summary>
+    /// 重置表单
+    /// </summary>
+    public void Reset() => _form?.Reset();
+
+    /// <summary>
+    /// 验证表单
+    /// </summary>
+    public bool Validate() => _form?.Validate() ?? false;
+
+    /// <summary>
+    /// 重置验证状态
+    /// </summary>
+    public void ValidationReset() => _form?.ValidationReset();
+
+    private async Task HandleFinish(EditContext editContext)
+    {
+        await OnFinish.InvokeAsync(editContext);
+    }
+
+    private async Task HandleFinishFailed(EditContext editContext)
+    {
+        await OnFinishFailed.InvokeAsync(editContext);
+    }
+
+    private async Task HandleFieldChanged(FieldChangedEventArgs args)
+    {
+        await OnFieldChanged.InvokeAsync(args);
+    }
+
+    private async Task HandleReset()
+    {
+        Reset();
+        await OnReset.InvokeAsync();
+    }
+
+    private ColLayoutParam? GetFooterWrapperCol()
+    {
+        if (Layout == FormLayout.Horizontal)
+        {
+            var offset = LabelColSpan.Match(
+                str => int.TryParse(str, out var i) ? i : 6,
+                i => i
+            );
+            return new ColLayoutParam { Offset = offset.ToString() };
+        }
+
+        return null;
+    }
+
+    #region Field Registration
+
+    /// <summary>
+    /// 注册表单字段
+    /// </summary>
+    public void AddField(PFormItem field)
+    {
+        if (!_fields.Contains(field))
+        {
+            _fields.Add(field);
+        }
+    }
+
+    /// <summary>
+    /// 移除表单字段
+    /// </summary>
+    public void RemoveField(PFormItem field)
+    {
+        _fields.Remove(field);
+    }
+
+    /// <summary>
+    /// 判断字段是否应该显示
+    /// </summary>
+    public bool ShouldShowField(PFormItem field)
+    {
+        if (!Collapsible) return true;
+        if (!Collapsed) return true;
+        if (field.AlwaysShow) return true;
+
+        var index = _fields.IndexOf(field);
+        return index == -1 || index < CollapseCount;
+    }
+
+    /// <summary>
+    /// 已注册的字段数量
+    /// </summary>
+    public int FieldCount => _fields.Count;
+
+    /// <summary>
+    /// 是否为Inline布局
+    /// </summary>
+    public bool IsInlineLayout => Layout == FormLayout.Inline;
+
+    #endregion
+
+}
