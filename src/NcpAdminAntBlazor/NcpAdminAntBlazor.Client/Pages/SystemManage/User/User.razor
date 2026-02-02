@@ -1,0 +1,272 @@
+@page "/User"
+@using NcpAdminAntBlazor.Client.ApiSdk
+@using NcpAdminAntBlazor.Client.ApiSdk.Models
+@inject ApiClient ApiClient
+@inject IMessageService MessageService
+
+<PageTitle>用户管理</PageTitle>
+
+<div class="h-full flex flex-col">
+    <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
+        <Form Model="@_searchModel"
+              Layout="FormLayout.Inline"
+              LabelColSpan="6"
+              WrapperColSpan="18"
+              OnFinish="OnSearch">
+            <GridRow Gutter="@((24, 12))">
+                <GridCol Span="6">
+                    <FormItem Label="用户名">
+                        <Input @bind-Value="@context.Username" Placeholder="请输入用户名" AllowClear/>
+                    </FormItem>
+                </GridCol>
+                <GridCol Span="6">
+                    <FormItem Label="真实姓名">
+                        <Input @bind-Value="@context.RealName" Placeholder="请输入真实姓名" AllowClear/>
+                    </FormItem>
+                </GridCol>
+                <GridCol Span="6">
+                    <FormItem Label="邮箱">
+                        <Input @bind-Value="@context.Email" Placeholder="请输入邮箱" AllowClear/>
+                    </FormItem>
+                </GridCol>
+                <GridCol Span="6">
+                    <FormItem Label="手机号">
+                        <Input @bind-Value="@context.Phone" Placeholder="请输入手机号" AllowClear/>
+                    </FormItem>
+                </GridCol>
+                <div class="flex flex-1 justify-end">
+                    <FormItem>
+                        <Space>
+                            <SpaceItem>
+                                <Button Type="@ButtonType.Primary" HtmlType="submit"
+                                        Icon="@IconType.Outline.Search">
+                                    查询
+                                </Button>
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Button OnClick="OnReset" Icon="@IconType.Outline.Reload">
+                                    重置
+                                </Button>
+                            </SpaceItem>
+                            <SpaceItem>
+                                <Button OnClick="OnReset" Class="px-0" Type="@ButtonType.Link">
+                                    展开
+                                    <Icon Type="@IconType.Outline.Down"></Icon>
+                                </Button>
+                            </SpaceItem>
+                        </Space>
+                    </FormItem>
+                </div>
+            </GridRow>
+        </Form>
+    </div>
+
+    <div class="px-4 py-2 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
+        <Table TItem="NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto"
+               DataSource="@_users"
+               ScrollY=""
+               AutoHeight
+               Loading="@_loading"
+               Total="_total">
+            <TitleTemplate>
+                <div class="flex items-center justify-between">
+                    <div class="pl-1 text-base font-medium">
+                        用户列表
+                    </div>
+                    <Space Class="pr-1">
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">
+                                新增
+                            </Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Search"
+                                    Shape="ButtonShape.Circle"></Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Button Icon="@IconType.Outline.Reload" OnClick="LoadDataAsync" Shape="ButtonShape.Circle">
+                            </Button>
+                        </SpaceItem>
+                    </Space>
+                </div>
+            </TitleTemplate>
+            <PaginationTemplate>
+                <Pagination Class="@(context.PaginationClass + " mb-2 justify-end")"
+                            Size="PaginationSize.Small"
+                            Total="context.Total"
+                            PageSize="context.PageSize"
+                            Current="context.PageIndex"
+                            ShowSizeChanger
+                            OnChange="context.HandlePageChange"/>
+            </PaginationTemplate>
+            <ChildContent>
+                <PropertyColumn ColIndex="" Fixed="" Property="c => c.Username" Title="用户名"/>
+                <PropertyColumn ColIndex="" Fixed="" Property="c => c.RealName" Title="真实姓名"/>
+                <PropertyColumn ColIndex="" Fixed="" Property="c => c.Email" Title="邮箱"/>
+                <PropertyColumn ColIndex="" Fixed="" Property="c => c.Phone" Title="手机号"/>
+                <PropertyColumn ColIndex="" Fixed="" Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
+                <ActionColumn ColIndex="" Fixed="" Title="操作" Width="180">
+                    <Space>
+                        <SpaceItem>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link">
+                                编辑
+                            </Button>
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Popconfirm Title="确定要删除该用户吗？"
+                                        OnConfirm="() => OnDelete(context)"
+                                        OkText="确定"
+                                        CancelText="取消">
+                                <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
+                                    删除
+                                </Button>
+                            </Popconfirm>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </ChildContent>
+        </Table>
+    </div>
+</div>
+
+@code {
+    private bool _loading;
+    private List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto> _users = new();
+    private int _total;
+    private int _pageIndex = 1;
+    private int _pageSize = 10;
+    private readonly SearchModel _searchModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        _loading = true;
+        try
+        {
+            // var response = await ApiClient.Api.User.List.GetAsync(config =>
+            // {
+            //     config.QueryParameters.PageIndex = _pageIndex;
+            //     config.QueryParameters.PageSize = _pageSize;
+            //     config.QueryParameters.CountTotal = true;
+            //     config.QueryParameters.Username = string.IsNullOrWhiteSpace(_searchModel.Username) ? null : _searchModel.Username;
+            //     config.QueryParameters.RealName = string.IsNullOrWhiteSpace(_searchModel.RealName) ? null : _searchModel.RealName;
+            //     config.QueryParameters.Email = string.IsNullOrWhiteSpace(_searchModel.Email) ? null : _searchModel.Email;
+            //     config.QueryParameters.Phone = string.IsNullOrWhiteSpace(_searchModel.Phone) ? null : _searchModel.Phone;
+            // });
+            //
+            // if (response is { Success: true, Data: { } data })
+            // {
+            //     _users = data.Items?.ToList() ?? new List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto>();
+            //     _total = data.Total ?? 0;
+            // }
+            // else
+            // {
+            //     await MessageService.ErrorAsync(response?.Message ?? "获取用户列表失败");
+            // }
+            _users = GenerateMockUsers();
+            _total = _users.Count;
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"获取用户列表失败: {ex.Message}");
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private async Task OnSearch(EditContext editContext)
+    {
+        _pageIndex = 1;
+        await LoadDataAsync();
+    }
+
+    private async Task OnReset()
+    {
+        _searchModel.Username = null;
+        _searchModel.RealName = null;
+        _searchModel.Email = null;
+        _searchModel.Phone = null;
+        _pageIndex = 1;
+        await LoadDataAsync();
+    }
+
+    private async Task OnPageIndexChange(PaginationEventArgs args)
+    {
+        _pageIndex = args.Page;
+        await LoadDataAsync();
+    }
+
+    private async Task OnPageSizeChange(PaginationEventArgs args)
+    {
+        _pageSize = args.PageSize;
+        _pageIndex = 1;
+        await LoadDataAsync();
+    }
+
+    private async Task OnDelete(NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto user)
+    {
+        try
+        {
+            var response = await ApiClient.Api.User[user.Id!].DeletePath.DeleteAsync();
+            if (response is { Success: true })
+            {
+                await MessageService.SuccessAsync("删除成功");
+                await LoadDataAsync();
+            }
+            else
+            {
+                await MessageService.ErrorAsync(response?.Message ?? "删除失败");
+            }
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"删除失败: {ex.Message}");
+        }
+    }
+
+    private class SearchModel
+    {
+        public string? Username { get; set; }
+        public string? RealName { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
+    }
+
+    // 生成虚拟用户数据
+    private List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto> GenerateMockUsers()
+    {
+        var mockUsers = new List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto>();
+
+        var usernames = new[] { "admin", "zhangsan", "lisi", "wangwu", "zhaoliu", "sunqi", "zhouba", "wujiu", "zhengshi", "liuyi" };
+        var realNames = new[] { "管理员", "张三", "李四", "王五", "赵六", "孙七", "周八", "吴九", "郑十", "刘一" };
+        var emailDomains = new[] { "qq.com", "163.com", "gmail.com", "outlook.com" };
+
+        for (int i = 0; i < 25; i++)
+        {
+            var username = i < usernames.Length ? usernames[i] : $"user{i + 1}";
+            var realName = i < realNames.Length ? realNames[i] : $"用户{i + 1}";
+
+            // 生成8位手机号后缀
+            var phoneSuffix = (10000000 + i * 123456).ToString().PadLeft(8, '0').Substring(0, 8);
+
+            mockUsers.Add(new NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto
+            {
+                Id = Guid.NewGuid().ToString(),
+                Username = username,
+                RealName = realName,
+                Email = $"{username}@{emailDomains[i % emailDomains.Length]}",
+                Phone = $"138{phoneSuffix}",
+                CreatedAt = DateTime.Now.AddDays(-i * 5)
+            });
+        }
+
+        return mockUsers;
+    }
+
+}

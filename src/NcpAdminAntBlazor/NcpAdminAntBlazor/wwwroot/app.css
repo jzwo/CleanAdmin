@@ -11,6 +11,7 @@
     --radius-borderbase: var(--ant-border-radius-base);
     --color-item-hover-bg: var(--ant-item-hover-bg);
     --color-item-active-bg: var(--ant-item-active-bg);
+    --color-content-bg: var(--ant-card-background);
 }
 
 @layer base {
