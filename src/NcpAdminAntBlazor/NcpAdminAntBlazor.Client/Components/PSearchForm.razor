@@ -1,59 +1,57 @@
 @typeparam TModel where TModel : class, new()
 
-<div class="@ContainerClass" style="@ContainerStyle">
-    <PForm @ref="_form"
-           TModel="TModel"
-           Model="@Model"
-           GridClass="w-full"
-           Layout="FormLayout.Inline"
-           LabelColSpan="@LabelColSpan"
-           WrapperColSpan="@WrapperColSpan"
-           Gutter="@Gutter"
-           Loading="@Loading"
-           ShowDefaultFooter="false"
-           Collapsible="@(!DisableCollapse)"
-           Collapsed="@(!_expanded)"
-           CollapseCount="@CollapseCount"
-           OnFinish="OnFinish">
-        <ChildContent Context="context">
-            @ChildContent(context)
-            <GridCol Flex=@("auto")>
-                <div class="flex justify-end">
-                    <Space>
+<PForm @ref="_form"
+       TModel="TModel"
+       Model="@Model"
+       GridClass="w-full"
+       Layout="FormLayout.Inline"
+       LabelColSpan="@LabelColSpan"
+       WrapperColSpan="@WrapperColSpan"
+       Gutter="@Gutter"
+       Loading="@Loading"
+       ShowDefaultFooter="false"
+       Collapsible="@(!DisableCollapse)"
+       Collapsed="@(!_expanded)"
+       CollapseCount="@CollapseCount"
+       OnFinish="OnFinish">
+    <ChildContent Context="context">
+        @ChildContent(context)
+        <GridCol Flex=@("auto")>
+            <div class="flex justify-end">
+                <Space>
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary"
+                                HtmlType="submit"
+                                Icon="@IconType.Outline.Search"
+                                Loading="@Loading">
+                            @SearchText
+                        </Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button OnClick="@HandleReset"
+                                Icon="@IconType.Outline.Reload"
+                                Disabled="@Loading">
+                            @ResetText
+                        </Button>
+                    </SpaceItem>
+                    @if (!DisableCollapse && _form?.FieldCount > CollapseCount)
+                    {
                         <SpaceItem>
-                            <Button Type="@ButtonType.Primary"
-                                    HtmlType="submit"
-                                    Icon="@IconType.Outline.Search"
-                                    Loading="@Loading">
-                                @SearchText
+                            <Button OnClick="@ToggleExpand" Class="px-0" Type="@ButtonType.Link">
+                                @(_expanded ? CollapseText : ExpandText)
+                                <Icon Type="@(_expanded ? IconType.Outline.Up : IconType.Outline.Down)"></Icon>
                             </Button>
                         </SpaceItem>
-                        <SpaceItem>
-                            <Button OnClick="@HandleReset"
-                                    Icon="@IconType.Outline.Reload"
-                                    Disabled="@Loading">
-                                @ResetText
-                            </Button>
-                        </SpaceItem>
-                        @if (!DisableCollapse && _form?.FieldCount > CollapseCount)
-                        {
-                            <SpaceItem>
-                                <Button OnClick="@ToggleExpand" Class="px-0" Type="@ButtonType.Link">
-                                    @(_expanded ? CollapseText : ExpandText)
-                                    <Icon Type="@(_expanded ? IconType.Outline.Up : IconType.Outline.Down)"></Icon>
-                                </Button>
-                            </SpaceItem>
-                        }
-                        @if (ExtraButtons != null)
-                        {
-                            @ExtraButtons
-                        }
-                    </Space>
-                </div>
-            </GridCol>
-        </ChildContent>
-    </PForm>
-</div>
+                    }
+                    @if (ExtraButtons != null)
+                    {
+                        @ExtraButtons
+                    }
+                </Space>
+            </div>
+        </GridCol>
+    </ChildContent>
+</PForm>
 
 @code {
     private PForm<TModel>? _form;
@@ -90,22 +88,6 @@
     /// </summary>
     [Parameter, EditorRequired]
     public RenderFragment<TModel> ChildContent { get; set; } = default!;
-
-    #endregion
-
-    #region Container Parameters
-
-    /// <summary>
-    /// 容器样式类
-    /// </summary>
-    [Parameter]
-    public string ContainerClass { get; set; } = "shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase";
-
-    /// <summary>
-    /// 容器内联样式
-    /// </summary>
-    [Parameter]
-    public string? ContainerStyle { get; set; }
 
     #endregion
 

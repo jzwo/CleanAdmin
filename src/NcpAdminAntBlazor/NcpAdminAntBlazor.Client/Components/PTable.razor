@@ -1,13 +1,69 @@
+@using AntDesign.TableModels
+@attribute [CascadingTypeParameter(nameof(TItem))]
+@typeparam TItem
+
 <div class="h-full flex flex-col">
-    @if (QueryType != null)
+    @if (SearchTemplate != null)
     {
-        <PTableSearch TSearchModel="QueryType" OnSearch="OnSearch" OnReset="OnReset"/>
+        <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
+            <CascadingValue Value="this" IsFixed="true">
+                @SearchTemplate
+            </CascadingValue>
+        </div>
     }
-    <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
+    <div class="px-4 py-2 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
+        <Table @ref="InternalTable"
+               TItem="TItem"
+               Total="_total"
+               DataSource="_dataSource"
+               ScrollY=""
+               AutoHeight
+               Loading="@_loading"
+               PageSize="@PageSize"
+               PaginationPosition="bottomRight"
+               OnChange="@HandleTableChangeAsync">
+            <ChildContent>
+                @ChildContent(context)
+            </ChildContent>
+        </Table>
     </div>
 </div>
-<h3>PTable</h3>
 
 @code {
-    [Parameter] public Type? QueryType { get; set; }
+    private bool _loading;
+    private int _total;
+    private IEnumerable<TItem> _dataSource = [];
+
+    #region Parameters
+
+    [Parameter] public RenderFragment? SearchTemplate { get; set; }
+
+    [Parameter] public required RenderFragment<TItem> ChildContent { get; set; }
+
+    [Parameter] public required Func<QueryModel<TItem>, Task<(int Total, IEnumerable<TItem> Data)>> OnLoadData { get; set; }
+
+    [Parameter] public int PageSize { get; set; } = 10;
+
+    #endregion
+
+    private async Task HandleTableChangeAsync(QueryModel<TItem> queryModel)
+    {
+        if (_loading) return;
+
+        try
+        {
+            _loading = true;
+            StateHasChanged();
+
+            var (total, data) = await OnLoadData(queryModel);
+            _total = total;
+            _dataSource = data;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    public Table<TItem> InternalTable { get; private set; } = null!;
 }
