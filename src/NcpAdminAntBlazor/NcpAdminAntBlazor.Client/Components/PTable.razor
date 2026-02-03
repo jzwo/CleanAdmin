@@ -4,7 +4,7 @@
 @implements IPTable
 
 <div class="h-full flex flex-col">
-    @if (SearchTemplate != null)
+    @if (SearchTemplate is not null && _searchFormVisible)
     {
         <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
             <CascadingValue Value="this" IsFixed="true">
@@ -12,7 +12,29 @@
             </CascadingValue>
         </div>
     }
-    <div class="px-4 py-2 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
+    <div class="px-4 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
+        <div class="flex items-center justify-between pb-2 pt-3 px-1">
+            <div class="text-base font-medium pl-1">
+                @Title
+            </div>
+            <Space>
+                @if (HasSearchForm)
+                {
+                    <SpaceItem>
+                        <Button Type="@(_searchFormVisible ? ButtonType.Primary : ButtonType.Default)"
+                                Shape="ButtonShape.Circle"
+                                OnClick="@(() => _searchFormVisible = !_searchFormVisible)">
+                            <Icon Type="@IconType.Outline.Search"></Icon>
+                        </Button>
+                    </SpaceItem>
+                }
+                <SpaceItem>
+                    <Button Disabled="@IsLoading" Shape="ButtonShape.Circle" OnClick="@ReloadData">
+                        <Icon Type="@IconType.Outline.Reload" Spin="IsLoading"></Icon>
+                    </Button>
+                </SpaceItem>
+            </Space>
+        </div>
         <Table @ref="InternalTable"
                TItem="TItem"
                Total="_total"
@@ -20,7 +42,7 @@
                ScrollY=""
                AutoHeight
                Loading="@IsLoading"
-               PageSize="@PageSize"
+               @bind-PageSize="@_pageSize"
                PaginationPosition="bottomRight"
                OnChange="@HandleTableChangeAsync">
             <ChildContent>
@@ -33,8 +55,14 @@
 @code {
     private int _total;
     private IEnumerable<TItem> _dataSource = [];
-    private bool hasSearchForm => SearchTemplate != null;
-    private bool searchFormVisible = true;
+    private bool HasSearchForm => SearchTemplate != null;
+    private bool _searchFormVisible = true;
+    private int _pageSize;
+
+    protected override void OnParametersSet()
+    {
+        _pageSize = PageSize;
+    }
 
     #region Parameters
 
@@ -45,6 +73,9 @@
     [Parameter] public required Func<QueryModel<TItem>, Task<(int Total, IEnumerable<TItem> Data)>> OnLoadData { get; set; }
 
     [Parameter] public int PageSize { get; set; } = 10;
+    [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
+
+    [Parameter] public string? Title { get; set; }
 
     #endregion
 
@@ -60,6 +91,10 @@
             var (total, data) = await OnLoadData(queryModel);
             _total = total;
             _dataSource = data;
+            if (PageSize != queryModel.PageSize)
+            {
+                await PageSizeChanged.InvokeAsync(queryModel.PageSize);
+            }
         }
         finally
         {
