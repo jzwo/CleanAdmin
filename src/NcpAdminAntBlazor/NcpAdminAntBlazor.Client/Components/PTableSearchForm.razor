@@ -1,0 +1,182 @@
+@typeparam TModel where TModel : class, new()
+
+<PForm @ref="_form"
+       TModel="TModel"
+       Model="@Model"
+       GridClass="w-full"
+       Layout="FormLayout.Inline"
+       LabelColSpan="@LabelColSpan"
+       WrapperColSpan="@WrapperColSpan"
+       Gutter="@Gutter"
+       ShowDefaultFooter="false"
+       Collapsible="@(!DisableCollapse)"
+       Collapsed="@(!_expanded)"
+       CollapseCount="@CollapseCount"
+       OnFinish="HandleFinish">
+    <ChildContent Context="context">
+        @ChildContent(context)
+        <GridCol Flex=@("auto")>
+            <div class="flex justify-end">
+                <Space>
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary"
+                                HtmlType="submit"
+                                Icon="@IconType.Outline.Search"
+                                Loading="@Loading">
+                            @SearchText
+                        </Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button OnClick="@HandleReset"
+                                Icon="@IconType.Outline.Reload"
+                                Disabled="@Loading">
+                            @ResetText
+                        </Button>
+                    </SpaceItem>
+                    @if (!DisableCollapse && _form?.FieldCount > CollapseCount)
+                    {
+                        <SpaceItem>
+                            <Button OnClick="@ToggleExpand" Class="px-0" Type="@ButtonType.Link">
+                                @(_expanded ? CollapseText : ExpandText)
+                                <Icon Type="@(_expanded ? IconType.Outline.Up : IconType.Outline.Down)"></Icon>
+                            </Button>
+                        </SpaceItem>
+                    }
+                    @if (ExtraButtons != null)
+                    {
+                        @ExtraButtons
+                    }
+                </Space>
+            </div>
+        </GridCol>
+    </ChildContent>
+</PForm>
+
+@code {
+    private PForm<TModel>? _form;
+    private bool _expanded;
+    [CascadingParameter] private IPTable? Table { get; set; }
+    private bool Loading => Table?.IsLoading ?? false;
+
+    #region Form Parameters
+
+    /// <summary>
+    /// 搜索模型
+    /// </summary>
+    [Parameter, EditorRequired]
+    public TModel Model { get; set; } = new();
+
+    /// <summary>
+    /// 标签列宽度
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<string, int> LabelColSpan { get; set; } = 6;
+
+    /// <summary>
+    /// 输入框列宽度
+    /// </summary>
+    [Parameter]
+    public OneOf.OneOf<string, int> WrapperColSpan { get; set; } = 18;
+
+    /// <summary>
+    /// 表单内容（在GridRow内部渲染）
+    /// </summary>
+    [Parameter, EditorRequired]
+    public RenderFragment<TModel> ChildContent { get; set; } = default!;
+
+    #endregion
+
+    #region Grid Parameters
+
+    /// <summary>
+    /// Grid行间隔 (水平间隔, 垂直间隔)
+    /// </summary>
+    [Parameter]
+    public (int, int) Gutter { get; set; } = (24, 12);
+
+    #endregion
+
+    #region Button Parameters
+
+    /// <summary>
+    /// 搜索按钮文字
+    /// </summary>
+    [Parameter]
+    public string SearchText { get; set; } = "查询";
+
+    /// <summary>
+    /// 重置按钮文字
+    /// </summary>
+    [Parameter]
+    public string ResetText { get; set; } = "重置";
+
+    /// <summary>
+    /// 展开按钮文字
+    /// </summary>
+    [Parameter]
+    public string ExpandText { get; set; } = "展开";
+
+    /// <summary>
+    /// 收起按钮文字
+    /// </summary>
+    [Parameter]
+    public string CollapseText { get; set; } = "收起";
+
+    /// <summary>
+    /// 是否禁用折叠功能
+    /// </summary>
+    [Parameter]
+    public bool DisableCollapse { get; set; }
+
+    /// <summary>
+    /// 额外的按钮
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ExtraButtons { get; set; }
+
+    #endregion
+
+    #region Expand Parameters
+
+    /// <summary>
+    /// 默认显示的字段数量（折叠状态下）
+    /// </summary>
+    [Parameter]
+    public int CollapseCount { get; set; } = 2;
+
+    #endregion
+
+    /// <summary>
+    /// 获取表单引用
+    /// </summary>
+    public Form<TModel>? GetForm() => _form?.GetForm();
+
+
+    private Task HandleReset()
+    {
+
+            _form?.Reset();
+            Table?.ReloadData();
+            return Task.CompletedTask;
+
+    }
+
+    /// <summary>
+    /// 搜索事件
+    /// </summary>
+    private Task HandleFinish(EditContext editContext)
+    {
+        
+            Table?.ReloadData();
+            return Task.CompletedTask;
+
+    }
+
+    private void ToggleExpand()
+    {
+        _expanded = !_expanded;
+    }
+
+}
+
+

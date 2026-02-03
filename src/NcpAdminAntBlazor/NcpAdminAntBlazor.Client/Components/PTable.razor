@@ -1,6 +1,7 @@
 @using AntDesign.TableModels
 @attribute [CascadingTypeParameter(nameof(TItem))]
 @typeparam TItem
+@implements IPTable
 
 <div class="h-full flex flex-col">
     @if (SearchTemplate != null)
@@ -18,7 +19,7 @@
                DataSource="_dataSource"
                ScrollY=""
                AutoHeight
-               Loading="@_loading"
+               Loading="@IsLoading"
                PageSize="@PageSize"
                PaginationPosition="bottomRight"
                OnChange="@HandleTableChangeAsync">
@@ -30,9 +31,10 @@
 </div>
 
 @code {
-    private bool _loading;
     private int _total;
     private IEnumerable<TItem> _dataSource = [];
+    private bool hasSearchForm => SearchTemplate != null;
+    private bool searchFormVisible = true;
 
     #region Parameters
 
@@ -48,11 +50,11 @@
 
     private async Task HandleTableChangeAsync(QueryModel<TItem> queryModel)
     {
-        if (_loading) return;
+        if (IsLoading) return;
 
         try
         {
-            _loading = true;
+            IsLoading = true;
             StateHasChanged();
 
             var (total, data) = await OnLoadData(queryModel);
@@ -61,9 +63,17 @@
         }
         finally
         {
-            _loading = false;
+            IsLoading = false;
         }
     }
 
     public Table<TItem> InternalTable { get; private set; } = null!;
+
+    public void ReloadData()
+    {
+        InternalTable.ReloadData();
+    }
+
+    public bool IsLoading { get; private set; }
+
 }
