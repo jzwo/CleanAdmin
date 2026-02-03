@@ -7,6 +7,7 @@
        Layout="FormLayout.Inline"
        LabelColSpan="@LabelColSpan"
        WrapperColSpan="@WrapperColSpan"
+       ItemSpan="8"
        Gutter="@Gutter"
        ShowDefaultFooter="false"
        Collapsible="@(!DisableCollapse)"
@@ -82,7 +83,7 @@
     /// 表单内容（在GridRow内部渲染）
     /// </summary>
     [Parameter, EditorRequired]
-    public RenderFragment<TModel> ChildContent { get; set; } = default!;
+    public RenderFragment<TModel> ChildContent { get; set; } = null!;
 
     #endregion
 
@@ -154,11 +155,9 @@
 
     private Task HandleReset()
     {
-
-            _form?.Reset();
-            Table?.ReloadData();
-            return Task.CompletedTask;
-
+        _form?.Reset();
+        Table?.ReloadData();
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -166,10 +165,8 @@
     /// </summary>
     private Task HandleFinish(EditContext editContext)
     {
-        
-            Table?.ReloadData();
-            return Task.CompletedTask;
-
+        Table?.ReloadData();
+        return Task.CompletedTask;
     }
 
     private void ToggleExpand()

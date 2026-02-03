@@ -1,13 +1,24 @@
+@using OneOf;
 @implements IDisposable
 
+@{
+    // 计算实际使用的栅格值 - 优先使用自身设置的值，否则使用父组件的默认值
+    var actualSpan = _spanSet ? Span : (Parent?.ItemSpan ?? Span);
+    var actualXs = _xsSet ? Xs : (Parent?.ItemXs ?? Xs);
+    var actualSm = _smSet ? Sm : (Parent?.ItemSm ?? Sm);
+    var actualMd = _mdSet ? Md : (Parent?.ItemMd ?? Md);
+    var actualLg = _lgSet ? Lg : (Parent?.ItemLg ?? Lg);
+    var actualXl = _xlSet ? Xl : (Parent?.ItemXl ?? Xl);
+    var actualXxl = _xxlSet ? Xxl : (Parent?.ItemXxl ?? Xxl);
+}
 
-<GridCol Span="@Span"
-         Xs="@Xs"
-         Sm="@Sm"
-         Md="@Md"
-         Lg="@Lg"
-         Xl="@Xl"
-         Xxl="@Xxl"
+<GridCol Span="@actualSpan"
+         Xs="@actualXs"
+         Sm="@actualSm"
+         Md="@actualMd"
+         Lg="@actualLg"
+         Xl="@actualXl"
+         Xxl="@actualXxl"
          Class="@(IsVisible ? null : "hidden")">
     <FormItem Label="@Label"
               LabelTemplate="@LabelTemplate"
@@ -60,47 +71,111 @@
 
     #region GridCol Parameters
 
+    private bool _spanSet;
+    private bool _xsSet;
+    private bool _smSet;
+    private bool _mdSet;
+    private bool _lgSet;
+    private bool _xlSet;
+    private bool _xxlSet;
+
     /// <summary>
     /// 栅格占位格数 (1-24)
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<string, int> Span { get; set; } = 24;
+    public OneOf<string, int> Span
+    {
+        get;
+        set
+        {
+            field = value;
+            _spanSet = true;
+        }
+    } = 24;
 
     /// <summary>
     /// &lt;576px 响应式栅格
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<int, EmbeddedProperty> Xs { get; set; }
+    public OneOf<int, EmbeddedProperty> Xs
+    {
+        get;
+        set
+        {
+            field = value;
+            _xsSet = true;
+        }
+    }
 
     /// <summary>
     /// ≥576px 响应式栅格
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<int, EmbeddedProperty> Sm { get; set; }
+    public OneOf<int, EmbeddedProperty> Sm
+    {
+        get;
+        set
+        {
+            field = value;
+            _smSet = true;
+        }
+    }
 
     /// <summary>
     /// ≥768px 响应式栅格
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<int, EmbeddedProperty> Md { get; set; }
+    public OneOf<int, EmbeddedProperty> Md
+    {
+        get;
+        set
+        {
+            field = value;
+            _mdSet = true;
+        }
+    }
 
     /// <summary>
     /// ≥992px 响应式栅格
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<int, EmbeddedProperty> Lg { get; set; }
+    public OneOf<int, EmbeddedProperty> Lg
+    {
+        get;
+        set
+        {
+            field = value;
+            _lgSet = true;
+        }
+    }
 
     /// <summary>
     /// ≥1200px 响应式栅格
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<int, EmbeddedProperty> Xl { get; set; }
+    public OneOf<int, EmbeddedProperty> Xl
+    {
+        get;
+        set
+        {
+            field = value;
+            _xlSet = true;
+        }
+    }
 
     /// <summary>
     /// ≥1600px 响应式栅格
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<int, EmbeddedProperty> Xxl { get; set; }
+    public OneOf<int, EmbeddedProperty> Xxl
+    {
+        get;
+        set
+        {
+            field = value;
+            _xxlSet = true;
+        }
+    }
 
     #endregion
 

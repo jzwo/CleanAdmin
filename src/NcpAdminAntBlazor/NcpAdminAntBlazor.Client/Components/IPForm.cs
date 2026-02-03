@@ -1,3 +1,6 @@
+using AntDesign;
+using OneOf;
+
 namespace NcpAdminAntBlazor.Client.Components;
 
 /// <summary>
@@ -39,6 +42,45 @@ public interface IPForm
     /// 已注册的字段数量
     /// </summary>
     int FieldCount { get; }
+
+    #region Item Span Properties
+
+    /// <summary>
+    /// 子项栅格占位格数 (1-24)
+    /// </summary>
+    OneOf<string, int>? ItemSpan { get; }
+
+    /// <summary>
+    /// 子项 &lt;576px 响应式栅格
+    /// </summary>
+    OneOf<int, EmbeddedProperty>? ItemXs { get; }
+
+    /// <summary>
+    /// 子项 ≥576px 响应式栅格
+    /// </summary>
+    OneOf<int, EmbeddedProperty>? ItemSm { get; }
+
+    /// <summary>
+    /// 子项 ≥768px 响应式栅格
+    /// </summary>
+    OneOf<int, EmbeddedProperty>? ItemMd { get; }
+
+    /// <summary>
+    /// 子项 ≥992px 响应式栅格
+    /// </summary>
+    OneOf<int, EmbeddedProperty>? ItemLg { get; }
+
+    /// <summary>
+    /// 子项 ≥1200px 响应式栅格
+    /// </summary>
+    OneOf<int, EmbeddedProperty>? ItemXl { get; }
+
+    /// <summary>
+    /// 子项 ≥1600px 响应式栅格
+    /// </summary>
+    OneOf<int, EmbeddedProperty>? ItemXxl { get; }
+
+    #endregion
 }
 
 

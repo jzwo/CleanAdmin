@@ -8,11 +8,8 @@
 <PageTitle>用户管理</PageTitle>
 
 <div class="h-full flex flex-col">
-    <PSearchForm TModel="SearchModel"
-                 Model="@_searchModel"
-                 Loading="@_loading"
-                 OnFinish="OnSearch"
-                 OnReset="OnReset">
+    <PTableSearchForm TModel="SearchModel"
+                 Model="@_searchModel">
         <PFormItem Label="用户名" Span="8">
             <Input @bind-Value="@context.Username" Placeholder="请输入用户名" AllowClear/>
         </PFormItem>
@@ -25,7 +22,7 @@
         <PFormItem Label="手机号" Span="8">
             <Input @bind-Value="@context.Phone" Placeholder="请输入手机号" AllowClear/>
         </PFormItem>
-    </PSearchForm>
+    </PTableSearchForm>
 
     <div class="px-4 py-2 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
         <Table TItem="NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto"

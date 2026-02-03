@@ -1,3 +1,4 @@
+@using OneOf;
 @typeparam TModel where TModel : class, new()
 @implements IPForm
 
@@ -7,7 +8,6 @@
           Layout="@Layout"
           LabelColSpan="@LabelColSpan"
           WrapperColSpan="@WrapperColSpan"
-        
           Size="@Size"
           RequiredMark="@RequiredMark"
           ValidateOnChange="@ValidateOnChange"
@@ -41,7 +41,7 @@
                     @if (ShowResetButton)
                     {
                         <SpaceItem>
-                            <Button OnClick="HandleReset" Disabled="@Loading">
+                            <Button OnClick="@HandleReset" Disabled="@Loading">
                                 @ResetText
                             </Button>
                         </SpaceItem>
@@ -96,13 +96,13 @@
     /// 标签列宽度
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<string, int> LabelColSpan { get; set; } = 6;
+    public OneOf<string, int> LabelColSpan { get; set; } = 6;
 
     /// <summary>
     /// 输入框列宽度
     /// </summary>
     [Parameter]
-    public OneOf.OneOf<string, int> WrapperColSpan { get; set; } = 18;
+    public OneOf<string, int> WrapperColSpan { get; set; } = 18;
 
     /// <summary>
     /// 标签列布局
@@ -156,7 +156,7 @@
     /// 表单内容（在GridRow内部渲染）
     /// </summary>
     [Parameter, EditorRequired]
-    public RenderFragment<TModel> ChildContent { get; set; } = default!;
+    public RenderFragment<TModel> ChildContent { get; set; } = null!;
 
     /// <summary>
     /// 自定义底部内容
@@ -179,15 +179,56 @@
     #endregion
 
     #region Grid Parameters
-    
-    [Parameter] 
-    public string? GridClass { get; set; }
+
+    [Parameter] public string? GridClass { get; set; }
 
     /// <summary>
     /// Grid行间隔 (水平间隔, 垂直间隔)
     /// </summary>
     [Parameter]
     public (int, int) Gutter { get; set; } = (16, 16);
+
+    /// <summary>
+    /// 子项栅格占位格数 (1-24)，如果设置此值，子组件 PFormItem 将自动使用该值
+    /// </summary>
+    [Parameter]
+    public OneOf<string, int>? ItemSpan { get; set; }
+
+    /// <summary>
+    /// 子项 &lt;576px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemXs { get; set; }
+
+    /// <summary>
+    /// 子项 ≥576px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemSm { get; set; }
+
+    /// <summary>
+    /// 子项 ≥768px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemMd { get; set; }
+
+    /// <summary>
+    /// 子项 ≥992px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemLg { get; set; }
+
+    /// <summary>
+    /// 子项 ≥1200px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemXl { get; set; }
+
+    /// <summary>
+    /// 子项 ≥1600px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemXxl { get; set; }
 
     #endregion
 
