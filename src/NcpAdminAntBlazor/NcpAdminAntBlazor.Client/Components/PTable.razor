@@ -17,23 +17,23 @@
             <div class="text-base font-medium pl-1">
                 @Title
             </div>
-            <Space>
+            <div class="flex items-center gap-2">
+                @if (ToolbarButtons is not null)
+                {
+                    @ToolbarButtons
+                }
                 @if (HasSearchForm)
                 {
-                    <SpaceItem>
-                        <Button Type="@(_searchFormVisible ? ButtonType.Primary : ButtonType.Default)"
-                                Shape="ButtonShape.Circle"
-                                OnClick="@(() => _searchFormVisible = !_searchFormVisible)">
-                            <Icon Type="@IconType.Outline.Search"></Icon>
-                        </Button>
-                    </SpaceItem>
-                }
-                <SpaceItem>
-                    <Button Disabled="@IsLoading" Shape="ButtonShape.Circle" OnClick="@ReloadData">
-                        <Icon Type="@IconType.Outline.Reload" Spin="IsLoading"></Icon>
+                    <Button Type="@(_searchFormVisible ? ButtonType.Primary : ButtonType.Default)"
+                            Shape="ButtonShape.Circle"
+                            OnClick="@(() => _searchFormVisible = !_searchFormVisible)">
+                        <Icon Type="@IconType.Outline.Search"></Icon>
                     </Button>
-                </SpaceItem>
-            </Space>
+                }
+                <Button Disabled="@IsLoading" Shape="ButtonShape.Circle" OnClick="@ReloadData">
+                    <Icon Type="@IconType.Outline.Reload" Spin="IsLoading"></Icon>
+                </Button>
+            </div>
         </div>
         <Table @ref="InternalTable"
                TItem="TItem"
@@ -46,7 +46,7 @@
                PaginationPosition="bottomRight"
                OnChange="@HandleTableChangeAsync">
             <ChildContent>
-                @ChildContent(context)
+                @ColumnDefinitions(context)
             </ChildContent>
         </Table>
     </div>
@@ -68,7 +68,7 @@
 
     [Parameter] public RenderFragment? SearchTemplate { get; set; }
 
-    [Parameter] public required RenderFragment<TItem> ChildContent { get; set; }
+    [Parameter] public required RenderFragment<TItem> ColumnDefinitions { get; set; }
 
     [Parameter] public required Func<QueryModel<TItem>, Task<(int Total, IEnumerable<TItem> Data)>> OnLoadData { get; set; }
 
@@ -76,6 +76,8 @@
     [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
 
     [Parameter] public string? Title { get; set; }
+
+    [Parameter] public RenderFragment? ToolbarButtons { get; set; }
 
     #endregion
 
