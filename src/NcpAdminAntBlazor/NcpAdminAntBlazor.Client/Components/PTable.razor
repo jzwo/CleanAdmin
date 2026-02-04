@@ -2,6 +2,7 @@
 @attribute [CascadingTypeParameter(nameof(TItem))]
 @typeparam TItem
 @implements IPTable
+@inject IJSRuntime Js
 
 <div class="h-full flex flex-col">
     @if (SearchTemplate is not null && _searchFormVisible)
@@ -30,6 +31,21 @@
                         <Icon Type="@IconType.Outline.Search"></Icon>
                     </Button>
                 }
+                <Dropdown Trigger="@([Trigger.Click])">
+                    <Overlay>
+                        <Menu SelectedKeys="@(new[] { _tableSize.ToString() })"
+                              OnMenuItemClicked="@HandleTableSizeChangeAsync">
+                            <MenuItem Key="@nameof(TableSize.Default)">默认</MenuItem>
+                            <MenuItem Key="@nameof(TableSize.Middle)">中等</MenuItem>
+                            <MenuItem Key="@nameof(TableSize.Small)">紧凑</MenuItem>
+                        </Menu>
+                    </Overlay>
+                    <ChildContent>
+                        <Button Shape="ButtonShape.Circle">
+                            <Icon Type="@IconType.Outline.ColumnHeight"></Icon>
+                        </Button>
+                    </ChildContent>
+                </Dropdown>
                 <Button Disabled="@IsLoading" Shape="ButtonShape.Circle" OnClick="@ReloadData">
                     <Icon Type="@IconType.Outline.Reload" Spin="IsLoading"></Icon>
                 </Button>
@@ -39,9 +55,9 @@
                TItem="TItem"
                Total="_total"
                DataSource="_dataSource"
-               ScrollY=""
                AutoHeight
                Loading="@IsLoading"
+               Size="@_tableSize"
                @bind-PageSize="@_pageSize"
                PaginationPosition="bottomRight"
                OnChange="@HandleTableChangeAsync">
@@ -58,6 +74,7 @@
     private bool HasSearchForm => SearchTemplate != null;
     private bool _searchFormVisible = true;
     private int _pageSize;
+    private TableSize _tableSize = TableSize.Default;
 
     protected override void OnParametersSet()
     {
@@ -112,5 +129,15 @@
     }
 
     public bool IsLoading { get; private set; }
+
+    private async Task HandleTableSizeChangeAsync(MenuItem item)
+    {
+        if (_tableSize.ToString() == item.Key) return;
+        _tableSize = Enum.Parse<TableSize>(item.Key);
+        await InvokeAsync(StateHasChanged);
+        await Task.Delay(200);
+        //这里需要触发一次窗口大小改变事件，强制表格重新计算高度
+        await Js.InvokeVoidAsync("eval", "window.dispatchEvent(new Event('resize'));");
+    }
 
 }
