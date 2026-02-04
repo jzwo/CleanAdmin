@@ -2,43 +2,39 @@
 @implements IDisposable
 
 @{
-    // 计算实际使用的栅格值 - 优先使用自身设置的值，否则使用父组件的默认值
-    var actualSpan = _spanSet ? Span : (Parent?.ItemSpan ?? Span);
-    var actualXs = _xsSet ? Xs : (Parent?.ItemXs ?? Xs);
-    var actualSm = _smSet ? Sm : (Parent?.ItemSm ?? Sm);
-    var actualMd = _mdSet ? Md : (Parent?.ItemMd ?? Md);
-    var actualLg = _lgSet ? Lg : (Parent?.ItemLg ?? Lg);
-    var actualXl = _xlSet ? Xl : (Parent?.ItemXl ?? Xl);
-    var actualXxl = _xxlSet ? Xxl : (Parent?.ItemXxl ?? Xxl);
+    RenderFragment formItemContent = @<FormItem Label="@Label"
+                                                LabelTemplate="@LabelTemplate"
+                                                LabelAlign="@LabelAlign"
+                                                LabelStyle="@LabelStyle"
+                                                LabelCol="@LabelCol"
+                                                WrapperCol="@WrapperCol"
+                                                Required="@Required"
+                                                NoStyle="@NoStyle"
+                                                Rules="@Rules"
+                                                Help="@Help"
+                                                ToolTip="@ToolTip"
+                                                Class="@FormItemClass"
+                                                Style="@Style">
+                                         @ChildContent
+                                     </FormItem>;
 }
-
-<GridCol Span="@actualSpan"
-         Xs="@actualXs"
-         Sm="@actualSm"
-         Md="@actualMd"
-         Lg="@actualLg"
-         Xl="@actualXl"
-         Xxl="@actualXxl"
-         Class="@(IsVisible ? null : "hidden")">
-    <FormItem Label="@Label"
-              LabelTemplate="@LabelTemplate"
-              LabelAlign="@LabelAlign"
-              LabelStyle="@LabelStyle"
-              LabelCol="@LabelCol"
-              WrapperCol="@WrapperCol"
-              Required="@Required"
-              NoStyle="@NoStyle"
-              Rules="@Rules"
-              HasFeedback="@HasFeedback"
-              ShowFeedbackOnError="@ShowFeedbackOnError"
-              ValidateStatus="@ValidateStatus"
-              Help="@Help"
-              ToolTip="@ToolTip"
-              Class="@Class"
-              Style="@Style">
-        @ChildContent
-    </FormItem>
-</GridCol>
+@if (UseGrid)
+{
+    <GridCol Span="@ActualSpan"
+             Xs="@ActualXs"
+             Sm="@ActualSm"
+             Md="@ActualMd"
+             Lg="@ActualLg"
+             Xl="@ActualXl"
+             Xxl="@ActualXxl"
+             Class="@HiddenClass">
+        @formItemContent
+    </GridCol>
+}
+else
+{
+    @formItemContent
+}
 
 @code {
 
@@ -59,6 +55,27 @@
     /// </summary>
     private bool IsVisible => Parent?.ShouldShowField(this) ?? true;
 
+    /// <summary>
+    /// 是否使用栅格布局
+    /// </summary>
+    private bool UseGrid => !(Parent?.DisableGrid ?? false);
+
+    /// <summary>
+    /// 隐藏类名（用于 GridCol）
+    /// </summary>
+    private string? HiddenClass => IsVisible ? null : "hidden";
+
+    /// <summary>
+    /// FormItem 的样式类（非 Grid 模式下需要合并隐藏类）
+    /// </summary>
+    private string? FormItemClass => UseGrid
+        ? Class
+        : IsVisible
+            ? Class
+            : string.IsNullOrEmpty(Class)
+                ? "hidden"
+                : $"{Class} hidden";
+
     protected override void OnInitialized()
     {
         Parent?.AddField(this);
@@ -68,6 +85,18 @@
     {
         Parent?.RemoveField(this);
     }
+
+    #region GridCol Parameters - 计算属性
+
+    private OneOf<string, int> ActualSpan => _spanSet ? Span : Parent?.ItemSpan ?? Span;
+    private OneOf<int, EmbeddedProperty> ActualXs => _xsSet ? Xs : Parent?.ItemXs ?? Xs;
+    private OneOf<int, EmbeddedProperty> ActualSm => _smSet ? Sm : Parent?.ItemSm ?? Sm;
+    private OneOf<int, EmbeddedProperty> ActualMd => _mdSet ? Md : Parent?.ItemMd ?? Md;
+    private OneOf<int, EmbeddedProperty> ActualLg => _lgSet ? Lg : Parent?.ItemLg ?? Lg;
+    private OneOf<int, EmbeddedProperty> ActualXl => _xlSet ? Xl : Parent?.ItemXl ?? Xl;
+    private OneOf<int, EmbeddedProperty> ActualXxl => _xxlSet ? Xxl : Parent?.ItemXxl ?? Xxl;
+
+    #endregion
 
     #region GridCol Parameters
 
@@ -234,24 +263,6 @@
     /// </summary>
     [Parameter]
     public FormValidationRule[]? Rules { get; set; }
-
-    /// <summary>
-    /// 是否显示校验状态图标
-    /// </summary>
-    [Parameter]
-    public bool HasFeedback { get; set; }
-
-    /// <summary>
-    /// 是否在错误时显示反馈图标
-    /// </summary>
-    [Parameter]
-    public bool ShowFeedbackOnError { get; set; }
-
-    /// <summary>
-    /// 校验状态
-    /// </summary>
-    [Parameter]
-    public FormValidateStatus ValidateStatus { get; set; }
 
     /// <summary>
     /// 提示信息

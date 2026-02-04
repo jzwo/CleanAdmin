@@ -1,6 +1,8 @@
 @using OneOf;
+@using FluentValidation;
 @typeparam TModel where TModel : class, new()
 @implements IPForm
+@inject IServiceProvider ServiceProvider
 
 <CascadingValue Value="(IPForm)this" IsFixed="true">
     <Form @ref="_form"
@@ -17,14 +19,25 @@
           OnFieldChanged="HandleFieldChanged"
           Class="@Class"
           Style="@Style">
-        <FluentValidator/>
+
+        @if (HasFluentValidator)
+        {
+            <FluentValidator/>
+        }
         @if (Validator != null)
         {
             @Validator
         }
-        <GridRow Class="@GridClass" Gutter="@Gutter">
+        @if (!DisableGrid)
+        {
+            <GridRow Class="@GridClass" Gutter="@Gutter">
+                @ChildContent(context)
+            </GridRow>
+        }
+        else
+        {
             @ChildContent(context)
-        </GridRow>
+        }
         @if (FooterContent != null)
         {
             @FooterContent
@@ -55,6 +68,11 @@
 @code {
     private Form<TModel>? _form;
     private readonly List<PFormItem> _fields = new();
+
+    /// <summary>
+    /// 检查容器中是否注册了 TModel 对应的验证器
+    /// </summary>
+    private bool HasFluentValidator => ServiceProvider.GetServices<IValidator<TModel>>().Any();
 
     #region Collapse Parameters
 
@@ -179,6 +197,12 @@
     #endregion
 
     #region Grid Parameters
+
+    /// <summary>
+    /// 是否禁用Grid布局
+    /// </summary>
+    [Parameter]
+    public bool DisableGrid { get; set; }
 
     [Parameter] public string? GridClass { get; set; }
 
@@ -386,11 +410,6 @@
     /// 已注册的字段数量
     /// </summary>
     public int FieldCount => _fields.Count;
-
-    /// <summary>
-    /// 是否为Inline布局
-    /// </summary>
-    public bool IsInlineLayout => Layout == FormLayout.Inline;
 
     #endregion
 

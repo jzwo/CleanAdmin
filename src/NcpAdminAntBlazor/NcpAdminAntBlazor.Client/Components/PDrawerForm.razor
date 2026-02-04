@@ -1,0 +1,312 @@
+@using OneOf;
+@typeparam TModel where TModel : class, new()
+
+@if (Activator != null)
+{
+    <div class="inline-block" @onclick="@Open">
+        @Activator
+    </div>
+}
+<Drawer Title="@Title"
+        @bind-Visible="@_visible"
+        Width="@Width"
+        MaskClosable="@(!_loading)">
+        <div class="flex flex-col h-full">
+            <div class="flex-1 overflow-y-auto">
+                <PForm @ref="_form"
+                       TModel="TModel"
+                       Model="@Model"
+                       Layout="@Layout"
+                       LabelColSpan="@LabelColSpan"
+                       WrapperColSpan="@WrapperColSpan"
+                       Size="@Size"
+                       RequiredMark="@RequiredMark"
+                       ValidateOnChange="@ValidateOnChange"
+                       Loading="@_loading"
+                       Validator="@Validator"
+                       Class="@FormClass"
+                       Style="@FormStyle"
+                       DisableGrid="@DisableGrid"
+                       GridClass="@(GridClass ?? "mx-0")"
+                       Gutter="@Gutter"
+                       ItemSpan="@ItemSpan"
+                       ItemXs="@ItemXs"
+                       ItemSm="@ItemSm"
+                       ItemMd="@ItemMd"
+                       ItemLg="@ItemLg"
+                       ItemXl="@ItemXl"
+                       ItemXxl="@ItemXxl"
+                       ShowDefaultFooter="false"
+                       OnFinish="@HandleFinishAsync"
+                       OnFinishFailed="@HandleFinishFailed">
+                    @ChildContent(context)
+                </PForm>
+            </div>
+
+            <div class="shrink-0 -mx-[24px] -mb-[24px] px-6 py-2.5 border-t border-border text-right">
+                <Space>
+                    <SpaceItem>
+                        <Button OnClick="@CloseAsync" Disabled="@_loading">取消</Button>
+                    </SpaceItem>
+                    <SpaceItem>
+                        <Button Type="@ButtonType.Primary" OnClick="@Submit" Loading="@_loading">
+                            @SubmitText
+                        </Button>
+                    </SpaceItem>
+                </Space>
+            </div>
+
+        </div>
+</Drawer>
+
+@code {
+    private PForm<TModel>? _form;
+    private bool _visible;
+    private bool _loading;
+
+    #region Drawer Parameters
+
+    /// <summary>
+    /// 抽屉标题
+    /// </summary>
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 抽屉宽度
+    /// </summary>
+    [Parameter]
+    public string Width { get; set; } = "520";
+
+    /// <summary>
+    /// 触发器内容（点击打开抽屉）
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Activator { get; set; }
+
+    /// <summary>
+    /// 提交按钮文字
+    /// </summary>
+    [Parameter]
+    public string SubmitText { get; set; } = "确定";
+
+    #endregion
+
+    #region Form Parameters
+
+    /// <summary>
+    /// 表单模型
+    /// </summary>
+    [Parameter, EditorRequired]
+    public TModel Model { get; set; } = new();
+
+    /// <summary>
+    /// 表单布局（默认水平布局）
+    /// </summary>
+    [Parameter]
+    public FormLayout Layout { get; set; } = FormLayout.Horizontal;
+
+    /// <summary>
+    /// 标签列宽度（默认 4）
+    /// </summary>
+    [Parameter]
+    public OneOf<string, int> LabelColSpan { get; set; } = 4;
+
+    /// <summary>
+    /// 输入框列宽度（默认 14）
+    /// </summary>
+    [Parameter]
+    public OneOf<string, int> WrapperColSpan { get; set; } = 14;
+
+    /// <summary>
+    /// 表单大小
+    /// </summary>
+    [Parameter]
+    public FormSize? Size { get; set; }
+
+    /// <summary>
+    /// 必填标记显示方式
+    /// </summary>
+    [Parameter]
+    public FormRequiredMark RequiredMark { get; set; } = FormRequiredMark.Required;
+
+    /// <summary>
+    /// 是否在值改变时验证
+    /// </summary>
+    [Parameter]
+    public bool ValidateOnChange { get; set; } = true;
+
+    /// <summary>
+    /// 自定义验证器
+    /// </summary>
+    [Parameter]
+    public RenderFragment? Validator { get; set; }
+
+    /// <summary>
+    /// 表单内容
+    /// </summary>
+    [Parameter, EditorRequired]
+    public RenderFragment<TModel> ChildContent { get; set; } = null!;
+
+    /// <summary>
+    /// 表单样式类
+    /// </summary>
+    [Parameter]
+    public string? FormClass { get; set; }
+
+    /// <summary>
+    /// 表单内联样式
+    /// </summary>
+    [Parameter]
+    public string? FormStyle { get; set; }
+
+    #endregion
+
+    #region Grid Parameters
+
+    /// <summary>
+    /// 是否禁用Grid布局
+    /// </summary>
+    [Parameter]
+    public bool DisableGrid { get; set; }
+
+    /// <summary>
+    /// Grid行样式类（默认 "mx-0"）
+    /// </summary>
+    [Parameter]
+    public string? GridClass { get; set; }
+
+    /// <summary>
+    /// Grid行间隔 (水平间隔, 垂直间隔)
+    /// </summary>
+    [Parameter]
+    public (int, int) Gutter { get; set; } = (16, 16);
+
+    /// <summary>
+    /// 子项栅格占位格数 (1-24)
+    /// </summary>
+    [Parameter]
+    public OneOf<string, int>? ItemSpan { get; set; }
+
+    /// <summary>
+    /// 子项 &lt;576px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemXs { get; set; }
+
+    /// <summary>
+    /// 子项 ≥576px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemSm { get; set; }
+
+    /// <summary>
+    /// 子项 ≥768px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemMd { get; set; }
+
+    /// <summary>
+    /// 子项 ≥992px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemLg { get; set; }
+
+    /// <summary>
+    /// 子项 ≥1200px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemXl { get; set; }
+
+    /// <summary>
+    /// 子项 ≥1600px 响应式栅格
+    /// </summary>
+    [Parameter]
+    public OneOf<int, EmbeddedProperty>? ItemXxl { get; set; }
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// 表单提交处理，返回 true 表示成功并关闭抽屉
+    /// </summary>
+    [Parameter]
+    public Func<TModel, Task<bool>>? OnSubmit { get; set; }
+
+    /// <summary>
+    /// 表单提交失败时触发
+    /// </summary>
+    [Parameter]
+    public EventCallback<EditContext> OnFinishFailed { get; set; }
+
+    /// <summary>
+    /// 抽屉关闭后触发
+    /// </summary>
+    [Parameter]
+    public EventCallback OnClosed { get; set; }
+
+    #endregion
+
+    /// <summary>
+    /// 打开抽屉
+    /// </summary>
+    private void Open()
+    {
+        _visible = true;
+    }
+
+    /// <summary>
+    /// 关闭抽屉
+    /// </summary>
+    private async Task CloseAsync()
+    {
+        _visible = false;
+        StateHasChanged();
+        await OnClosed.InvokeAsync();
+    }
+    
+    /// <summary>
+    /// 重置表单
+    /// </summary>
+    public void Reset() => _form?.Reset();
+
+    /// <summary>
+    /// 验证表单
+    /// </summary>
+    public bool Validate() => _form?.Validate() ?? false;
+
+    private async Task HandleFinishAsync(EditContext editContext)
+    {
+        if (OnSubmit == null) return;
+
+        _loading = true;
+        StateHasChanged();
+
+        try
+        {
+            var success = await OnSubmit.Invoke(Model);
+            if (success)
+            {
+                await CloseAsync();
+            }
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleFinishFailed(EditContext editContext)
+    {
+        await OnFinishFailed.InvokeAsync(editContext);
+    }
+
+    /// <summary>
+    /// 提交表单
+    /// </summary>
+    private void Submit() => _form?.Submit();
+
+
+}

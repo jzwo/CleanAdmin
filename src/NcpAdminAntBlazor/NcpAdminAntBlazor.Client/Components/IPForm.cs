@@ -43,6 +43,11 @@ public interface IPForm
     /// </summary>
     int FieldCount { get; }
 
+    /// <summary>
+    /// 是否禁用Grid布局
+    /// </summary>
+    bool DisableGrid { get; }
+
     #region Item Span Properties
 
     /// <summary>
@@ -82,9 +87,3 @@ public interface IPForm
 
     #endregion
 }
-
-
-
-
-
-
