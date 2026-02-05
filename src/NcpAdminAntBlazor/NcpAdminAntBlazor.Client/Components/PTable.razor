@@ -6,13 +6,14 @@
 
 <div class="h-full flex flex-col">
     <CascadingValue Value="this" IsFixed="true">
-        @if (SearchTemplate is not null && _searchFormVisible)
+        @if (SearchTemplate is not null)
         {
-            <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
+            <div
+                class="@((_searchFormVisible ? "" : "hidden ") + "shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase")">
                 @SearchTemplate
             </div>
         }
-        <div class="px-4 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
+        <div class="px-4 flex-1 overflow-hidden bg-content-bg rounded-borderbase flex flex-col auto-flex-table">
             <div class="flex items-center justify-between pb-2 pt-3 px-1">
                 <div class="text-base font-medium pl-1">
                     @Title
@@ -54,7 +55,7 @@
                    TItem="TItem"
                    Total="_total"
                    DataSource="_dataSource"
-                   AutoHeight
+                   ScrollY="100%"
                    Loading="@IsLoading"
                    Size="@_tableSize"
                    @bind-PageSize="@_pageSize"
@@ -135,14 +136,10 @@
 
     public bool IsLoading { get; private set; }
 
-    private async Task HandleTableSizeChangeAsync(MenuItem item)
+    private void HandleTableSizeChangeAsync(MenuItem item)
     {
         if (_tableSize.ToString() == item.Key) return;
         _tableSize = Enum.Parse<TableSize>(item.Key);
-        await InvokeAsync(StateHasChanged);
-        await Task.Delay(200);
-        //这里需要触发一次窗口大小改变事件，强制表格重新计算高度
-        await Js.InvokeVoidAsync("eval", "window.dispatchEvent(new Event('resize'));");
     }
 
 }

@@ -1,0 +1,32 @@
+/* 1. 打通高度传递链：将所有中间层容器设为 Flex 列布局并强制占满高度 */
+::deep .auto-flex-table > .ant-table-wrapper,
+::deep .auto-flex-table .ant-spin-nested-loading,
+::deep .auto-flex-table .ant-spin-nested-loading > div,
+::deep .auto-flex-table .ant-spin-container,
+::deep .auto-flex-table .ant-table,
+::deep .auto-flex-table .ant-table-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+}
+
+/* 2. 表头：禁止压缩，保持自然高度 */
+::deep .auto-flex-table .ant-table-header {
+    flex: 0 0 auto !important;
+}
+
+/* 3. 表体：占据剩余空间，强制接管滚动控制 */
+::deep .auto-flex-table .ant-table-body {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;  /* 必须：开启滚动 */
+    max-height: none !important;  /* 必须：覆盖 JS 计算的内联高度 */
+    min-height: 0 !important;
+}
+
+/* 4. 分页器：禁止压缩，固定底部 */
+::deep .auto-flex-table .ant-pagination {
+    flex: 0 0 auto !important;
+    margin: 12px 0 8px 0 !important; /* 调整间距 */
+}
