@@ -3,11 +3,11 @@
 @using NcpAdminAntBlazor.Client.Infrastructure.Auth
 @using NcpAdminAntBlazor.Client.Infrastructure.Http
 @inject IStringLocalizer<Login> L
-@inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
 @inject ApiClient ApiClient
 @inject JwtAuthStateProvider JwtAuthStateProvider
 @inject IMessageService MessageService
+@inject INotificationService NotificationService
 
 <PageTitle>@L["PageTitle"]</PageTitle>
 
@@ -76,17 +76,8 @@
         Username = "admin",
         Password = "admin123456"
     };
+
     private bool _loading;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var state = await AuthStateProvider.GetAuthenticationStateAsync();
-        if (state.User.Identity?.IsAuthenticated is true)
-        {
-            NavigationManager.NavigateTo(Home.PageUri);
-        }
-    }
-
 
     private async Task OnFinish(EditContext editContext)
     {
@@ -114,6 +105,11 @@
                     ),
                     _model.RememberMe);
                 NavigationManager.NavigateTo(!string.IsNullOrWhiteSpace(ReturnUrl) ? ReturnUrl! : Home.PageUri);
+                _ = NotificationService.Success(new NotificationConfig()
+                {
+                    Message = "登录成功",
+                    Description = "欢迎回来！",
+                });
             }
             else
             {
