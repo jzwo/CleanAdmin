@@ -5,67 +5,67 @@
 @inject IJSRuntime Js
 
 <div class="h-full flex flex-col">
-    @if (SearchTemplate is not null && _searchFormVisible)
-    {
-        <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
-            <CascadingValue Value="this" IsFixed="true">
+    <CascadingValue Value="this" IsFixed="true">
+        @if (SearchTemplate is not null && _searchFormVisible)
+        {
+            <div class="shrink-0 p-5 mb-4 bg-content-bg rounded-borderbase">
                 @SearchTemplate
-            </CascadingValue>
-        </div>
-    }
-    <div class="px-4 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
-        <div class="flex items-center justify-between pb-2 pt-3 px-1">
-            <div class="text-base font-medium pl-1">
-                @Title
             </div>
-            <div class="flex items-center gap-2">
-                @if (ToolbarButtons is not null)
-                {
-                    @ToolbarButtons
-                }
-                @if (HasSearchForm)
-                {
-                    <Button Type="@(_searchFormVisible ? ButtonType.Primary : ButtonType.Default)"
-                            Shape="ButtonShape.Circle"
-                            OnClick="@(() => _searchFormVisible = !_searchFormVisible)">
-                        <Icon Type="@IconType.Outline.Search"></Icon>
-                    </Button>
-                }
-                <Dropdown Trigger="@([Trigger.Click])">
-                    <Overlay>
-                        <Menu SelectedKeys="@(new[] { _tableSize.ToString() })"
-                              OnMenuItemClicked="@HandleTableSizeChangeAsync">
-                            <MenuItem Key="@nameof(TableSize.Default)">默认</MenuItem>
-                            <MenuItem Key="@nameof(TableSize.Middle)">中等</MenuItem>
-                            <MenuItem Key="@nameof(TableSize.Small)">紧凑</MenuItem>
-                        </Menu>
-                    </Overlay>
-                    <ChildContent>
-                        <Button Shape="ButtonShape.Circle">
-                            <Icon Type="@IconType.Outline.ColumnHeight"></Icon>
+        }
+        <div class="px-4 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
+            <div class="flex items-center justify-between pb-2 pt-3 px-1">
+                <div class="text-base font-medium pl-1">
+                    @Title
+                </div>
+                <div class="flex items-center gap-2">
+                    @if (ToolbarButtons is not null)
+                    {
+                        @ToolbarButtons
+                    }
+                    @if (HasSearchForm)
+                    {
+                        <Button Type="@(_searchFormVisible ? ButtonType.Primary : ButtonType.Default)"
+                                Shape="ButtonShape.Circle"
+                                OnClick="@(() => _searchFormVisible = !_searchFormVisible)">
+                            <Icon Type="@IconType.Outline.Search"></Icon>
                         </Button>
-                    </ChildContent>
-                </Dropdown>
-                <Button Disabled="@IsLoading" Shape="ButtonShape.Circle" OnClick="@ReloadData">
-                    <Icon Type="@IconType.Outline.Reload" Spin="IsLoading"></Icon>
-                </Button>
+                    }
+                    <Dropdown Trigger="@([Trigger.Click])">
+                        <Overlay>
+                            <Menu SelectedKeys="@(new[] { _tableSize.ToString() })"
+                                  OnMenuItemClicked="@HandleTableSizeChangeAsync">
+                                <MenuItem Key="@nameof(TableSize.Default)">默认</MenuItem>
+                                <MenuItem Key="@nameof(TableSize.Middle)">中等</MenuItem>
+                                <MenuItem Key="@nameof(TableSize.Small)">紧凑</MenuItem>
+                            </Menu>
+                        </Overlay>
+                        <ChildContent>
+                            <Button Shape="ButtonShape.Circle">
+                                <Icon Type="@IconType.Outline.ColumnHeight"></Icon>
+                            </Button>
+                        </ChildContent>
+                    </Dropdown>
+                    <Button Disabled="@IsLoading" Shape="ButtonShape.Circle" OnClick="@ReloadData">
+                        <Icon Type="@IconType.Outline.Reload" Spin="IsLoading"></Icon>
+                    </Button>
+                </div>
             </div>
+            <Table @ref="InternalTable"
+                   TItem="TItem"
+                   Total="_total"
+                   DataSource="_dataSource"
+                   AutoHeight
+                   Loading="@IsLoading"
+                   Size="@_tableSize"
+                   @bind-PageSize="@_pageSize"
+                   PaginationPosition="bottomRight"
+                   OnChange="@HandleTableChangeAsync">
+                <ChildContent>
+                    @ColumnDefinitions(context)
+                </ChildContent>
+            </Table>
         </div>
-        <Table @ref="InternalTable"
-               TItem="TItem"
-               Total="_total"
-               DataSource="_dataSource"
-               AutoHeight
-               Loading="@IsLoading"
-               Size="@_tableSize"
-               @bind-PageSize="@_pageSize"
-               PaginationPosition="bottomRight"
-               OnChange="@HandleTableChangeAsync">
-            <ChildContent>
-                @ColumnDefinitions(context)
-            </ChildContent>
-        </Table>
-    </div>
+    </CascadingValue>
 </div>
 
 @code {
@@ -126,6 +126,11 @@
     public void ReloadData()
     {
         InternalTable.ReloadData();
+    }
+
+    public void ReloadDataByCurrentQueryModel()
+    {
+        InternalTable.ReloadData(InternalTable.GetQueryModel());
     }
 
     public bool IsLoading { get; private set; }

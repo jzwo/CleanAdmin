@@ -39,7 +39,6 @@ public sealed class UpdateUserRequest
     public string Email { get; init; } = string.Empty;
 
     public string Phone { get; init; } = string.Empty;
-    public int Status { get; init; }
     public List<RoleId> AssignedRoleIds { get; init; } = [];
 }
 
@@ -79,8 +78,7 @@ internal sealed class UpdateUserSummary : Summary<UpdateUserEndpoint, UpdateUser
                 Username = "admin",
                 RealName = "管理员",
                 Email = "admin@example.com",
-                Phone = "13800000000",
-                Status = 0
+                Phone = "13800000000"
             },
             "更新用户示例"));
         ResponseExamples.Add(200, true.AsResponseData());

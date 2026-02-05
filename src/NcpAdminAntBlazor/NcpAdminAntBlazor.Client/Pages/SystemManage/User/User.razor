@@ -1,184 +1,218 @@
 @page "/User"
 @using NcpAdminAntBlazor.Client.ApiSdk
-@using NcpAdminAntBlazor.Client.ApiSdk.Models
-@using NcpAdminAntBlazor.Client.Components
+@using AntDesign.TableModels
+@using CreateUserRequest = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceEndpointsUsersCreateUserRequest
+@using UpdateUserRequest = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceEndpointsUsersUpdateUserRequest
+@using UserListItemDto = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto
+@using SearchQueryParameters = NcpAdminAntBlazor.Client.ApiSdk.Api.User.List.ListRequestBuilder.ListRequestBuilderGetQueryParameters
 @inject ApiClient ApiClient
 @inject IMessageService MessageService
 
 <PageTitle>用户管理</PageTitle>
 
-<div class="h-full flex flex-col">
-    <PTableSearchForm TModel="SearchModel"
-                 Model="@_searchModel">
-        <PFormItem Label="用户名" Span="8">
-            <Input @bind-Value="@context.Username" Placeholder="请输入用户名" AllowClear/>
-        </PFormItem>
-        <PFormItem Label="真实姓名" Span="8">
-            <Input @bind-Value="@context.RealName" Placeholder="请输入真实姓名" AllowClear/>
-        </PFormItem>
-        <PFormItem Label="邮箱" Span="8">
-            <Input @bind-Value="@context.Email" Placeholder="请输入邮箱" AllowClear/>
-        </PFormItem>
-        <PFormItem Label="手机号" Span="8">
-            <Input @bind-Value="@context.Phone" Placeholder="请输入手机号" AllowClear/>
-        </PFormItem>
-    </PTableSearchForm>
-
-    <div class="px-4 py-2 flex-1 overflow-hidden bg-content-bg rounded-borderbase">
-        <Table TItem="NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto"
-               DataSource="@_users"
-               ScrollY=""
-               AutoHeight
-               Loading="@_loading"
-               Total="_total">
-            @* <TitleTemplate> *@
-            @*     <div class="flex items-center justify-between"> *@
-            @*         <div class="pl-1 text-base font-medium"> *@
-            @*             用户列表 *@
-            @*         </div> *@
-            @*         <Space Class="pr-1"> *@
-            @*             <SpaceItem> *@
-            @*                 <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus"> *@
-            @*                     新增 *@
-            @*                 </Button> *@
-            @*             </SpaceItem> *@
-            @*             <SpaceItem> *@
-            @*                 <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Search" *@
-            @*                         Shape="ButtonShape.Circle"></Button> *@
-            @*             </SpaceItem> *@
-            @*             <SpaceItem> *@
-            @*                 <Button Icon="@IconType.Outline.Reload" OnClick="LoadDataAsync" Shape="ButtonShape.Circle"> *@
-            @*                 </Button> *@
-            @*             </SpaceItem> *@
-            @*             <SpaceItem> *@
-            @*                 <Button Icon="@IconType.Outline.Setting" Shape="ButtonShape.Circle"> *@
-            @*                 </Button> *@
-            @*             </SpaceItem> *@
-            @*         </Space> *@
-            @*     </div> *@
-            @* </TitleTemplate> *@
-            <PaginationTemplate>
-                <Pagination Class="@(context.PaginationClass + " mb-2 justify-end")"
-                            Size="PaginationSize.Small"
-                            Total="context.Total"
-                            PageSize="context.PageSize"
-                            Current="context.PageIndex"
-                            ShowSizeChanger
-                            OnChange="context.HandlePageChange"/>
-            </PaginationTemplate>
-            <ChildContent>
-                <PropertyColumn Property="c => c.Username" Title="用户名"/>
-                <PropertyColumn Property="c => c.RealName" Title="真实姓名"/>
-                <PropertyColumn Property="c => c.Email" Title="邮箱"/>
-                <PropertyColumn Property="c => c.Phone" Title="手机号"/>
-                <PropertyColumn Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
-
-                @* <PGenerateColumns HideColumnsByName="@(["Id"])"></PGenerateColumns> *@
-                <ActionColumn Title="操作" Width="180">
-                    <Space>
-                        <SpaceItem>
-                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link">
+<PTable @ref="_pTable" TItem="UserListItemDto"
+        Title="用户列表"
+        OnLoadData="LoadDataAsync">
+    <SearchTemplate>
+        <PTableSearchForm TModel="SearchQueryParameters" Model="_searchModel">
+            <PFormItem Label="用户名">
+                <Input @bind-Value="@_searchModel.Username" Placeholder="请输入用户名" AllowClear/>
+            </PFormItem>
+            <PFormItem Label="真实姓名">
+                <Input @bind-Value="@_searchModel.RealName" Placeholder="请输入真实姓名" AllowClear/>
+            </PFormItem>
+            <PFormItem Label="邮箱">
+                <Input @bind-Value="@_searchModel.Email" Placeholder="请输入邮箱" AllowClear/>
+            </PFormItem>
+            <PFormItem Label="手机号">
+                <Input @bind-Value="@_searchModel.Phone" Placeholder="请输入手机号" AllowClear/>
+            </PFormItem>
+        </PTableSearchForm>
+    </SearchTemplate>
+    <ToolbarButtons>
+        <PDrawerForm TModel="CreateUserRequest"
+                     Title="新增用户"
+                     Model="_createModel"
+                     OnSubmit="@HandleCreateAsync">
+            <Activator>
+                <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
+            </Activator>
+            <ChildContent Context="model">
+                <PFormItem Label="用户名"
+                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入用户名" } })">
+                    <Input @bind-Value="@model.Username" Placeholder="请输入用户名"/>
+                </PFormItem>
+                <PFormItem Label="密码"
+                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入密码" }, new FormValidationRule { Min = 6, Message = "密码长度不能少于6位" } })">
+                    <InputPassword @bind-Value="@model.Password" Placeholder="请输入密码"/>
+                </PFormItem>
+                <PFormItem Label="真实姓名"
+                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入真实姓名" } })">
+                    <Input @bind-Value="@model.RealName" Placeholder="请输入真实姓名"/>
+                </PFormItem>
+                <PFormItem Label="邮箱"
+                           Rules="@(new[] { new FormValidationRule { Type = FormFieldType.Email, Message = "请输入有效的邮箱地址" } })">
+                    <Input @bind-Value="@model.Email" Placeholder="请输入邮箱"/>
+                </PFormItem>
+                <PFormItem Label="手机号">
+                    <Input @bind-Value="@model.Phone" Placeholder="请输入手机号"/>
+                </PFormItem>
+            </ChildContent>
+        </PDrawerForm>
+    </ToolbarButtons>
+    <ColumnDefinitions Context="item">
+        <PropertyColumn Property="c => c.Username" Title="用户名"/>
+        <PropertyColumn Property="c => c.RealName" Title="真实姓名"/>
+        <PropertyColumn Property="c => c.Email" Title="邮箱"/>
+        <PropertyColumn Property="c => c.Phone" Title="手机号"/>
+        <PropertyColumn Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
+        <ActionColumn Title="操作" Width="180">
+            <Space>
+                <SpaceItem>
+                    @* 编辑用户抽屉表单 *@
+                    <PDrawerForm TModel="UpdateUserRequest"
+                                 Title="编辑用户"
+                                 Model="_editModel"
+                                 OnSubmit="@HandleEditAsync">
+                        <Activator>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
+                                    OnClick="@(() => OnOpenEditDrawer(item))">
                                 编辑
                             </Button>
-                        </SpaceItem>
-                        <SpaceItem>
-                            <Popconfirm Title="确定要删除该用户吗？"
-                                        OnConfirm="() => OnDelete(context)"
-                                        OkText="确定"
-                                        CancelText="取消">
-                                <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
-                                    删除
-                                </Button>
-                            </Popconfirm>
-                        </SpaceItem>
-                    </Space>
-                </ActionColumn>
-            </ChildContent>
-        </Table>
-    </div>
-</div>
+                        </Activator>
+                        <ChildContent Context="model">
+                            <PFormItem Label="用户名"
+                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入用户名" }])">
+                                <Input @bind-Value="@model.Username" Placeholder="请输入用户名"/>
+                            </PFormItem>
+                            <PFormItem Label="真实姓名"
+                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入真实姓名" }])">
+                                <Input @bind-Value="@model.RealName" Placeholder="请输入真实姓名"/>
+                            </PFormItem>
+                            <PFormItem Label="邮箱"
+                                       Rules="@([new FormValidationRule { Type = FormFieldType.Email, Message = "请输入有效的邮箱地址" }])">
+                                <Input @bind-Value="@model.Email" Placeholder="请输入邮箱"/>
+                            </PFormItem>
+                            <PFormItem Label="手机号">
+                                <Input @bind-Value="@model.Phone" Placeholder="请输入手机号"/>
+                            </PFormItem>
+                        </ChildContent>
+                    </PDrawerForm>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm Title="确定要删除该用户吗？"
+                                OnConfirm="() => OnDelete(item)"
+                                OkText="确定"
+                                CancelText="取消">
+                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
+                            删除
+                        </Button>
+                    </Popconfirm>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </ColumnDefinitions>
+</PTable>
+
 
 @code {
-    private bool _loading;
-    private List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto> _users = new();
-    private int _total;
-    private int _pageIndex = 1;
-    private int _pageSize = 10;
-    private readonly SearchModel _searchModel = new();
+    private PTable<UserListItemDto>? _pTable;
+    private readonly SearchQueryParameters _searchModel = new();
+    private readonly CreateUserRequest _createModel = new();
+    private UpdateUserRequest _editModel = new();
+    private string? _currentEditUserId;
 
-    protected override async Task OnInitializedAsync()
+    /// <summary>
+    /// PTable 数据加载回调
+    /// </summary>
+    private async Task<(int Total, IEnumerable<UserListItemDto> Data)> LoadDataAsync(
+        QueryModel<UserListItemDto> queryModel)
     {
-        await LoadDataAsync();
-    }
-
-    private async Task LoadDataAsync()
-    {
-        _loading = true;
         try
         {
-            // var response = await ApiClient.Api.User.List.GetAsync(config =>
-            // {
-            //     config.QueryParameters.PageIndex = _pageIndex;
-            //     config.QueryParameters.PageSize = _pageSize;
-            //     config.QueryParameters.CountTotal = true;
-            //     config.QueryParameters.Username = string.IsNullOrWhiteSpace(_searchModel.Username) ? null : _searchModel.Username;
-            //     config.QueryParameters.RealName = string.IsNullOrWhiteSpace(_searchModel.RealName) ? null : _searchModel.RealName;
-            //     config.QueryParameters.Email = string.IsNullOrWhiteSpace(_searchModel.Email) ? null : _searchModel.Email;
-            //     config.QueryParameters.Phone = string.IsNullOrWhiteSpace(_searchModel.Phone) ? null : _searchModel.Phone;
-            // });
-            //
-            // if (response is { Success: true, Data: { } data })
-            // {
-            //     _users = data.Items?.ToList() ?? new List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto>();
-            //     _total = data.Total ?? 0;
-            // }
-            // else
-            // {
-            //     await MessageService.ErrorAsync(response?.Message ?? "获取用户列表失败");
-            // }
-            _users = GenerateMockUsers();
-            _total = _users.Count;
+            var response = await ApiClient.Api.User.List.GetAsync(config =>
+            {
+                config.QueryParameters.PageIndex = queryModel.PageIndex;
+                config.QueryParameters.PageSize = queryModel.PageSize;
+                config.QueryParameters.CountTotal = true;
+                config.QueryParameters.Username = string.IsNullOrWhiteSpace(_searchModel.Username) ? null : _searchModel.Username;
+                config.QueryParameters.RealName = string.IsNullOrWhiteSpace(_searchModel.RealName) ? null : _searchModel.RealName;
+                config.QueryParameters.Email = string.IsNullOrWhiteSpace(_searchModel.Email) ? null : _searchModel.Email;
+                config.QueryParameters.Phone = string.IsNullOrWhiteSpace(_searchModel.Phone) ? null : _searchModel.Phone;
+            });
+
+            if (response is { Success: true, Data: { } data })
+            {
+                return (data.Total ?? 0, data.Items?.ToList() ?? []);
+            }
+            else
+            {
+                await MessageService.ErrorAsync(response?.Message ?? "获取用户列表失败");
+                return (0, []);
+            }
         }
         catch (Exception ex)
         {
             await MessageService.ErrorAsync($"获取用户列表失败: {ex.Message}");
+            return (0, []);
         }
-        finally
+    }
+
+    /// <summary>
+    /// 处理新增用户
+    /// </summary>
+    private async Task<(bool, string?)> HandleCreateAsync(CreateUserRequest model)
+    {
+        try
         {
-            _loading = false;
+            var response = await ApiClient.Api.Users.PostAsync(model);
+            return response is { Success: true } ? (true, null) : (false, response?.Message);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
         }
     }
 
-    private async Task OnSearch(EditContext model)
+    /// <summary>
+    /// 打开编辑抽屉
+    /// </summary>
+    private void OnOpenEditDrawer(UserListItemDto user)
     {
-        _pageIndex = 1;
-        await LoadDataAsync();
+        _currentEditUserId = user.Id;
+        _editModel = new UpdateUserRequest
+        {
+            Username = user.Username,
+            RealName = user.RealName,
+            Email = user.Email,
+            Phone = user.Phone,
+            Status = 1, // 默认启用
+            AssignedRoleIds = []
+        };
     }
 
-    private async Task OnReset()
+    /// <summary>
+    /// 处理编辑用户
+    /// </summary>
+    private async Task<(bool, string?)> HandleEditAsync(UpdateUserRequest model)
     {
-        _searchModel.Username = null;
-        _searchModel.RealName = null;
-        _searchModel.Email = null;
-        _searchModel.Phone = null;
-        _pageIndex = 1;
-        await LoadDataAsync();
+        try
+        {
+            if (string.IsNullOrEmpty(_currentEditUserId))
+            {
+                return (false, "用户ID不能为空");
+            }
+
+            var response = await ApiClient.Api.User[_currentEditUserId].Update.PostAsync(model);
+            return response is { Success: true } ? (true, null) : (false, response?.Message);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
     }
 
-    private async Task OnPageIndexChange(PaginationEventArgs args)
-    {
-        _pageIndex = args.Page;
-        await LoadDataAsync();
-    }
-
-    private async Task OnPageSizeChange(PaginationEventArgs args)
-    {
-        _pageSize = args.PageSize;
-        _pageIndex = 1;
-        await LoadDataAsync();
-    }
-
-    private async Task OnDelete(NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto user)
+    private async Task OnDelete(UserListItemDto user)
     {
         try
         {
@@ -186,7 +220,7 @@
             if (response is { Success: true })
             {
                 await MessageService.SuccessAsync("删除成功");
-                await LoadDataAsync();
+                _pTable?.ReloadData();
             }
             else
             {
@@ -199,43 +233,5 @@
         }
     }
 
-    private class SearchModel
-    {
-        public string? Username { get; set; }
-        public string? RealName { get; set; }
-        public string? Email { get; set; }
-        public string? Phone { get; set; }
-    }
-
-    // 生成虚拟用户数据
-    private List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto> GenerateMockUsers()
-    {
-        var mockUsers = new List<NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto>();
-
-        var usernames = new[] { "admin", "zhangsan", "lisi", "wangwu", "zhaoliu", "sunqi", "zhouba", "wujiu", "zhengshi", "liuyi" };
-        var realNames = new[] { "管理员", "张三", "李四", "王五", "赵六", "孙七", "周八", "吴九", "郑十", "刘一" };
-        var emailDomains = new[] { "qq.com", "163.com", "gmail.com", "outlook.com" };
-
-        for (int i = 0; i < 25; i++)
-        {
-            var username = i < usernames.Length ? usernames[i] : $"user{i + 1}";
-            var realName = i < realNames.Length ? realNames[i] : $"用户{i + 1}";
-
-            // 生成8位手机号后缀
-            var phoneSuffix = (10000000 + i * 123456).ToString().PadLeft(8, '0').Substring(0, 8);
-
-            mockUsers.Add(new NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto
-            {
-                Id = Guid.NewGuid().ToString(),
-                Username = username,
-                RealName = realName,
-                Email = $"{username}@{emailDomains[i % emailDomains.Length]}",
-                Phone = $"138{phoneSuffix}",
-                CreatedAt = DateTime.Now.AddDays(-i * 5)
-            });
-        }
-
-        return mockUsers;
-    }
 
 }

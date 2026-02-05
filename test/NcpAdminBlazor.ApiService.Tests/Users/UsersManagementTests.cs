@@ -145,7 +145,6 @@ public class UsersManagementTests(WebAppFixture app, UsersManagementTests.UserSt
             RealName = updatedRealName,
             Email = updatedEmail,
             Phone = updatedPhone,
-            Status = 0,
             AssignedRoleIds = [roleId]
         };
 
