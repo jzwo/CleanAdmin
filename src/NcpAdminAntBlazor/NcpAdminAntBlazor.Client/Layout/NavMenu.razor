@@ -76,7 +76,7 @@
                 <TitleTemplate>
                     @if (!string.IsNullOrEmpty(item.Icon))
                     {
-                        <Icon Type="@(item.Icon)"/>
+                        <iconify-icon icon="@(item.Icon)"></iconify-icon>
                     }
                     <span>@item.MenuName</span>
                 </TitleTemplate>
@@ -91,14 +91,17 @@
         else
         {
             var match = item.RoutePath == "/" ? NavLinkMatch.All : NavLinkMatch.Prefix;
+            RenderFragment? iconTemplate = null;
+            if (!string.IsNullOrEmpty(item.Icon))
+            {
+                var iconName = item.Icon;
+                iconTemplate = @<iconify-icon icon="@iconName"></iconify-icon>;
+            }
 
             <MenuItem Key="@(item.MenuId ?? Guid.NewGuid().ToString())" RouterLink="@item.RoutePath"
-                      RouterMatch="@NavLinkMatch.All">
-                @if (!string.IsNullOrEmpty(item.Icon))
-                {
-                    <Icon Type="@(item.Icon)"/>
-                }
-                <span>@item.MenuName</span>
+                      IconTemplate="@iconTemplate"
+                      RouterMatch="@match">
+                @item.MenuName
             </MenuItem>
         }
     };

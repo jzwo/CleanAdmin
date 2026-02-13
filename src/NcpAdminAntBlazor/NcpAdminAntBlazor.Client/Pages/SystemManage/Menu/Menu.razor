@@ -54,7 +54,11 @@
                     <Input @bind-Value="@model.ComponentPath" Placeholder="请输入组件路径"/>
                 </PFormItem>
                 <PFormItem Label="图标">
-                    <Input @bind-Value="@model.Icon" Placeholder="请输入图标"/>
+                    <AntDesign.Input @bind-Value="@model.Icon" Placeholder="请输入图标">
+                        <AddOnAfter>
+                            <iconify-icon icon="@model.Icon"></iconify-icon>
+                        </AddOnAfter>
+                    </AntDesign.Input>
                 </PFormItem>
                 <PFormItem Label="排序号"
                            Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入排序号" } })">
@@ -67,7 +71,17 @@
         </PDrawerForm>
     </ToolbarButtons>
     <ColumnDefinitions>
-        <PropertyColumn Width="20%" Property="c => c.MenuName" Title="菜单名称"/>
+        <PropertyColumn Width="20%" Property="c => c.MenuName" Title="菜单名称">
+            <Space>
+                <SpaceItem Class="flex items-center">
+                    @if (!string.IsNullOrEmpty(context.Icon))
+                    {
+                        <iconify-icon icon="@context.Icon"></iconify-icon>
+                    }
+                </SpaceItem>
+                <SpaceItem>@context.MenuName</SpaceItem>
+            </Space>
+        </PropertyColumn>
         <PropertyColumn Property="c => c.MenuType" Title="菜单类型">
             <Tag Color="@GetMenuTypeColor(context.MenuType)">@GetMenuTypeText(context.MenuType)</Tag>
         </PropertyColumn>
@@ -115,7 +129,11 @@
                                 <Input @bind-Value="@model.ComponentPath" Placeholder="请输入组件路径"/>
                             </PFormItem>
                             <PFormItem Label="图标">
-                                <Input @bind-Value="@model.Icon" Placeholder="请输入图标"/>
+                                <AntDesign.Input @bind-Value="@model.Icon" Placeholder="请输入图标">
+                                    <AddOnAfter>
+                                        <iconify-icon icon="@model.Icon"></iconify-icon>
+                                    </AddOnAfter>
+                                </AntDesign.Input>
                             </PFormItem>
                             <PFormItem Label="权限码">
                                 <Input @bind-Value="@model.PermissionCode" Placeholder="请输入权限码"/>
