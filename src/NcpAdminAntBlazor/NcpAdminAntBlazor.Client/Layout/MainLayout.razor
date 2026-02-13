@@ -36,9 +36,7 @@
                 <Button Type="@ButtonType.Text" OnClick="@CollapseToggle">
                     <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"/>
                 </Button>
-                <Breadcrumb Class="flex-1 overflow-hidden ml-2" AutoGenerate Separator=">">
-                    
-                </Breadcrumb>
+                <AutoBreadcrumb />
 
                 <div class="h-full flex items-center justify-end">
                     <ThemeToggle/>
