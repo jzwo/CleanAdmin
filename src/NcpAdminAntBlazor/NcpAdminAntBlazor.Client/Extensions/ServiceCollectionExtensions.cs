@@ -26,7 +26,6 @@ public static class ServiceCollectionExtensions
             options.SupportedCultures = ["zh-CN", "en-US"];
         });
         services.AddScoped<ICultureService, CultureService>();
-        services.AddSingleton<IMenuService, MenuService>();
         services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddScoped<FullscreenState>();
     }

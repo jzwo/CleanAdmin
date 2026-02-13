@@ -1,85 +1,109 @@
-@inject IMenuService MenuService
-@inject NavigationManager Navigation
+@using NcpAdminAntBlazor.Client.ApiSdk
+@using NcpAdminAntBlazor.Client.ApiSdk.Models
+@inject ApiClient ApiClient
+@inject AuthenticationStateProvider AuthStateProvider
 
 <div>
-    <Menu DefaultSelectedKeys=@(new[] { GetSelectedKey() }) Mode="MenuMode.Inline" Class="rounded-menu bg-transparent">
-        @foreach (var item in MenuService.GetMenuItems())
-        {
-            @RenderMenuItem(item)
-        }
-    </Menu>
+    @if (_isLoading)
+    {
+        <div class="menu-loading" style="padding: 20px; text-align: center;">
+            <Spin/>
+        </div>
+    }
+    else if (_menuItems.Count > 0)
+    {
+        <Menu Mode="MenuMode.Inline" Class="rounded-menu bg-transparent">
+            @foreach (var item in _menuItems)
+            {
+                @RenderMenuItem(item)
+            }
+        </Menu>
+    }
+    else
+    {
+        <div class="menu-empty" style="padding: 20px; text-align: center; color: #999;">
+            <p>暂无菜单</p>
+        </div>
+    }
 </div>
 
-@code {
-    private RenderFragment RenderMenuItem(MenuItemModel item) => __builder =>
-    {
-        if (item.IsSubMenu)
-        {
-            RenderFragment subMenuTitle = @<span>
-                @if (!string.IsNullOrEmpty(item.Icon))
-                {
-                    <Icon Type="@GetIconType(item.Icon)" />
-                }
-                <span>@item.Title</span>
-            </span>;
+@* ReSharper disable once UnusedParameter.Local *@
 
-            <SubMenu Key="@item.Key" TitleTemplate="@subMenuTitle">
-                @foreach (var child in item.Children)
-                {
-                    @RenderMenuItem(child)
-                }
+@code {
+    private List<NcpAdminBlazorApiServiceApplicationQueriesMenusUserMenuTreeNodeDto> _menuItems = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMenusAsync();
+    }
+
+    private async Task LoadMenusAsync()
+    {
+        try
+        {
+            _isLoading = true;
+
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            if (!authState.User.Identity?.IsAuthenticated ?? true)
+            {
+                _menuItems = [];
+                return;
+            }
+
+            var response = await ApiClient.Api.Menus.CurrentUser.GetAsync();
+
+            _menuItems = response?.Data ?? [];
+        }
+        catch (Exception ex)
+        {
+            await System.Console.Error.WriteLineAsync($"加载菜单失败: {ex.Message}");
+            await System.Console.Error.WriteLineAsync(ex.StackTrace);
+            _menuItems = [];
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private RenderFragment RenderMenuItem(NcpAdminBlazorApiServiceApplicationQueriesMenusUserMenuTreeNodeDto item) => __builder =>
+    {
+        var hasChildren = item.Children?.Count > 0;
+        if (hasChildren)
+        {
+            <SubMenu Key="@(item.MenuId ?? Guid.NewGuid().ToString())">
+                <TitleTemplate>
+                    @if (!string.IsNullOrEmpty(item.Icon))
+                    {
+                        <Icon Type="@(item.Icon)"/>
+                    }
+                    <span>@item.MenuName</span>
+                </TitleTemplate>
+                <ChildContent>
+                    @foreach (var child in item.Children!)
+                    {
+                        @RenderMenuItem(child)
+                    }
+                </ChildContent>
             </SubMenu>
         }
         else
         {
-            <MenuItem Key="@item.Key" OnClick="@(() => NavigateToRoute(item.Route))">
+            var match = item.RoutePath == "/" ? NavLinkMatch.All : NavLinkMatch.Prefix;
+
+            <MenuItem Key="@(item.MenuId ?? Guid.NewGuid().ToString())" RouterLink="@item.RoutePath"
+                      RouterMatch="@NavLinkMatch.All">
                 @if (!string.IsNullOrEmpty(item.Icon))
                 {
-                    <Icon Type="@GetIconType(item.Icon)" />
+                    <Icon Type="@(item.Icon)"/>
                 }
-                <span>@item.Title</span>
+                <span>@item.MenuName</span>
             </MenuItem>
         }
     };
 
-    private string GetIconType(string icon)
-    {
-        return icon.ToLowerInvariant() switch
-        {
-            "pie-chart" => IconType.Outline.PieChart,
-            "desktop" => IconType.Outline.Desktop,
-            "user" => IconType.Outline.User,
-            "team" => IconType.Outline.Team,
-            "file" => IconType.Outline.File,
-            _ => IconType.Outline.QuestionCircle
-        };
-    }
-
-    private void NavigateToRoute(string? route)
-    {
-        if (!string.IsNullOrEmpty(route))
-        {
-            Navigation.NavigateTo(route);
-        }
-    }
-
-    private string GetSelectedKey()
-    {
-        var currentPath = new Uri(Navigation.Uri).AbsolutePath;
-        var menuItems = MenuService.GetMenuItems();
-        
-        foreach (var item in menuItems)
-        {
-            if (item.Route == currentPath)
-                return item.Key;
-                
-            foreach (var child in item.Children)
-            {
-                if (child.Route == currentPath)
-                    return child.Key;
-            }
-        }
-        
-        return menuItems.FirstOrDefault()?.Key ?? "dashboard";
-    }
 }
+
+
+

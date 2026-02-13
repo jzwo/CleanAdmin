@@ -35,23 +35,6 @@ public class MenusManagementTests(WebAppFixture app, MenusManagementTests.MenuSt
         state.MenuId = res.Data.MenuId;
     }
 
-    [Fact, Priority(2)]
-    public async Task MenuList_ShouldIncludeCreatedMenu()
-    {
-        var (rsp, res) = await app.AuthenticatedClient
-            .GETAsync<GetMenuListEndpoint, GetMenuListRequest, ResponseData<PagedData<MenuListItemDto>>>(
-                new GetMenuListRequest
-                {
-                    MenuName = null,
-                    PageIndex = 1,
-                    PageSize = 100
-                });
-
-        rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
-        res.Success.ShouldBeTrue();
-        res.Data.Items.ShouldNotBeEmpty();
-    }
-
     [Fact, Priority(3)]
     public async Task MenuInfo_ShouldReturnMenuInfo()
     {

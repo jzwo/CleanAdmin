@@ -60,7 +60,10 @@
                    Size="@_tableSize"
                    @bind-PageSize="@_pageSize"
                    PaginationPosition="bottomRight"
-                   OnChange="@HandleTableChangeAsync">
+                   HidePagination="HidePagination"
+                   OnChange="@HandleTableChangeAsync"
+                   TreeChildren="@TreeChildren"
+                   DefaultExpandAllRows="@DefaultExpandAllRows">
                 <ChildContent>
                     @ColumnDefinitions(context)
                 </ChildContent>
@@ -92,10 +95,14 @@
 
     [Parameter] public int PageSize { get; set; } = 10;
     [Parameter] public EventCallback<int> PageSizeChanged { get; set; }
+    [Parameter] public bool HidePagination { get; set; }
 
     [Parameter] public string? Title { get; set; }
 
     [Parameter] public RenderFragment? ToolbarButtons { get; set; }
+
+    [Parameter] public Func<TItem, IEnumerable<TItem>>? TreeChildren { get; set; }
+    [Parameter] public bool DefaultExpandAllRows { get; set; }
 
     #endregion
 
