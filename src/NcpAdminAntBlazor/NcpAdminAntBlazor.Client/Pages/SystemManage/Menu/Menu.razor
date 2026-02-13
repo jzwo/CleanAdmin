@@ -72,8 +72,8 @@
     </ToolbarButtons>
     <ColumnDefinitions>
         <PropertyColumn Width="20%" Property="c => c.MenuName" Title="菜单名称">
-            <Space>
-                <SpaceItem Class="flex items-center">
+            <Space Class="flex items-center">
+                <SpaceItem>
                     @if (!string.IsNullOrEmpty(context.Icon))
                     {
                         <iconify-icon icon="@context.Icon"></iconify-icon>

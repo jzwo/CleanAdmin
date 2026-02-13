@@ -19,6 +19,12 @@
         --color-sider: var(--ant-layout-sider-background);
         --color-appbar: var(--ant-layout-header-background);
     }
+
+    iconify-icon {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+    }
 }
 
 @plugin "@iconify/tailwind4";
