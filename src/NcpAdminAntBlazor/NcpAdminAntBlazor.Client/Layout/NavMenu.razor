@@ -74,11 +74,17 @@
         {
             <SubMenu Key="@(item.MenuId ?? Guid.NewGuid().ToString())">
                 <TitleTemplate>
-                    @if (!string.IsNullOrEmpty(item.Icon))
-                    {
-                        <iconify-icon icon="@(item.Icon)"></iconify-icon>
-                    }
-                    <span>@item.MenuName</span>
+                    <span style="display: inline-flex; align-items: center;">
+                        @if (!string.IsNullOrEmpty(item.Icon))
+                        {
+                            <Icon>
+                                <Component>
+                                    <iconify-icon icon="@(item.Icon)"></iconify-icon>
+                                </Component>
+                            </Icon>
+                        }
+                        <span>@item.MenuName</span>
+                    </span>
                 </TitleTemplate>
                 <ChildContent>
                     @foreach (var child in item.Children!)

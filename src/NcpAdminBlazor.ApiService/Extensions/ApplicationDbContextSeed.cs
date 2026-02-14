@@ -54,7 +54,7 @@ public static class ApplicationDbContextSeed
                     parentId: null,
                     routePath: "/",
                     componentPath: null,
-                    icon: null,
+                    icon: "lucide:home",
                     sortOrder: 1,
                     permissionCode: null);
 
@@ -62,9 +62,9 @@ public static class ApplicationDbContextSeed
                     menuName: "系统管理",
                     menuType: MenuType.Directory,
                     parentId: null,
-                    routePath: "/system",
+                    routePath: "/SystemManage",
                     componentPath: null,
-                    icon: null,
+                    icon: "lucide:settings",
                     sortOrder: 2,
                     permissionCode: null);
 
@@ -86,23 +86,33 @@ public static class ApplicationDbContextSeed
                     menuName: "用户管理",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
-                    routePath: "/system/users",
+                    routePath: "/SystemManage/User",
                     componentPath: null,
-                    icon: null,
+                    icon: "lucide:user-cog",
                     sortOrder: 1,
-                    permissionCode: "user.view");
+                    permissionCode: "");
 
                 var roleMenu = new Menu(
                     menuName: "角色管理",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
-                    routePath: "/system/roles",
+                    routePath: "/SystemManage/Role",
                     componentPath: null,
-                    icon: null,
+                    icon: "lucide:shield-check",
                     sortOrder: 2,
-                    permissionCode: "role.view");
+                    permissionCode: "");
 
-                await context.Menus.AddRangeAsync([userMenu, roleMenu], cancellationToken);
+                var menuMenu = new Menu(
+                    menuName: "菜单管理",
+                    menuType: MenuType.Menu,
+                    parentId: systemMenu.Id,
+                    routePath: "/SystemManage/Menu",
+                    componentPath: null,
+                    icon: "lucide:layout-list",
+                    sortOrder: 2,
+                    permissionCode: "");
+
+                await context.Menus.AddRangeAsync([userMenu, roleMenu, menuMenu], cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);
             }
         }

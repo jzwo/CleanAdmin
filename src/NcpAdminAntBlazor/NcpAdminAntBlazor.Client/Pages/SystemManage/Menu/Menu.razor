@@ -1,4 +1,4 @@
-@page "/Menu"
+@page "/SystemManage/Menu"
 
 @using AntDesign.TableModels
 @using NcpAdminAntBlazor.Client.ApiSdk
@@ -71,9 +71,9 @@
         </PDrawerForm>
     </ToolbarButtons>
     <ColumnDefinitions>
-        <PropertyColumn Width="20%" Property="c => c.MenuName" Title="菜单名称">
+        <PropertyColumn Property="c => c.MenuName" Title="菜单名称">
             <Space Class="flex items-center">
-                <SpaceItem>
+                <SpaceItem Class="flex items-center">
                     @if (!string.IsNullOrEmpty(context.Icon))
                     {
                         <iconify-icon icon="@context.Icon"></iconify-icon>
@@ -82,27 +82,21 @@
                 <SpaceItem>@context.MenuName</SpaceItem>
             </Space>
         </PropertyColumn>
-        <PropertyColumn Property="c => c.MenuType" Title="菜单类型">
+        <PropertyColumn Width="12%" Property="c => c.MenuType" Title="菜单类型">
             <Tag Color="@GetMenuTypeColor(context.MenuType)">@GetMenuTypeText(context.MenuType)</Tag>
         </PropertyColumn>
-        <PropertyColumn Property="c => c.RoutePath" Title="路由路径"/>
-        <PropertyColumn Property="c => c.ComponentPath" Title="组件路径"/>
-        <PropertyColumn Property="c => c.Icon" Title="图标">
-            @if (!string.IsNullOrEmpty(context.Icon))
-            {
-                <Icon Type="@context.Icon"/>
-            }
-        </PropertyColumn>
-        <PropertyColumn Property="c => c.SortOrder" Title="排序号"/>
-        <PropertyColumn Property="c => c.IsVisible" Title="可见性">
+        <PropertyColumn Width="20%" Property="c => c.RoutePath" Title="路由路径"/>
+        <PropertyColumn Width="8%" Property="c => c.ComponentPath" Title="组件路径"/>
+        <PropertyColumn Width="8%" Property="c => c.SortOrder" Title="排序号"/>
+        <PropertyColumn Width="8%" Property="c => c.IsVisible" Title="可见性">
             <Tag
                 Color="@(context.IsVisible == true ? "green" : "red")">@(context.IsVisible == true ? "显示" : "隐藏")</Tag>
         </PropertyColumn>
-        <PropertyColumn Property="c => c.Status" Title="状态">
+        <PropertyColumn Width="8%" Property="c => c.Status" Title="状态">
             <Tag
                 Color="@(context.Status == MenuStatus.Enabled ? "green" : "red")">@(context.Status == MenuStatus.Enabled ? "启用" : "禁用")</Tag>
         </PropertyColumn>
-        <ActionColumn Title="操作" Width="200">
+        <ActionColumn Title="操作" Width="12%">
             <Space>
                 <SpaceItem>
                     @* 编辑菜单抽屉表单 *@
@@ -246,12 +240,7 @@
             }
 
             var response = await ApiClient.Api.Menus[_currentEditMenuId].PutAsync(model);
-            if (response is { Success: true })
-            {
-                return (true, null);
-            }
-
-            return (false, response?.Message);
+            return response is { Success: true } ? (true, null) : (false, response?.Message);
         }
         catch (Exception ex)
         {
