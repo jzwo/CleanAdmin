@@ -1,5 +1,6 @@
 using FastEndpoints;
 using NcpAdminBlazor.ApiService.Application.Commands.Users;
+using NcpAdminBlazor.ApiService.Application.Queries.Roles;
 using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
 
@@ -15,13 +16,17 @@ public sealed class UpdateUserEndpoint(IMediator mediator) : Endpoint<UpdateUser
 
     public override async Task HandleAsync(UpdateUserRequest req, CancellationToken ct)
     {
+        var roleDetails = await mediator.Send(
+            new GetRoleDetailsByIdsQuery(req.AssignedRoleIds),
+            ct);
+
         var command = new UpdateUserInfoCommand(
             req.UserId,
             req.Username,
             req.RealName,
             req.Email,
             req.Phone,
-            req.AssignedRoleIds);
+            roleDetails);
 
         await mediator.Send(command, ct);
         await Send.OkAsync(true.AsResponseData(), ct);

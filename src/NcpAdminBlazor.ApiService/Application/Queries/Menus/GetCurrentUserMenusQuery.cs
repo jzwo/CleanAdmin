@@ -38,10 +38,11 @@ public class GetCurrentUserMenusQueryHandler(ApplicationDbContext context)
 
         // 获取用户所有权限码
         var userPermissions = new HashSet<string>();
-        if (user.AssignedRoleIds.Any())
+        var roleIds = user.UserRoles.Select(ur => ur.RoleId).ToList();
+        if (roleIds.Any())
         {
             var rolePermissions = await context.Roles
-                .Where(r => user.AssignedRoleIds.Contains(r.Id) && !r.IsDeleted && !r.IsDisabled)
+                .Where(r => roleIds.Contains(r.Id) && !r.IsDeleted && !r.IsDisabled)
                 .SelectMany(r => r.AssignedPermissionCodes)
                 .Distinct()
                 .ToListAsync(cancellationToken);

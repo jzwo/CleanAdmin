@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 
@@ -33,12 +34,18 @@ internal sealed class RoleEntityTypeConfiguration : IEntityTypeConfiguration<Rol
             .IsRequired()
             .HasComment("创建时间");
 
-        builder.Property(role => role.AssignedPermissionCodes)
+        var assignedPermissionCodesProperty = builder.Property(role => role.AssignedPermissionCodes)
             .HasConversion(
                 v => string.Join(',', v),
                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList())
             .HasColumnType("text")
             .HasComment("分配的权限代码(逗号分隔)");
+
+        assignedPermissionCodesProperty.Metadata.SetValueComparer(
+            new ValueComparer<ICollection<string>>(
+                (c1, c2) => c1!.SequenceEqual(c2!),
+                c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                c => c.ToList()));
 
         builder.Property(role => role.IsDeleted)
             .IsRequired()

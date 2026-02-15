@@ -42,7 +42,8 @@ public class RegisterUserCommandHandler(
             realName: string.Empty,
             email: string.Empty,
             phone: string.Empty,
-            assignedRoleIds: []
+            userRoles: [],
+            userPermissions: []
         );
 
         await userRepository.AddAsync(user, cancellationToken);

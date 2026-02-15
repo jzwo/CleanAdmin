@@ -12,14 +12,9 @@ public sealed class GetUserIdsByRoleIdQueryHandler(ApplicationDbContext dbContex
     public async Task<List<UserId>> Handle(GetUserIdsByRoleIdQuery request,
         CancellationToken cancellationToken)
     {
-        var users = await dbContext.Users
-            .Where(u => !u.IsDeleted)
-            .Select(u => new { u.Id, u.AssignedRoleIds })
-            .ToListAsync(cancellationToken);
-
-        return users
-            .Where(u => u.AssignedRoleIds.Contains(request.RoleId))
+        return await dbContext.Users
+            .Where(u => !u.IsDeleted && u.UserRoles.Any(ur => ur.RoleId == request.RoleId))
             .Select(u => u.Id)
-            .ToList();
+            .ToListAsync(cancellationToken);
     }
 }

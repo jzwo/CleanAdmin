@@ -1,5 +1,5 @@
+using NcpAdminBlazor.ApiService.Application.Queries.Roles;
 using NcpAdminBlazor.ApiService.Application.Queries.Users;
-using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
 using NcpAdminBlazor.Infrastructure.Repositories;
 
@@ -11,7 +11,7 @@ public record UpdateUserInfoCommand(
     string RealName,
     string Email,
     string Phone,
-    List<RoleId> RoleIds) : ICommand;
+    List<RoleDetailDto> RoleDetails) : ICommand;
 
 public class UpdateUserInfoCommandValidator : AbstractValidator<UpdateUserInfoCommand>
 {
@@ -43,8 +43,8 @@ public class UpdateUserInfoCommandValidator : AbstractValidator<UpdateUserInfoCo
             .NotEmpty().WithMessage("手机号不能为空")
             .MaximumLength(20).WithMessage("手机号不能超过20个字符");
 
-        RuleFor(x => x.RoleIds)
-            .NotNull().WithMessage("角色列表不能为空");
+        RuleFor(x => x.RoleDetails)
+            .NotNull().WithMessage("角色详情不能为空");
     }
 }
 
@@ -56,7 +56,26 @@ public class UpdateUserInfoCommandHandler(IUserRepository userRepository)
         var user = await userRepository.GetAsync(request.UserId, cancellationToken)
                    ?? throw new KnownException($"未找到用户，UserId = {request.UserId}");
 
-        user.UpdateInfo(request.Username, request.RealName, request.Email, request.Phone,
-            request.RoleIds);
+        // 创建UserRole集合
+        var userRoles = request.RoleDetails
+            .Select(r => new UserRole(r.RoleId, r.RoleName))
+            .ToList();
+
+        var userPermissions = CalculateUserPermissions(request.RoleDetails);
+        user.UpdateInfo(request.Username, request.RealName, request.Email, request.Phone, userRoles, userPermissions);
+    }
+
+    private static List<UserPermission> CalculateUserPermissions(List<RoleDetailDto> roleDetails)
+    {
+        // 将所有权限按PermissionCode分组，记录每个权限来自哪些角色
+        var permissionGroups = roleDetails
+            .SelectMany(role => role.PermissionCodes.Select(code => new { role.RoleId, PermissionCode = code }))
+            .GroupBy(x => x.PermissionCode)
+            .Select(g => new UserPermission(
+                g.Key,
+                g.Select(x => x.RoleId).Distinct().ToList()))
+            .ToList();
+
+        return permissionGroups;
     }
 }

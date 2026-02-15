@@ -1,5 +1,6 @@
 using FastEndpoints;
 using NcpAdminBlazor.ApiService.Application.Commands.Users;
+using NcpAdminBlazor.ApiService.Application.Queries.Roles;
 using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
 
@@ -16,13 +17,17 @@ public sealed class CreateUserEndpoint(IMediator mediator)
 
     public override async Task HandleAsync(CreateUserRequest req, CancellationToken ct)
     {
+        var roleDetails = await mediator.Send(
+            new GetRoleDetailsByIdsQuery(req.AssignedRoleIds),
+            ct);
+
         var command = new CreateUserCommand(
             req.Username,
             req.Password,
             req.RealName,
             req.Email,
             req.Phone,
-            req.AssignedRoleIds);
+            roleDetails);
 
         var userId = await mediator.Send(command, ct);
         await Send.OkAsync(new CreateUserResponse(userId).AsResponseData(), ct);

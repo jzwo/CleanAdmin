@@ -18,7 +18,7 @@ public record UserListItemDto(
     string Phone,
     string RealName,
     DateTimeOffset CreatedAt,
-    List<RoleId> RoleIds
+    List<string> RoleNames
 );
 
 public class GetUserListQueryValidator : AbstractValidator<GetUserListQuery>
@@ -51,7 +51,7 @@ public class GetUserListQueryHandler(ApplicationDbContext context)
                 u.Phone,
                 u.RealName,
                 u.CreatedAt,
-                u.AssignedRoleIds.ToList()
+                u.UserRoles.Select(ur => ur.RoleName).ToList()
             ));
 
         return await usersQuery.ToPagedDataAsync(request.PageRequest, cancellationToken);

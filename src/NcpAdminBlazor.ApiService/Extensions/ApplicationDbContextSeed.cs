@@ -28,10 +28,14 @@ public static class ApplicationDbContextSeed
 
             if (!await context.Users.AnyAsync(cancellationToken))
             {
-                var adminRoleId = await context.Roles
+                var adminRole = await context.Roles
                     .Where(r => r.Name == "Admin")
-                    .Select(r => r.Id)
                     .FirstAsync(cancellationToken);
+
+                var userRoles = new List<UserRole>
+                {
+                    new(adminRole.Id, adminRole.Name)
+                };
 
                 var adminUser = new User(
                     username: "admin",
@@ -39,7 +43,8 @@ public static class ApplicationDbContextSeed
                     realName: "system administrator",
                     email: "admin@example.com",
                     phone: "13800000000",
-                    assignedRoleIds: new List<RoleId> { adminRoleId });
+                    userRoles: userRoles,
+                    userPermissions: []);
 
                 await context.Users.AddAsync(adminUser, cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);

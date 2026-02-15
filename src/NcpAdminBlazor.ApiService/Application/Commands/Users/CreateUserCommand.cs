@@ -1,5 +1,5 @@
+using NcpAdminBlazor.ApiService.Application.Queries.Roles;
 using NcpAdminBlazor.ApiService.Application.Queries.Users;
-using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
 using NcpAdminBlazor.Infrastructure.Repositories;
 using NcpAdminBlazor.Infrastructure.Utils;
@@ -12,7 +12,7 @@ public record CreateUserCommand(
     string RealName,
     string Email,
     string Phone,
-    List<RoleId> RoleIds) : ICommand<UserId>;
+    List<RoleDetailDto> RoleDetails) : ICommand<UserId>;
 
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
@@ -42,27 +42,52 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
             .NotEmpty().WithMessage("手机号不能为空")
             .MaximumLength(20).WithMessage("手机号不能超过20个字符");
 
-        RuleFor(x => x.RoleIds)
-            .NotNull().WithMessage("角色列表不能为空");
+        RuleFor(x => x.RoleDetails)
+            .NotNull().WithMessage("角色详情不能为空");
     }
 }
 
-public class CreateUserCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
+public class CreateUserCommandHandler(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher)
     : ICommandHandler<CreateUserCommand, UserId>
 {
     public async Task<UserId> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var hashedPassword = passwordHasher.HashPassword(request.Password);
+
+        // 创建UserRole集合
+        var userRoles = request.RoleDetails
+            .Select(r => new UserRole(r.RoleId, r.RoleName))
+            .ToList();
+
+        var userPermissions = CalculateUserPermissions(request.RoleDetails);
+
         var user = new User(
             username: request.Username,
             passwordHash: hashedPassword,
             realName: request.RealName,
             email: request.Email,
             phone: request.Phone,
-            assignedRoleIds: request.RoleIds
+            userRoles: userRoles,
+            userPermissions: userPermissions
         );
 
         await userRepository.AddAsync(user, cancellationToken);
         return user.Id;
+    }
+
+    private static List<UserPermission> CalculateUserPermissions(List<RoleDetailDto> roleDetails)
+    {
+        // 将所有权限按PermissionCode分组，记录每个权限来自哪些角色
+        var permissionGroups = roleDetails
+            .SelectMany(role => role.PermissionCodes.Select(code => new { role.RoleId, PermissionCode = code }))
+            .GroupBy(x => x.PermissionCode)
+            .Select(g => new UserPermission(
+                g.Key,
+                g.Select(x => x.RoleId).Distinct().ToList()))
+            .ToList();
+
+        return permissionGroups;
     }
 }
