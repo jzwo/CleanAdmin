@@ -1,0 +1,200 @@
+﻿@page "/"
+@using AntDesign.TableModels
+@using Console = System.Console
+@attribute [Authorize]
+
+@inject IStringLocalizer<Home> L
+
+<PageTitle>@L["Title"]</PageTitle>
+
+@* PTable 组件测试区域 *@
+<PTable @ref="_pTable" TItem="SampleData" OnLoadData="LoadDataAsync">
+    <SearchTemplate>
+        <PTableSearchForm Model="_searchModel">
+            <PFormItem Label="名称">
+                <Input @bind-Value="@_searchModel.Name" Placeholder="请输入名称" AllowClear/>
+            </PFormItem>
+            <PFormItem Label="状态">
+                <Select @bind-Value="@_searchModel.IsActive"
+                        Placeholder="请选择状态"
+                        AllowClear
+                        TItemValue="bool?"
+                        TItem="bool?">
+                    <SelectOptions>
+                        <SelectOption Value="@((bool?)true)" Label="活跃"/>
+                        <SelectOption Value="@((bool?)false)" Label="未活跃"/>
+                    </SelectOptions>
+                </Select>
+            </PFormItem>
+        </PTableSearchForm>
+    </SearchTemplate>
+    <ToolbarButtons>
+        <PDrawerForm @ref="_drawerForm" TModel="CreateModel" Title="新增项" Model="_createModel"
+                     OnClosed="@HandleDrawerClosed">
+            <Activator>
+                <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
+            </Activator>
+            <ChildContent Context="model">
+                <PFormItem Label="名称"
+                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入名称" } })">
+                    <Input @bind-Value="@model.Name" Placeholder="请输入名称"/>
+                </PFormItem>
+                <PFormItem Label="状态">
+                    <Switch @bind-Checked="@model.IsActive" CheckedChildren="活跃" UnCheckedChildren="未活跃"/>
+                </PFormItem>
+            </ChildContent>
+        </PDrawerForm>
+    </ToolbarButtons>
+    <ColumnDefinitions Context="item">
+        <PropertyColumn Property="c => c.Id" Title="ID" Width="80"/>
+        <PropertyColumn Property="c => c.Name" Title="@L["ColumnName"]" Sortable/>
+        <PropertyColumn Property="c => c.Date" Title="@L["ColumnDate"]" Format="yyyy-MM-dd HH:mm:ss" Sortable/>
+        <PropertyColumn Property="c => c.IsActive" Title="@L["ColumnStatus"]">
+            <Tag Color="@(item.IsActive ? "green" : "red")">
+                @(item.IsActive ? L["StatusActive"] : L["StatusInactive"])
+            </Tag>
+        </PropertyColumn>
+        <ActionColumn Title="操作" Width="150">
+            <Space>
+                <SpaceItem>
+                    <Button Type="@ButtonType.Link" OnClick="() => HandleView(item)">查看</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Type="@ButtonType.Link" Danger OnClick="() => HandleDelete(item)">删除</Button>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </ColumnDefinitions>
+</PTable>
+
+@code {
+    private PTable<SampleData>? _pTable;
+    private PDrawerForm<CreateModel>? _drawerForm;
+    private readonly SearchModel _searchModel = new();
+    private CreateModel _createModel = new();
+
+    // 模拟数据源（实际项目中会从API获取）
+    private static readonly List<SampleData> AllData = Enumerable.Range(1, 100)
+        .Select(i => new SampleData
+        {
+            Id = i,
+            Name = $"Item {i}",
+            Date = DateTime.Now.AddDays(-i).AddHours(i),
+            IsActive = i % 3 != 0
+        }).ToList();
+
+    /// <summary>
+    /// PTable 数据加载回调
+    /// </summary>
+    private async Task<(int Total, IEnumerable<SampleData> Data)> LoadDataAsync(QueryModel<SampleData> queryModel)
+    {
+        // 模拟网络延迟
+        await Task.Delay(300);
+
+        // 根据搜索条件过滤
+        var query = AllData.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(_searchModel.Name))
+        {
+            query = query.Where(x => x.Name.Contains(_searchModel.Name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        if (_searchModel.IsActive.HasValue)
+        {
+            query = query.Where(x => x.IsActive == _searchModel.IsActive.Value);
+        }
+
+        var total = query.Count();
+
+        // 分页
+        var data = query
+            .Skip((queryModel.PageIndex - 1) * queryModel.PageSize)
+            .Take(queryModel.PageSize)
+            .ToList();
+
+        return (total, data);
+    }
+
+
+    /// <summary>
+    /// 查看操作
+    /// </summary>
+    private void HandleView(SampleData item)
+    {
+        // 这里可以打开详情弹窗等
+        Console.WriteLine($"查看: {item.Name}");
+    }
+
+    /// <summary>
+    /// 删除操作
+    /// </summary>
+    private void HandleDelete(SampleData item)
+    {
+        // 这里可以弹出确认框然后删除
+        Console.WriteLine($"删除: {item.Name}");
+    }
+
+    /// <summary>
+    /// 新增操作
+    /// </summary>
+    private async Task<bool> HandleCreateAsync(CreateModel model)
+    {
+        // 模拟网络请求
+        await Task.Delay(500);
+
+        // 添加到数据源
+        var newId = AllData.Max(x => x.Id) + 1;
+        AllData.Insert(0, new SampleData
+        {
+            Id = newId,
+            Name = model.Name ?? string.Empty,
+            Date = DateTime.Now,
+            IsActive = model.IsActive
+        });
+
+        Console.WriteLine($"新增成功: {model.Name}");
+
+        // 刷新表格
+        _pTable!.ReloadData();
+
+        return true; // 返回 true 表示成功，抽屉将自动关闭
+    }
+
+    /// <summary>
+    /// 抽屉关闭后重置表单数据
+    /// </summary>
+    private void HandleDrawerClosed()
+    {
+        _createModel = new CreateModel();
+    }
+
+    /// <summary>
+    /// 新增模型
+    /// </summary>
+    public class CreateModel
+    {
+        public string? Name { get; set; }
+        public bool IsActive { get; set; } = true;
+    }
+
+    /// <summary>
+    /// 搜索模型
+    /// </summary>
+    public class SearchModel
+    {
+        public string? Name { get; set; }
+        public bool? IsActive { get; set; }
+    }
+
+    /// <summary>
+    /// 示例数据模型
+    /// </summary>
+    public class SampleData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public DateTime Date { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+}

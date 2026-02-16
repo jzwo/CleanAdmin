@@ -1,0 +1,120 @@
+@page "/SystemManage/Role"
+@using NcpAdminAntBlazor.Client.ApiSdk
+@using AntDesign.TableModels
+@using RoleListItemDto = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceApplicationQueriesRolesRoleListItemDto
+@using SearchQueryParameters = NcpAdminAntBlazor.Client.ApiSdk.Api.Roles.RolesRequestBuilder.RolesRequestBuilderGetQueryParameters
+@inject ApiClient ApiClient
+@inject IMessageService MessageService
+
+<PageTitle>角色管理</PageTitle>
+
+<PTable @ref="_pTable" TItem="RoleListItemDto"
+        Title="角色列表"
+        OnLoadData="LoadDataAsync">
+    <SearchTemplate>
+        <PTableSearchForm TModel="SearchQueryParameters" Model="_searchModel">
+            <PFormItem Label="角色名称">
+                <Input @bind-Value="@_searchModel.Name" Placeholder="请输入角色名称" AllowClear/>
+            </PFormItem>
+        </PTableSearchForm>
+    </SearchTemplate>
+    <ToolbarButtons>
+        <RoleCreateDrawer OnSuccess="OnRoleChangedAsync"/>
+    </ToolbarButtons>
+    <ColumnDefinitions Context="item">
+        <PropertyColumn Property="c => c.Name" Title="角色名称"/>
+        <PropertyColumn Property="c => c.Description" Title="角色描述"/>
+        <PropertyColumn Property="c => c.IsDisabled" Title="状态">
+            <Tag Color="@(item.IsDisabled == true ? "red" : "green")">
+                @(item.IsDisabled == true ? "禁用" : "启用")
+            </Tag>
+        </PropertyColumn>
+        <PropertyColumn Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
+        <ActionColumn Title="操作" Width="240">
+            <Space>
+                <SpaceItem>
+                    <RoleEditDrawer Role="@item"/>
+                </SpaceItem>
+                <SpaceItem>
+                    <RolePermissionDrawer Role="@item"/>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm Title="确定要删除该角色吗？"
+                                OnConfirm="() => OnDelete(item)"
+                                OkText="确定"
+                                CancelText="取消">
+                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
+                            删除
+                        </Button>
+                    </Popconfirm>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </ColumnDefinitions>
+</PTable>
+
+@code {
+    private PTable<RoleListItemDto>? _pTable;
+    private readonly SearchQueryParameters _searchModel = new();
+
+    private async Task<(int Total, IEnumerable<RoleListItemDto> Data)> LoadDataAsync(
+        QueryModel<RoleListItemDto> queryModel)
+    {
+        try
+        {
+            var response = await ApiClient.Api.Roles.GetAsync(config =>
+            {
+                config.QueryParameters.PageIndex = queryModel.PageIndex;
+                config.QueryParameters.PageSize = queryModel.PageSize;
+                config.QueryParameters.CountTotal = true;
+                config.QueryParameters.Name = string.IsNullOrWhiteSpace(_searchModel.Name) ? null : _searchModel.Name;
+            });
+
+            if (response is { Success: true, Data: { } data })
+            {
+                return (data.Total ?? 0, data.Items?.ToList() ?? []);
+            }
+
+            await MessageService.ErrorAsync(response?.Message ?? "获取角色列表失败");
+            return (0, []);
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"获取角色列表失败: {ex.Message}");
+            return (0, []);
+        }
+    }
+
+    private void OnRoleChangedAsync()
+    {
+        _pTable?.ReloadData();
+    }
+
+    private async Task OnDelete(RoleListItemDto role)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(role.RoleId))
+            {
+                await MessageService.ErrorAsync("角色ID不能为空");
+                return;
+            }
+
+            var response = await ApiClient.Api.Roles[role.RoleId].DeleteAsync();
+            if (response is { Success: true })
+            {
+                await MessageService.SuccessAsync("删除成功");
+                _pTable?.ReloadData();
+            }
+            else
+            {
+                await MessageService.ErrorAsync(response?.Message ?? "删除失败");
+            }
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"删除失败: {ex.Message}");
+        }
+    }
+
+}

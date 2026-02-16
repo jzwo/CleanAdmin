@@ -1,0 +1,74 @@
+@using UpdateRoleRequest = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceEndpointsRolesUpdateRoleInfoRequest
+@using RoleListItemDto = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceApplicationQueriesRolesRoleListItemDto
+@using NcpAdminAntBlazor.Client.ApiSdk
+@inject ApiClient ApiClient
+
+<PDrawerForm TModel="UpdateRoleRequest"
+             Title="编辑角色"
+             Model="_model"
+             OnSubmit="@HandleSubmitAsync">
+    <Activator>
+        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
+                OnClick="@OnOpenDrawer">
+            编辑
+        </Button>
+    </Activator>
+    <ChildContent Context="model">
+        <PFormItem Label="角色名称"
+                   Rules="@([new FormValidationRule { Required = true, Message = "请输入角色名称" }])">
+            <Input @bind-Value="@model.Name" Placeholder="请输入角色名称"/>
+        </PFormItem>
+        <PFormItem Label="角色描述">
+            <Input @bind-Value="@model.Description" Placeholder="请输入角色描述"/>
+        </PFormItem>
+        <PFormItem Label="状态"
+                   Rules="@([new FormValidationRule { Required = true, Message = "请选择状态" }])">
+            <Select @bind-Value="@model.IsDisabled"
+                    Placeholder="请选择状态"
+                    TItemValue="bool?"
+                    TItem="bool?">
+                <SelectOptions>
+                    <SelectOption Value="@((bool?)false)" Label="启用"/>
+                    <SelectOption Value="@((bool?)true)" Label="禁用"/>
+                </SelectOptions>
+            </Select>
+        </PFormItem>
+    </ChildContent>
+</PDrawerForm>
+
+@code {
+    [Parameter, EditorRequired] public RoleListItemDto Role { get; set; } = new();
+
+    private UpdateRoleRequest _model = new();
+    private string? _currentEditRoleId;
+
+    private void OnOpenDrawer()
+    {
+        _currentEditRoleId = Role.RoleId;
+        _model = new UpdateRoleRequest
+        {
+            Name = Role.Name,
+            Description = Role.Description,
+            IsDisabled = Role.IsDisabled
+        };
+    }
+
+    private async Task<(bool, string?)> HandleSubmitAsync(UpdateRoleRequest model)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_currentEditRoleId))
+            {
+                return (false, "角色ID不能为空");
+            }
+
+            var response = await ApiClient.Api.Roles[_currentEditRoleId].Info.PostAsync(model);
+            return response is not { Success: true } ? (false, response?.Message) : (true, null);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+}

@@ -26,7 +26,13 @@ public class UpdateRolePermissionsCommandHandler(IRoleRepository roleRepository)
     {
         var role = await roleRepository.GetAsync(request.RoleId, cancellationToken)
                    ?? throw new KnownException($"未找到角色，RoleId = {request.RoleId}");
-        
-        role.UpdatePermissions(request.PermissionCodes);
+
+        var normalizedPermissionCodes = request.PermissionCodes
+            .Where(code => !string.IsNullOrWhiteSpace(code))
+            .Select(code => code.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
+
+        role.UpdatePermissions(normalizedPermissionCodes);
     }
 }
