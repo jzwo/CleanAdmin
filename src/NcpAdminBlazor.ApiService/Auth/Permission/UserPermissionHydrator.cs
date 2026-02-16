@@ -11,9 +11,18 @@ internal sealed class UserPermissionHydrator(UserPermissionService userPermissio
 {
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {
-        var userId = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        ArgumentNullException.ThrowIfNull(userId);
-        var username = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+        if (principal.Identity is not { IsAuthenticated: true })
+        {
+            return principal;
+        }
+
+        var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            return principal;
+        }
+
+        var username = principal.FindFirstValue(ClaimTypes.Name);
 
         if (principal.Claims.Any(c => c.Type == "permissions"))
         {
