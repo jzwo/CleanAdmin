@@ -20,7 +20,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using NcpAdminBlazor.ApiService.Auth;
@@ -36,7 +35,8 @@ using OpenAI;
 using Prometheus;
 using Refit;
 using Serilog;
-using Serilog.Formatting.Json;
+
+// using Serilog.Formatting.Json;
 
 // Create a minimal logger for startup
 Log.Logger = new LoggerConfiguration()
@@ -46,6 +46,15 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    if (builder.IsApiClientGenerationMode() || builder.IsSwaggerJsonExportMode())
+    {
+        builder.Host.UseDefaultServiceProvider((_, options) =>
+        {
+            options.ValidateOnBuild = false;
+            options.ValidateScopes = false;
+        });
+    }
 
     // Add service defaults & Aspire client integrations.
     builder.AddServiceDefaults();
@@ -71,12 +80,19 @@ try
 
     #region 身份认证
 
-    // When using Aspire, Redis connection is managed by Aspire and injected automatically
-    builder.AddRedisClient("Redis");
+    if (builder.IsNotGenerationMode())
+    {
+        // When using Aspire, Redis connection is managed by Aspire and injected automatically
+        builder.AddRedisClient("Redis");
 
-    // DataProtection - use custom extension that resolves IConnectionMultiplexer from DI
-    builder.Services.AddDataProtection()
-        .PersistKeysToStackExchangeRedis("DataProtection-Keys");
+        // DataProtection - use custom extension that resolves IConnectionMultiplexer from DI
+        builder.Services.AddDataProtection()
+            .PersistKeysToStackExchangeRedis("DataProtection-Keys");
+    }
+    else
+    {
+        builder.Services.AddDataProtection();
+    }
 
     builder.Services.AddScoped<ICurrentUser, CurrentUser>();
     builder.Services.AddHybridCache();
@@ -166,54 +182,57 @@ try
         options.EnableDetailedErrors();
     });
     builder.Services.AddUnitOfWork<ApplicationDbContext>();
-    // Redis locks use the Aspire-managed Redis connection
-    builder.Services.AddRedisLocks();
-    builder.Services.AddContext().AddEnvContext().AddCapContextProcessor();
-    builder.Services.AddNetCorePalServiceDiscoveryClient();
-    builder.Services.AddIntegrationEvents(typeof(Program))
-        .UseCap<ApplicationDbContext>(b =>
-        {
-            b.RegisterServicesFromAssemblies(typeof(Program));
-            b.AddContextIntegrationFilters();
-        });
-
-
-    builder.Services.AddCap(x =>
+    if (builder.IsNotGenerationMode())
     {
-        x.UseNetCorePalStorage<ApplicationDbContext>();
-        x.JsonSerializerOptions.AddNetCorePalJsonConverters();
-        // When using Aspire, RabbitMQ connection is managed by Aspire
-        x.UseRabbitMQ(p =>
-        {
-            var connectionString = builder.Configuration.GetConnectionString("rabbitmq");
-            if (!string.IsNullOrEmpty(connectionString))
+        // Redis locks use the Aspire-managed Redis connection
+        builder.Services.AddRedisLocks();
+        builder.Services.AddContext().AddEnvContext().AddCapContextProcessor();
+        builder.Services.AddNetCorePalServiceDiscoveryClient();
+        builder.Services.AddIntegrationEvents(typeof(Program))
+            .UseCap<ApplicationDbContext>(b =>
             {
-                // Parse Aspire-provided connection string
-                var uri = new Uri(connectionString);
-                p.HostName = uri.Host;
-                p.Port = uri.Port;
-                if (!string.IsNullOrEmpty(uri.UserInfo))
+                b.RegisterServicesFromAssemblies(typeof(Program));
+                b.AddContextIntegrationFilters();
+            });
+
+
+        builder.Services.AddCap(x =>
+        {
+            x.UseNetCorePalStorage<ApplicationDbContext>();
+            x.JsonSerializerOptions.AddNetCorePalJsonConverters();
+            // When using Aspire, RabbitMQ connection is managed by Aspire
+            x.UseRabbitMQ(p =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("rabbitmq");
+                if (!string.IsNullOrEmpty(connectionString))
                 {
-                    var userInfo = uri.UserInfo.Split(':');
-                    p.UserName = userInfo[0];
-                    if (userInfo.Length > 1)
+                    // Parse Aspire-provided connection string
+                    var uri = new Uri(connectionString);
+                    p.HostName = uri.Host;
+                    p.Port = uri.Port;
+                    if (!string.IsNullOrEmpty(uri.UserInfo))
                     {
-                        p.Password = userInfo[1];
+                        var userInfo = uri.UserInfo.Split(':');
+                        p.UserName = userInfo[0];
+                        if (userInfo.Length > 1)
+                        {
+                            p.Password = userInfo[1];
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(uri.AbsolutePath) && uri.AbsolutePath != "/")
+                    {
+                        p.VirtualHost = uri.AbsolutePath.TrimStart('/');
                     }
                 }
-
-                if (!string.IsNullOrEmpty(uri.AbsolutePath) && uri.AbsolutePath != "/")
+                else
                 {
-                    p.VirtualHost = uri.AbsolutePath.TrimStart('/');
+                    builder.Configuration.GetSection("RabbitMQ").Bind(p);
                 }
-            }
-            else
-            {
-                builder.Configuration.GetSection("RabbitMQ").Bind(p);
-            }
+            });
+            x.UseDashboard(); //CAP Dashboard  path：  /cap
         });
-        x.UseDashboard(); //CAP Dashboard  path：  /cap
-    });
+    }
 
     builder.Services.AddUtilsInfrastructure();
 
@@ -254,11 +273,8 @@ try
 
     #region Jobs
 
-    // this flag indicates whether we are generating API clients,
-    // when true, we use InMemory database and skip some services that are not needed for client generation
-    var isGenerateClients = args.Contains("--generateclients");
     // When using Aspire, Redis connection is managed by Aspire
-    if (!isGenerateClients)
+    if (builder.IsNotGenerationMode())
     {
         builder.Services.AddHangfire(x => { x.UseRedisStorage(builder.Configuration.GetConnectionString("Redis")); });
         builder.Services.AddHangfireServer(); //hangfire dashboard  path：  /hangfire
@@ -277,7 +293,7 @@ try
     var chatClient = new ChatClient(openAiModel, new ApiKeyCredential(openAiApiKey), openAiOptions).AsIChatClient();
     builder.Services.AddChatClient(chatClient);
 
-    builder.AddAIAgent("systemAssister", (sp, key) => new ChatClientAgent(
+    builder.AddAIAgent("systemAssister", (_, key) => new ChatClientAgent(
         chatClient,
         name: key,
         instructions:
@@ -308,6 +324,16 @@ try
         c.Binding.UseDefaultValuesForNullableProps = false;
         c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
     });
+
+    await app.GenerateApiClientsAndExitAsync(c =>
+    {
+        c.SwaggerDocumentName = "v1"; //must match doc name above
+        c.Language = GenerationLanguage.CSharp;
+        c.OutputPath = "../NcpAdminAntBlazor/NcpAdminAntBlazor.Client/ApiSdk";
+        c.ClientNamespaceName = "NcpAdminAntBlazor.Client.ApiSdk";
+        c.ClientClassName = "ApiClient";
+    });
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwaggerGen(); //add this
@@ -318,15 +344,6 @@ try
     // Map endpoints for OpenAI responses and conversations (also required for DevUI)
     app.MapOpenAIResponses();
     app.MapOpenAIConversations();
-
-    await app.GenerateApiClientsAndExitAsync(c =>
-    {
-        c.SwaggerDocumentName = "v1"; //must match doc name above
-        c.Language = GenerationLanguage.CSharp;
-        c.OutputPath = "../NcpAdminAntBlazor/NcpAdminAntBlazor.Client/ApiSdk";
-        c.ClientNamespaceName = "NcpAdminAntBlazor.Client.ApiSdk";
-        c.ClientClassName = "ApiClient";
-    });
 
     // Code analysis endpoint
     app.MapGet("/code-analysis", () =>
