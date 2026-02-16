@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using NcpAdminBlazor.Domain.AggregatesModel.MenuAggregate;
-using NcpAdminBlazor.Domain.AggregatesModel.RoleAggregate;
 using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
 using NcpAdminBlazor.Infrastructure.Utils;
-using NcpAdminBlazor.Shared.Auth;
 
 namespace NcpAdminBlazor.ApiService.Extensions;
 
@@ -18,37 +16,21 @@ public static class ApplicationDbContextSeed
         var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
         try
         {
-            if (!await context.Roles.AnyAsync(cancellationToken))
+            if (!await context.Users.AnyAsync(u => u.Username == SystemDefaultSuperAdmin.Username, cancellationToken))
             {
-                var adminRole = new Role("Admin", "system admin role", false);
-                adminRole.UpdatePermissions(AppPermissions.GetAllPermissionKeys().ToArray());
-                await context.Roles.AddAsync(adminRole, cancellationToken);
-                await context.SaveChangesAsync(cancellationToken);
-            }
-
-            if (!await context.Users.AnyAsync(cancellationToken))
-            {
-                var adminRole = await context.Roles
-                    .Where(r => r.Name == "Admin")
-                    .FirstAsync(cancellationToken);
-
-                var userRoles = new List<UserRole>
-                {
-                    new(adminRole.Id, adminRole.Name)
-                };
-
-                var adminUser = new User(
-                    username: "admin",
-                    passwordHash: passwordHasher.HashPassword("admin123456"),
-                    realName: "system administrator",
-                    email: "admin@example.com",
-                    phone: "13800000000",
-                    userRoles: userRoles,
+                var superAdminUser = new User(
+                    username: SystemDefaultSuperAdmin.Username,
+                    passwordHash: passwordHasher.HashPassword(SystemDefaultSuperAdmin.Password),
+                    realName: "super administrator",
+                    email: "superadmin@example.com",
+                    phone: "13900000000",
+                    userRoles: [],
                     userPermissions: []);
 
-                await context.Users.AddAsync(adminUser, cancellationToken);
-                await context.SaveChangesAsync(cancellationToken);
+                await context.Users.AddAsync(superAdminUser, cancellationToken);
             }
+
+            await context.SaveChangesAsync(cancellationToken);
 
             if (!await context.Menus.AnyAsync(cancellationToken))
             {

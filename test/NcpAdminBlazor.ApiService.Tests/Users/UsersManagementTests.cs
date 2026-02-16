@@ -112,7 +112,7 @@ public class UsersManagementTests(WebAppFixture app, UsersManagementTests.UserSt
         listResponse.Success.ShouldBeTrue();
         listResponse.Data.Items.ShouldContain(u =>
             u.Username == username &&
-            u.RoleIds.Contains(roleId));
+            u.RealName.Contains(roleRequest.Name));
 
         var (_, userInfoResponse) = await app.AuthenticatedClient
             .GETAsync<UserInfoEndpoint, UserInfoRequest, ResponseData<UserInfoDto>>(new UserInfoRequest
@@ -166,7 +166,7 @@ public class UsersManagementTests(WebAppFixture app, UsersManagementTests.UserSt
             user.RealName == updatedRealName &&
             user.Email == updatedEmail &&
             user.Phone == updatedPhone &&
-            user.RoleIds.Contains(roleId));
+            user.RoleNames.Contains(roleName));
 
         var (_, userInfoResponse) = await app.AuthenticatedClient
             .GETAsync<UserInfoEndpoint, UserInfoRequest, ResponseData<UserInfoDto>>(new UserInfoRequest

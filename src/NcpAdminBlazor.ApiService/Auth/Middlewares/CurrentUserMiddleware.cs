@@ -22,6 +22,7 @@ public class CurrentUserMiddleware(RequestDelegate next)
         {
             concreteCurrentUser.UserId = null;
             concreteCurrentUser.UserName = string.Empty;
+            concreteCurrentUser.PermissionCodes = [];
             await next(context);
             return;
         }
@@ -39,6 +40,12 @@ public class CurrentUserMiddleware(RequestDelegate next)
         }
 
         concreteCurrentUser.UserName = userNameClaim != null ? userNameClaim.Value : string.Empty;
+        concreteCurrentUser.PermissionCodes = claimsPrincipal
+            .FindAll("permissions")
+            .Select(c => c.Value)
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Distinct(StringComparer.Ordinal)
+            .ToList();
 
         await next(context);
     }

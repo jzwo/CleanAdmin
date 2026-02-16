@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 using NcpAdminBlazor.ApiService.Auth;
@@ -78,6 +79,7 @@ try
         .PersistKeysToStackExchangeRedis("DataProtection-Keys");
 
     builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+    builder.Services.AddHybridCache();
     builder.Services.AddTransient<UserTokenService>();
     builder.Services.AddTransient<UserPermissionService>(); // 获取用户权限
     builder.Services.AddTransient<IClaimsTransformation, UserPermissionHydrator>(); // 用户权限验证
