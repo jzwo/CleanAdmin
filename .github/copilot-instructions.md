@@ -26,7 +26,7 @@
 ## 项目结构
 
 ```
-NcpAdminBlazor.sln
+NcpAdminBlazor.slnx
 ├── src/
 │   ├── NcpAdminBlazor.Domain/         # 领域层 - 聚合根、实体、领域事件
 │   ├── NcpAdminBlazor.Infrastructure/ # 基础设施层 - EF配置、仓储接口、仓储实现
