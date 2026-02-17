@@ -12,7 +12,7 @@
         <Sider @bind-Collapsed="@_collapsed"
                CollapsedWidth="48"
                class="@($"{(FullscreenState.IsFullscreen ? "hidden" : "")} border-r border-border bg-sider")">
-            <div class="flex items-center justify-center h-16">
+            <div class="flex items-center justify-center h-14">
                 <div class="flex items-center gap-2">
                     <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
@@ -24,7 +24,7 @@
                     </svg>
                     @if (!_collapsed)
                     {
-                        <span class="text-xl font-bold text-text">NcpAdmin</span>
+                        <span class="text-xl font-semibold text-text">CleanAdmin</span>
                     }
                 </div>
             </div>
