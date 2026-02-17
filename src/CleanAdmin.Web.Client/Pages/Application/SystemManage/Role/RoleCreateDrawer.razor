@@ -10,15 +10,13 @@
         <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
     </Activator>
     <ChildContent Context="model">
-        <PFormItem Label="角色名称"
-                   Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入角色名称" } })">
+        <PFormItem Label="角色名称">
             <Input @bind-Value="@model.Name" Placeholder="请输入角色名称"/>
         </PFormItem>
         <PFormItem Label="角色描述">
             <Input @bind-Value="@model.Description" Placeholder="请输入角色描述"/>
         </PFormItem>
-        <PFormItem Label="状态"
-                   Rules="@(new[] { new FormValidationRule { Required = true, Message = "请选择状态" } })">
+        <PFormItem Label="状态">
             <Select @bind-Value="@model.IsDisabled"
                     Placeholder="请选择状态"
                     TItemValue="bool?"

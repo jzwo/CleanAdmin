@@ -27,12 +27,10 @@
                 <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
             </Activator>
             <ChildContent Context="model">
-                <PFormItem Label="菜单名称"
-                           Rules="@([new FormValidationRule { Required = true, Message = "请输入菜单名称" }])">
+                <PFormItem Label="菜单名称">
                     <Input @bind-Value="@model.MenuName" Placeholder="请输入菜单名称"/>
                 </PFormItem>
-                <PFormItem Label="菜单类型"
-                           Rules="@([new FormValidationRule { Required = true, Message = "请选择菜单类型" }])">
+                <PFormItem Label="菜单类型">
                     <EnumSelect TEnum="MenuType?" @bind-Value="@model.MenuType" Placeholder="请选择菜单类型"/>
                 </PFormItem>
                 <PFormItem Label="父菜单">
@@ -46,8 +44,7 @@
                                 Placeholder="请选择父菜单（留空为顶级菜单）"
                                 AllowClear/>
                 </PFormItem>
-                <PFormItem Label="路由路径"
-                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入路由路径" } })">
+                <PFormItem Label="路由路径">
                     <Input @bind-Value="@model.RoutePath" Placeholder="请输入路由路径"/>
                 </PFormItem>
                 <PFormItem Label="组件路径">
@@ -60,8 +57,7 @@
                         </AddOnAfter>
                     </AntDesign.Input>
                 </PFormItem>
-                <PFormItem Label="排序号"
-                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入排序号" } })">
+                <PFormItem Label="排序号">
                     <AntDesign.InputNumber @bind-Value="@model.SortOrder" Min="0" Placeholder="请输入排序号"/>
                 </PFormItem>
                 <PFormItem Label="权限码">
@@ -111,12 +107,10 @@
                             </Button>
                         </Activator>
                         <ChildContent Context="model">
-                            <PFormItem Label="菜单名称"
-                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入菜单名称" }])">
+                            <PFormItem Label="菜单名称">
                                 <Input @bind-Value="@model.MenuName" Placeholder="请输入菜单名称"/>
                             </PFormItem>
-                            <PFormItem Label="路由路径"
-                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入路由路径" }])">
+                            <PFormItem Label="路由路径">
                                 <Input @bind-Value="@model.RoutePath" Placeholder="请输入路由路径"/>
                             </PFormItem>
                             <PFormItem Label="组件路径">
