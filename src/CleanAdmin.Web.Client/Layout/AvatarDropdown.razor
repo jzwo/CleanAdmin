@@ -1,9 +1,10 @@
-﻿@using CleanAdmin.Web.Client.Extensions
+@using CleanAdmin.Web.Client.Extensions
 @using CleanAdmin.Web.Client.Infrastructure.Auth
+@implements IDisposable
 @inject JwtAuthStateProvider JwtAuthStateProvider
 @inject NavigationManager NavigationManager
 
-<Dropdown  Trigger="@(new[] { Trigger.Click })">
+<Dropdown Trigger="@(new[] { Trigger.Click })">
     <Overlay>
         <Menu>
             <MenuItem Key="center">
@@ -22,17 +23,47 @@
         <Button Type="@ButtonType.Text">
             <div class="flex items-center justify-center gap-2">
                 <Avatar Size="@AvatarSize.Small" Icon="user"/>
-                <span class="text-sm font-medium">Admin</span>
+                <span class="text-sm font-medium">@_displayName</span>
             </div>
         </Button>
     </ChildContent>
 </Dropdown>
 
-@code
-{
+@code {
+    private string _displayName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        JwtAuthStateProvider.AuthenticationStateChanged += OnAuthenticationStateChanged;
+        await RefreshDisplayNameAsync();
+    }
+
+    private void OnAuthenticationStateChanged(Task<AuthenticationState> task)
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await RefreshDisplayNameAsync();
+            StateHasChanged();
+        });
+    }
+
+    private async Task RefreshDisplayNameAsync()
+    {
+        var authState = await JwtAuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        _displayName = user.Identity?.Name ?? string.Empty;
+    }
+
     private async Task OnLogoutAsync()
     {
         await JwtAuthStateProvider.NotifyLogoutAsync();
         NavigationManager.NavigateToLogin();
     }
+
+    public void Dispose()
+    {
+        JwtAuthStateProvider.AuthenticationStateChanged -= OnAuthenticationStateChanged;
+    }
+
 }
