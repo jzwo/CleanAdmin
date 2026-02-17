@@ -185,6 +185,52 @@ public class UsersManagementTests(WebAppFixture app, UsersManagementTests.UserSt
         );
     }
 
+    [Fact, Priority(6)]
+    public async Task UserAssignableRolesEndpoint_ShouldReturnEnabledRolesOnly()
+    {
+        var uniqueSuffix = Guid.NewGuid().ToString("N")[..8];
+
+        var enabledRoleRequest = new CreateRoleRequest
+        {
+            Name = $"Assignable Enabled {uniqueSuffix}",
+            Description = "enabled role"
+        };
+
+        var disabledRoleRequest = new CreateRoleRequest
+        {
+            Name = $"Assignable Disabled {uniqueSuffix}",
+            Description = "disabled role"
+        };
+
+        var (_, enabledRoleRes) = await app.AuthenticatedClient
+            .POSTAsync<CreateRoleEndpoint, CreateRoleRequest, ResponseData<CreateRoleResponse>>(enabledRoleRequest);
+        enabledRoleRes.Success.ShouldBeTrue();
+
+        var (_, disabledRoleRes) = await app.AuthenticatedClient
+            .POSTAsync<CreateRoleEndpoint, CreateRoleRequest, ResponseData<CreateRoleResponse>>(disabledRoleRequest);
+        disabledRoleRes.Success.ShouldBeTrue();
+
+        var updateDisabledReq = new UpdateRoleInfoRequest
+        {
+            RoleId = disabledRoleRes.Data.RoleId,
+            Name = disabledRoleRequest.Name,
+            Description = disabledRoleRequest.Description,
+            IsDisabled = true
+        };
+
+        var (_, updateDisabledRes) = await app.AuthenticatedClient
+            .POSTAsync<UpdateRoleInfoEndpoint, UpdateRoleInfoRequest, ResponseData>(updateDisabledReq);
+        updateDisabledRes.Success.ShouldBeTrue();
+
+        var (rsp, res) = await app.AuthenticatedClient
+            .GETAsync<UserAssignableRolesEndpoint, ResponseData<List<UserAssignableRoleItemResponse>>>();
+
+        rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
+        res.Success.ShouldBeTrue();
+        res.Data.ShouldContain(x => x.RoleId == enabledRoleRes.Data.RoleId);
+        res.Data.ShouldNotContain(x => x.RoleId == disabledRoleRes.Data.RoleId);
+    }
+
     /// <summary>
     /// use for sharing state between UsersManagementTests
     /// </summary>

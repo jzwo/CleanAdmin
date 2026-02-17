@@ -1,0 +1,190 @@
+@using NcpAdminAntBlazor.Client.ApiSdk
+@using AssignableRoleItemDto = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceEndpointsUsersUserAssignableRoleItemResponse
+@using UpdateUserRequest = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceEndpointsUsersUpdateUserRequest
+@using UserListItemDto = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto
+@inject ApiClient ApiClient
+@inject IMessageService MessageService
+
+<PDrawerForm TModel="UpdateUserRequest"
+             Title="编辑用户"
+             Model="_model"
+             OnSubmit="@HandleSubmitAsync">
+    <Activator>
+        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="@OnOpenDrawerAsync">
+            编辑
+        </Button>
+    </Activator>
+    <ChildContent Context="model">
+        @if (_loadingEditContext)
+        {
+            <div class="py-4 text-center">
+                <Spin/>
+            </div>
+        }
+        else
+        {
+            <PFormItem Label="用户名"
+                       Rules="@([new FormValidationRule { Required = true, Message = "请输入用户名" }])">
+                <Input @bind-Value="@model.Username" Placeholder="请输入用户名"/>
+            </PFormItem>
+            <PFormItem Label="真实姓名"
+                       Rules="@([new FormValidationRule { Required = true, Message = "请输入真实姓名" }])">
+                <Input @bind-Value="@model.RealName" Placeholder="请输入真实姓名"/>
+            </PFormItem>
+            <PFormItem Label="邮箱"
+                       Rules="@([new FormValidationRule { Type = FormFieldType.Email, Message = "请输入有效的邮箱地址" }])">
+                <Input @bind-Value="@model.Email" Placeholder="请输入邮箱"/>
+            </PFormItem>
+            <PFormItem Label="手机号">
+                <Input @bind-Value="@model.Phone" Placeholder="请输入手机号"/>
+            </PFormItem>
+            <PFormItem Label="角色">
+                <Select Mode="SelectMode.Multiple"
+                        Placeholder="请选择角色"
+                        @bind-Values="_assignedRoleIds"
+                        TItemValue="string"
+                        TItem="string"
+                        EnableSearch
+                        AllowClear
+                        Style="width: 100%;">
+                    <SelectOptions>
+                        @foreach (var role in _assignableRoles)
+                        {
+                            <SelectOption TItemValue="string"
+                                          TItem="string"
+                                          Value="@(role.RoleId ?? string.Empty)"
+                                          Label="@(role.RoleName ?? string.Empty)"/>
+                        }
+                    </SelectOptions>
+                </Select>
+            </PFormItem>
+        }
+    </ChildContent>
+</PDrawerForm>
+
+@code {
+    [Parameter, EditorRequired] public UserListItemDto User { get; set; } = new();
+
+    private string? _currentEditUserId;
+    private bool _loadingEditContext;
+    private UpdateUserRequest _model = new();
+    private List<AssignableRoleItemDto> _assignableRoles = [];
+    private IEnumerable<string> _assignedRoleIds = [];
+
+    private async Task OnOpenDrawerAsync()
+    {
+        _currentEditUserId = User.Id;
+
+        if (string.IsNullOrWhiteSpace(_currentEditUserId))
+        {
+            _model = new UpdateUserRequest
+            {
+                Username = User.Username,
+                RealName = User.RealName,
+                Email = User.Email,
+                Phone = User.Phone,
+                AssignedRoleIds = []
+            };
+            _assignableRoles = [];
+            _assignedRoleIds = [];
+            await MessageService.ErrorAsync("用户ID不能为空");
+            return;
+        }
+
+        _loadingEditContext = true;
+
+        try
+        {
+            var userInfoTask = ApiClient.Api.User[_currentEditUserId].Profile.GetAsync();
+            var assignableRolesTask = ApiClient.Api.User.Roles.Assignable.GetAsync();
+            await Task.WhenAll(userInfoTask, assignableRolesTask);
+
+            var userInfoResponse = await userInfoTask;
+            var assignableRolesResponse = await assignableRolesTask;
+
+            if (assignableRolesResponse is not { Success: true })
+            {
+                _assignableRoles = [];
+                await MessageService.ErrorAsync(assignableRolesResponse?.Message ?? "获取可分配角色失败");
+            }
+            else
+            {
+                _assignableRoles = assignableRolesResponse.Data ?? [];
+            }
+
+            if (userInfoResponse is not { Success: true, Data: { } userInfo })
+            {
+                _model = new UpdateUserRequest
+                {
+                    Username = User.Username,
+                    RealName = User.RealName,
+                    Email = User.Email,
+                    Phone = User.Phone,
+                    AssignedRoleIds = []
+                };
+                _assignedRoleIds = [];
+                await MessageService.ErrorAsync(userInfoResponse?.Message ?? "获取用户详情失败");
+                return;
+            }
+
+            var assignedRoleIds = userInfo.Roles?
+                .Select(r => r.RoleId)
+                .Where(roleId => !string.IsNullOrWhiteSpace(roleId))
+                .Select(roleId => roleId!)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList() ?? [];
+
+            _assignedRoleIds = assignedRoleIds;
+            _model = new UpdateUserRequest
+            {
+                Username = userInfo.Username,
+                RealName = userInfo.RealName,
+                Email = userInfo.Email,
+                Phone = userInfo.Phone,
+                AssignedRoleIds = assignedRoleIds
+            };
+        }
+        catch (Exception ex)
+        {
+            _model = new UpdateUserRequest
+            {
+                Username = User.Username,
+                RealName = User.RealName,
+                Email = User.Email,
+                Phone = User.Phone,
+                AssignedRoleIds = []
+            };
+            _assignableRoles = [];
+            _assignedRoleIds = [];
+            await MessageService.ErrorAsync($"加载编辑信息失败: {ex.Message}");
+        }
+        finally
+        {
+            _loadingEditContext = false;
+        }
+    }
+
+    private async Task<(bool, string?)> HandleSubmitAsync(UpdateUserRequest model)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(_currentEditUserId))
+            {
+                return (false, "用户ID不能为空");
+            }
+
+            model.AssignedRoleIds = _assignedRoleIds
+                .Where(roleId => !string.IsNullOrWhiteSpace(roleId))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var response = await ApiClient.Api.User[_currentEditUserId].Update.PostAsync(model);
+            return response is { Success: true } ? (true, null) : (false, response?.Message);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+}

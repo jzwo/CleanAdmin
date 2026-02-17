@@ -1,8 +1,6 @@
 @page "/SystemManage/User"
 @using NcpAdminAntBlazor.Client.ApiSdk
 @using AntDesign.TableModels
-@using CreateUserRequest = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceEndpointsUsersCreateUserRequest
-@using UpdateUserRequest = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceEndpointsUsersUpdateUserRequest
 @using UserListItemDto = NcpAdminAntBlazor.Client.ApiSdk.Models.NcpAdminBlazorApiServiceApplicationQueriesUsersUserListItemDto
 @using SearchQueryParameters = NcpAdminAntBlazor.Client.ApiSdk.Api.User.List.ListRequestBuilder.ListRequestBuilderGetQueryParameters
 @inject ApiClient ApiClient
@@ -30,35 +28,7 @@
         </PTableSearchForm>
     </SearchTemplate>
     <ToolbarButtons>
-        <PDrawerForm TModel="CreateUserRequest"
-                     Title="新增用户"
-                     Model="_createModel"
-                     OnSubmit="@HandleCreateAsync">
-            <Activator>
-                <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
-            </Activator>
-            <ChildContent Context="model">
-                <PFormItem Label="用户名"
-                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入用户名" } })">
-                    <Input @bind-Value="@model.Username" Placeholder="请输入用户名"/>
-                </PFormItem>
-                <PFormItem Label="密码"
-                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入密码" }, new FormValidationRule { Min = 6, Message = "密码长度不能少于6位" } })">
-                    <InputPassword @bind-Value="@model.Password" Placeholder="请输入密码"/>
-                </PFormItem>
-                <PFormItem Label="真实姓名"
-                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入真实姓名" } })">
-                    <Input @bind-Value="@model.RealName" Placeholder="请输入真实姓名"/>
-                </PFormItem>
-                <PFormItem Label="邮箱"
-                           Rules="@(new[] { new FormValidationRule { Type = FormFieldType.Email, Message = "请输入有效的邮箱地址" } })">
-                    <Input @bind-Value="@model.Email" Placeholder="请输入邮箱"/>
-                </PFormItem>
-                <PFormItem Label="手机号">
-                    <Input @bind-Value="@model.Phone" Placeholder="请输入手机号"/>
-                </PFormItem>
-            </ChildContent>
-        </PDrawerForm>
+        <UserCreateDrawer/>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
         <PropertyColumn Property="c => c.Username" Title="用户名"/>
@@ -69,35 +39,7 @@
         <ActionColumn Title="操作" Width="180">
             <Space>
                 <SpaceItem>
-                    @* 编辑用户抽屉表单 *@
-                    <PDrawerForm TModel="UpdateUserRequest"
-                                 Title="编辑用户"
-                                 Model="_editModel"
-                                 OnSubmit="@HandleEditAsync">
-                        <Activator>
-                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
-                                    OnClick="@(() => OnOpenEditDrawer(item))">
-                                编辑
-                            </Button>
-                        </Activator>
-                        <ChildContent Context="model">
-                            <PFormItem Label="用户名"
-                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入用户名" }])">
-                                <Input @bind-Value="@model.Username" Placeholder="请输入用户名"/>
-                            </PFormItem>
-                            <PFormItem Label="真实姓名"
-                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入真实姓名" }])">
-                                <Input @bind-Value="@model.RealName" Placeholder="请输入真实姓名"/>
-                            </PFormItem>
-                            <PFormItem Label="邮箱"
-                                       Rules="@([new FormValidationRule { Type = FormFieldType.Email, Message = "请输入有效的邮箱地址" }])">
-                                <Input @bind-Value="@model.Email" Placeholder="请输入邮箱"/>
-                            </PFormItem>
-                            <PFormItem Label="手机号">
-                                <Input @bind-Value="@model.Phone" Placeholder="请输入手机号"/>
-                            </PFormItem>
-                        </ChildContent>
-                    </PDrawerForm>
+                    <UserEditDrawer User="@item"/>
                 </SpaceItem>
                 <SpaceItem>
                     <Popconfirm Title="确定要删除该用户吗？"
@@ -118,9 +60,6 @@
 @code {
     private PTable<UserListItemDto>? _pTable;
     private readonly SearchQueryParameters _searchModel = new();
-    private readonly CreateUserRequest _createModel = new();
-    private UpdateUserRequest _editModel = new();
-    private string? _currentEditUserId;
 
     /// <summary>
     /// PTable 数据加载回调
@@ -155,59 +94,6 @@
         {
             await MessageService.ErrorAsync($"获取用户列表失败: {ex.Message}");
             return (0, []);
-        }
-    }
-
-    /// <summary>
-    /// 处理新增用户
-    /// </summary>
-    private async Task<(bool, string?)> HandleCreateAsync(CreateUserRequest model)
-    {
-        try
-        {
-            var response = await ApiClient.Api.Users.PostAsync(model);
-            return response is { Success: true } ? (true, null) : (false, response?.Message);
-        }
-        catch (Exception ex)
-        {
-            return (false, ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 打开编辑抽屉
-    /// </summary>
-    private void OnOpenEditDrawer(UserListItemDto user)
-    {
-        _currentEditUserId = user.Id;
-        _editModel = new UpdateUserRequest
-        {
-            Username = user.Username,
-            RealName = user.RealName,
-            Email = user.Email,
-            Phone = user.Phone,
-            AssignedRoleIds = []
-        };
-    }
-
-    /// <summary>
-    /// 处理编辑用户
-    /// </summary>
-    private async Task<(bool, string?)> HandleEditAsync(UpdateUserRequest model)
-    {
-        try
-        {
-            if (string.IsNullOrEmpty(_currentEditUserId))
-            {
-                return (false, "用户ID不能为空");
-            }
-
-            var response = await ApiClient.Api.User[_currentEditUserId].Update.PostAsync(model);
-            return response is { Success: true } ? (true, null) : (false, response?.Message);
-        }
-        catch (Exception ex)
-        {
-            return (false, ex.Message);
         }
     }
 
