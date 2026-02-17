@@ -138,6 +138,10 @@
     display: none !important;
 }
 
+::deep .chrome-tabs-bar .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    text-shadow: none !important;
+}
+
 
 /* 关键！使用 '>' (直接子元素选择器)
    这样只有 layout-tabs 直属的 holder 会受影响。
@@ -150,6 +154,6 @@
 }
 
 /* 3. 确保高度一直传递到最底层的 TabPane */
-::deep .layout-tabs  > .ant-tabs-content-holder > .ant-tabs-content {
+::deep .layout-tabs > .ant-tabs-content-holder > .ant-tabs-content {
     height: 100%;
 }
