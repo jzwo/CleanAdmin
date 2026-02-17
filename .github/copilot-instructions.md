@@ -26,15 +26,15 @@
 ## 项目结构
 
 ```
-NcpAdminBlazor.slnx
+CleanAdmin.slnx
 ├── src/
-│   ├── NcpAdminBlazor.Domain/         # 领域层 - 聚合根、实体、领域事件
-│   ├── NcpAdminBlazor.Infrastructure/ # 基础设施层 - EF配置、仓储接口、仓储实现
-│   └── NcpAdminBlazor.ApiService/           # 表现层 - API、应用服务
+│   ├── CleanAdmin.Domain/         # 领域层 - 聚合根、实体、领域事件
+│   ├── CleanAdmin.Infrastructure/ # 基础设施层 - EF配置、仓储接口、仓储实现
+│   └── CleanAdmin.ApiService/           # 表现层 - API、应用服务
 └── test/                            # 测试项目
-    ├── NcpAdminBlazor.Domain.UnitTests/         # 领域层测试项目
-    ├── NcpAdminBlazor.Infrastructure.UnitTests/ # 基础设施层测试项目
-    └── NcpAdminBlazor.ApiService.UnitTests/           # 表现层测试项目
+    ├── CleanAdmin.Domain.UnitTests/         # 领域层测试项目
+    ├── CleanAdmin.Infrastructure.UnitTests/ # 基础设施层测试项目
+    └── CleanAdmin.ApiService.UnitTests/           # 表现层测试项目
 ```
 
 **分层依赖关系：** Web → Infrastructure → Domain (严格单向依赖)
@@ -74,17 +74,17 @@ NcpAdminBlazor.slnx
 ## 核心开发原则
 
 ### 文件组织
-- **聚合根** → `src/NcpAdminBlazor.Domain/AggregatesModel/{AggregateFolder}/`
-- **领域事件** → `src/NcpAdminBlazor.Domain/DomainEvents/`
-- **仓储** → `src/NcpAdminBlazor.Infrastructure/Repositories/`
-- **实体配置** → `src/NcpAdminBlazor.Infrastructure/EntityConfigurations/`
-- **命令与命令处理器** → `src/NcpAdminBlazor.ApiService/Application/Commands/`
-- **查询与查询处理器** → `src/NcpAdminBlazor.ApiService/Application/Queries/`
-- **API端点** → `src/NcpAdminBlazor.ApiService/Endpoints/`
-- **领域事件处理器** → `src/NcpAdminBlazor.ApiService/Application/DomainEventHandlers/`
-- **集成事件** → `src/NcpAdminBlazor.ApiService/Application/IntegrationEvents/`
-- **集成事件转换器** → `src/NcpAdminBlazor.ApiService/Application/IntegrationEventConverters/`
-- **集成事件处理器** → `src/NcpAdminBlazor.ApiService/Application/IntegrationEventHandlers/`
+- **聚合根** → `src/CleanAdmin.Domain/AggregatesModel/{AggregateFolder}/`
+- **领域事件** → `src/CleanAdmin.Domain/DomainEvents/`
+- **仓储** → `src/CleanAdmin.Infrastructure/Repositories/`
+- **实体配置** → `src/CleanAdmin.Infrastructure/EntityConfigurations/`
+- **命令与命令处理器** → `src/CleanAdmin.ApiService/Application/Commands/`
+- **查询与查询处理器** → `src/CleanAdmin.ApiService/Application/Queries/`
+- **API端点** → `src/CleanAdmin.ApiService/Endpoints/`
+- **领域事件处理器** → `src/CleanAdmin.ApiService/Application/DomainEventHandlers/`
+- **集成事件** → `src/CleanAdmin.ApiService/Application/IntegrationEvents/`
+- **集成事件转换器** → `src/CleanAdmin.ApiService/Application/IntegrationEventConverters/`
+- **集成事件处理器** → `src/CleanAdmin.ApiService/Application/IntegrationEventHandlers/`
 
 ### 强制性要求
 - ✅ 所有聚合根使用强类型ID，且**不手动赋值ID**（依赖EF值生成器）
@@ -140,7 +140,7 @@ public async Task<OrderId> Handle(OrderPaidCommand request, CancellationToken ca
 ### GlobalUsings.cs配置
 各层的常用引用已在GlobalUsings.cs中全局定义：
 
-**Web层** (`src/NcpAdminBlazor.ApiService/GlobalUsings.cs`):
+**Web层** (`src/CleanAdmin.ApiService/GlobalUsings.cs`):
 - `global using FluentValidation;` - 验证器
 - `global using MediatR;` - 命令处理器  
 - `global using NetCorePal.Extensions.Primitives;` - KnownException等
@@ -148,12 +148,12 @@ public async Task<OrderId> Handle(OrderPaidCommand request, CancellationToken ca
 - `global using NetCorePal.Extensions.Dto;` - ResponseData
 - `global using NetCorePal.Extensions.Domain;` - 领域事件处理器
 
-**Infrastructure层** (`src/NcpAdminBlazor.Infrastructure/GlobalUsings.cs`):
+**Infrastructure层** (`src/CleanAdmin.Infrastructure/GlobalUsings.cs`):
 - `global using Microsoft.EntityFrameworkCore;` - EF Core
 - `global using Microsoft.EntityFrameworkCore.Metadata.Builders;` - 实体配置
 - `global using NetCorePal.Extensions.Primitives;` - 基础类型
 
-**Domain层** (`src/NcpAdminBlazor.Domain/GlobalUsings.cs`):
+**Domain层** (`src/CleanAdmin.Domain/GlobalUsings.cs`):
 - `global using NetCorePal.Extensions.Domain;` - 领域基础类型
 - `global using NetCorePal.Extensions.Primitives;` - 强类型ID等
 
@@ -166,18 +166,18 @@ public async Task<OrderId> Handle(OrderPaidCommand request, CancellationToken ca
 
 **查询处理器**:
 ```csharp
-using NcpAdminBlazor.Domain.AggregatesModel.{AggregateFolder};
-using NcpAdminBlazor.Infrastructure;
+using CleanAdmin.Domain.AggregatesModel.{AggregateFolder};
+using CleanAdmin.Infrastructure;
 ```
 
 **实体配置**:
 ```csharp
-using NcpAdminBlazor.Domain.AggregatesModel.{AggregateFolder};
+using CleanAdmin.Domain.AggregatesModel.{AggregateFolder};
 ```
 
 **端点**:
 ```csharp
-using NcpAdminBlazor.Domain.AggregatesModel.{AggregateFolder};
-using NcpAdminBlazor.ApiService.Application.Commands.{FeatureFolder};
-using NcpAdminBlazor.ApiService.Application.Queries.{FeatureFolder};
+using CleanAdmin.Domain.AggregatesModel.{AggregateFolder};
+using CleanAdmin.ApiService.Application.Commands.{FeatureFolder};
+using CleanAdmin.ApiService.Application.Queries.{FeatureFolder};
 ```

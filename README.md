@@ -1,4 +1,4 @@
-# NcpAdminBlazor
+# CleanAdmin
 
 ## 环境准备
 
@@ -35,7 +35,7 @@ VS Code 的代码片段已预配置在 `.vscode/csharp.code-snippets` 文件中�
 
 ### JetBrains Rider 配置
 
-Rider 用户可以直接使用 `NcpAdminBlazor.sln.DotSettings` 文件中的 Live Templates 配置。
+Rider 用户可以直接使用 `CleanAdmin.sln.DotSettings` 文件中的 Live Templates 配置。
 
 ### 可用的代码片段
 
@@ -85,10 +85,10 @@ Rider 用户可以直接使用 `NcpAdminBlazor.sln.DotSettings` 文件中的 Liv
 dotnet tool install --global dotnet-ef --version 9.0.0
 
 # 强制更新数据库
-dotnet ef database update -p src/NcpAdminBlazor.Infrastructure 
+dotnet ef database update -p src/CleanAdmin.Infrastructure 
 
 # 创建迁移 SEE：https://learn.microsoft.com/zh-cn/ef/core/managing-schemas/migrations/?tabs=dotnet-core-cli
-dotnet ef migrations add InitialCreate -p src/NcpAdminBlazor.Infrastructure 
+dotnet ef migrations add InitialCreate -p src/CleanAdmin.Infrastructure 
 ```
 
 ## 代码分析可视化
@@ -111,7 +111,7 @@ dotnet ef migrations add InitialCreate -p src/NcpAdminBlazor.Infrastructure
 dotnet tool install -g NetCorePal.Extensions.CodeAnalysis.Tools
 
 # 进入项目目录并生成可视化文件
-cd src/NcpAdminBlazor.ApiService
+cd src/CleanAdmin.ApiService
 netcorepal-codeanalysis generate --output architecture.html
 ```
 

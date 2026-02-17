@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.Infrastructure/Repositories/*.cs"
+applyTo: "src/CleanAdmin.Infrastructure/Repositories/*.cs"
 ---
 
 # 仓储开发指南
@@ -11,7 +11,7 @@ applyTo: "src/NcpAdminBlazor.Infrastructure/Repositories/*.cs"
 ## 重要设计原则
 
 - 每个聚合根对应一个仓储
-- 仓储接口和实现应放置在 `src/NcpAdminBlazor.Infrastructure/Repositories/` 目录下
+- 仓储接口和实现应放置在 `src/CleanAdmin.Infrastructure/Repositories/` 目录下
 - 接口和实现定义在同一个文件中，文件名格式为 `{AggregateName}Repository.cs`
 - 接口必须继承 `IRepository<TEntity, TKey>`
 - 实现必须继承 `RepositoryBase<TEntity, TKey, TDbContext>`
@@ -25,7 +25,7 @@ applyTo: "src/NcpAdminBlazor.Infrastructure/Repositories/*.cs"
 **原因**: 在 Domain 层定义了仓储接口，或缺少引用
 **解决**: 
 - 将仓储接口定义在 Infrastructure 层
-- 在使用仓储的地方添加 `using NcpAdminBlazor.Infrastructure.Repositories;`
+- 在使用仓储的地方添加 `using CleanAdmin.Infrastructure.Repositories;`
 
 ### 自动注册相关
 **错误**: 仓储未注册到 DI 容器
@@ -70,12 +70,12 @@ public class MyRepository : RepositoryBase<Entity, EntityId, ApplicationDbContex
 
 ## 代码示例
 
-**文件**: `src/NcpAdminBlazor.Infrastructure/Repositories/UserRepository.cs`
+**文件**: `src/CleanAdmin.Infrastructure/Repositories/UserRepository.cs`
 
 ```csharp
-using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
+using CleanAdmin.Domain.AggregatesModel.UserAggregate;
 
-namespace NcpAdminBlazor.Infrastructure.Repositories;
+namespace CleanAdmin.Infrastructure.Repositories;
 
 // 接口和实现定义在同一文件中
 public interface IUserRepository

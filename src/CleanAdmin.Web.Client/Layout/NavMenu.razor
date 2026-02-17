@@ -1,0 +1,118 @@
+@using CleanAdmin.Web.Client.ApiSdk
+@using CleanAdmin.Web.Client.ApiSdk.Models
+@inject ApiClient ApiClient
+@inject AuthenticationStateProvider AuthStateProvider
+
+<div>
+    @if (_isLoading)
+    {
+        <div class="menu-loading" style="padding: 20px; text-align: center;">
+            <Spin/>
+        </div>
+    }
+    else if (_menuItems.Count > 0)
+    {
+        <Menu Mode="MenuMode.Inline" Class="rounded-menu bg-transparent">
+            @foreach (var item in _menuItems)
+            {
+                @RenderMenuItem(item)
+            }
+        </Menu>
+    }
+    else
+    {
+        <div class="menu-empty" style="padding: 20px; text-align: center; color: #999;">
+            <p>暂无菜单</p>
+        </div>
+    }
+</div>
+
+@* ReSharper disable once UnusedParameter.Local *@
+
+@code {
+    private List<CleanAdminApiServiceApplicationQueriesMenusUserMenuTreeNodeDto> _menuItems = new();
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMenusAsync();
+    }
+
+    private async Task LoadMenusAsync()
+    {
+        try
+        {
+            _isLoading = true;
+
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            if (!authState.User.Identity?.IsAuthenticated ?? true)
+            {
+                _menuItems = [];
+                return;
+            }
+
+            var response = await ApiClient.Api.Menus.CurrentUser.GetAsync();
+
+            _menuItems = response?.Data ?? [];
+        }
+        catch (Exception ex)
+        {
+            await System.Console.Error.WriteLineAsync($"加载菜单失败: {ex.Message}");
+            await System.Console.Error.WriteLineAsync(ex.StackTrace);
+            _menuItems = [];
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private RenderFragment RenderMenuItem(CleanAdminApiServiceApplicationQueriesMenusUserMenuTreeNodeDto item) => __builder =>
+    {
+        var hasChildren = item.Children?.Count > 0;
+        if (hasChildren)
+        {
+            <SubMenu Key="@(item.MenuId ?? Guid.NewGuid().ToString())">
+                <TitleTemplate>
+                    <span>
+                        @if (!string.IsNullOrEmpty(item.Icon))
+                        {
+                            <Icon>
+                                <Component>
+                                    <iconify-icon icon="@(item.Icon)"></iconify-icon>
+                                </Component>
+                            </Icon>
+                        }
+                        <span>@item.MenuName</span>
+                    </span>
+                </TitleTemplate>
+                <ChildContent>
+                    @foreach (var child in item.Children!)
+                    {
+                        @RenderMenuItem(child)
+                    }
+                </ChildContent>
+            </SubMenu>
+        }
+        else
+        {
+            var match = item.RoutePath == "/" ? NavLinkMatch.All : NavLinkMatch.Prefix;
+            RenderFragment? iconTemplate = null;
+            if (!string.IsNullOrEmpty(item.Icon))
+            {
+                var iconName = item.Icon;
+                iconTemplate = @<iconify-icon icon="@iconName"></iconify-icon>;
+            }
+
+            <MenuItem Key="@(item.MenuId ?? Guid.NewGuid().ToString())" RouterLink="@item.RoutePath"
+                      IconTemplate="@iconTemplate"
+                      RouterMatch="@match">
+                @item.MenuName
+            </MenuItem>
+        }
+    };
+
+}
+
+
+

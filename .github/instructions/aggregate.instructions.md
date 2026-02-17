@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.Domain/AggregatesModel/**/*.cs"
+applyTo: "src/CleanAdmin.Domain/AggregatesModel/**/*.cs"
 ---
 
 # 聚合与强类型ID开发指南
@@ -11,8 +11,8 @@ applyTo: "src/NcpAdminBlazor.Domain/AggregatesModel/**/*.cs"
 ## 文件与目录
 
 类文件命名应遵循以下规则：
-- 应放置在 `src/NcpAdminBlazor.Domain/AggregatesModel/{AggregateName}Aggregate/` 目录下
-- 例如 `src/NcpAdminBlazor.Domain/AggregatesModel/UserAggregate/User.cs`
+- 应放置在 `src/CleanAdmin.Domain/AggregatesModel/{AggregateName}Aggregate/` 目录下
+- 例如 `src/CleanAdmin.Domain/AggregatesModel/UserAggregate/User.cs`
 - 每个聚合在独立文件夹中
 - 聚合根类名与文件名一致
 - 强类型ID与聚合根定义在同一文件中
@@ -47,12 +47,12 @@ applyTo: "src/NcpAdminBlazor.Domain/AggregatesModel/**/*.cs"
 
 ## 代码示例
 
-文件: `src/NcpAdminBlazor.Domain/AggregatesModel/UserAggregate/User.cs`
+文件: `src/CleanAdmin.Domain/AggregatesModel/UserAggregate/User.cs`
 
 ```csharp
-using NcpAdminBlazor.Domain.DomainEvents; // 必需：引用领域事件
+using CleanAdmin.Domain.DomainEvents; // 必需：引用领域事件
 
-namespace NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
+namespace CleanAdmin.Domain.AggregatesModel.UserAggregate;
 
 // 强类型ID定义 - 与聚合根在同一文件中
 public partial record UserId : IGuidStronglyTypedId;
@@ -94,4 +94,4 @@ public class User : Entity<UserId>, IAggregateRoot
 ### 领域事件引用错误
 **错误**: `未能找到类型或命名空间名"UserCreatedDomainEvent"`
 **原因**: 缺少对领域事件命名空间的引用
-**解决**: 在聚合根文件顶部添加 `using NcpAdminBlazor.Domain.DomainEvents;`
+**解决**: 在聚合根文件顶部添加 `using CleanAdmin.Domain.DomainEvents;`

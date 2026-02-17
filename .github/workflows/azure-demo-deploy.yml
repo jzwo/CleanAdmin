@@ -1,8 +1,8 @@
 name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: NcpAdminBlazor-Demo   # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: './src/NcpAdminBlazor.Web'      # set this to the path to your web app project, defaults to the repository root
+  AZURE_WEBAPP_NAME: CleanAdmin-Demo   # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: './src/CleanAdmin.Web'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '10.0'                 # set this to the .NET Core version to use
 
 on:
@@ -31,13 +31,13 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build ApiService for Kiota code generation
-        run: dotnet build ./src/NcpAdminBlazor.ApiService/NcpAdminBlazor.ApiService.csproj --configuration Release
+        run: dotnet build ./src/CleanAdmin.ApiService/CleanAdmin.ApiService.csproj --configuration Release
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/NcpAdminBlazor.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/CleanAdmin.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

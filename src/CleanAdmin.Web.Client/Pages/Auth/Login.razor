@@ -1,0 +1,127 @@
+@page "/login"
+@using CleanAdmin.Web.Client.ApiSdk
+@using CleanAdmin.Web.Client.Infrastructure.Auth
+@using CleanAdmin.Web.Client.Infrastructure.Http
+@using CleanAdmin.Web.Client.Pages.Application
+@inject IStringLocalizer<Login> L
+@inject NavigationManager NavigationManager
+@inject ApiClient ApiClient
+@inject JwtAuthStateProvider JwtAuthStateProvider
+@inject IMessageService MessageService
+@inject INotificationService NotificationService
+
+<PageTitle>@L["PageTitle"]</PageTitle>
+
+<Title Level="4" Class="mb-6">密码登录</Title>
+
+<Form Model="@_model"
+      OnFinish="OnFinish">
+    <FluentValidator/>
+    <FormItem>
+        <AntDesign.Input @bind-Value="@context.Username"
+                         Placeholder="@L["UsernamePlaceholder"].Value"
+                         Size="InputSize.Large">
+            <Prefix>
+                <Icon Type="user"/>
+            </Prefix>
+        </AntDesign.Input>
+    </FormItem>
+
+    <FormItem>
+        <InputPassword @bind-Value="@context.Password"
+                       Placeholder="@L["PasswordPlaceholder"].Value"
+                       Size="InputSize.Large"
+                       VisibilityToggle="true">
+            <Prefix>
+                <Icon Type="lock"/>
+            </Prefix>
+        </InputPassword>
+    </FormItem>
+
+    <FormItem>
+        <Flex Justify="FlexJustify.SpaceBetween" Align="FlexAlign.Center">
+            <Checkbox @bind-Value="_model.RememberMe">
+                @L["RememberMe"]
+            </Checkbox>
+            <a href="#">@L["ForgotPassword"]</a>
+        </Flex>
+    </FormItem>
+
+    <FormItem>
+        <Button Type="@ButtonType.Primary"
+                HtmlType="submit"
+                Block="true"
+                Size="ButtonSize.Large"
+                Loading="@_loading">
+            @L["ConfirmButton"]
+        </Button>
+    </FormItem>
+
+    <FormItem>
+        <Flex Gap="FlexGap.Middle">
+            <Button Block="true" Size="ButtonSize.Large">
+                @L["CodeLogin"]
+            </Button>
+            <Button Block="true" Size="ButtonSize.Large">
+                @L["Register"]
+            </Button>
+        </Flex>
+    </FormItem>
+</Form>
+
+@code {
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
+
+    private readonly LoginModel _model = new()
+    {
+        Username = "admin",
+        Password = "admin123456"
+    };
+
+    private bool _loading;
+
+    private async Task OnFinish(EditContext editContext)
+    {
+        _loading = true;
+        try
+        {
+            var response = await ApiClient.Api.Auth.Login.PostAsync(new()
+            {
+                Username = _model.Username,
+                Password = _model.Password
+            }, config => config.Options.Add(AnonymousRequestOption.Instance));
+            if (response is
+                {
+                    Success: true,
+                    Data: { } data
+                })
+            {
+                await JwtAuthStateProvider.NotifyLoginAsync(
+                    new UserToken(
+                        data?.UserId ?? string.Empty,
+                        data?.AccessToken ?? string.Empty,
+                        data?.AccessTokenExpiry ?? DateTimeOffset.MinValue,
+                        data?.RefreshToken ?? string.Empty,
+                        data?.RefreshTokenExpiry ?? DateTimeOffset.MinValue
+                    ),
+                    _model.RememberMe);
+                NavigationManager.NavigateTo(!string.IsNullOrWhiteSpace(ReturnUrl) ? ReturnUrl! : Home.PageUri);
+                _ = NotificationService.Success(new NotificationConfig()
+                {
+                    Message = "登录成功",
+                    Description = "欢迎回来！",
+                });
+            }
+            else
+            {
+                _ = MessageService.ErrorAsync(response?.Message ?? "登录失败");
+            }
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+
+}

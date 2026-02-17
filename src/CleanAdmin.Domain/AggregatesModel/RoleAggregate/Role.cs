@@ -1,0 +1,51 @@
+﻿using CleanAdmin.Domain.Common;
+using CleanAdmin.Domain.DomainEvents;
+
+namespace CleanAdmin.Domain.AggregatesModel.RoleAggregate
+{
+    public partial record RoleId : IGuidStronglyTypedId;
+
+    public class Role : Entity<RoleId>, IAggregateRoot, ISoftDeletable
+    {
+        protected Role()
+        {
+        }
+
+        public string Name { get; private set; } = string.Empty;
+        public string Description { get; private set; } = string.Empty;
+        public bool IsDisabled { get; private set; } = false;
+        public ICollection<string> AssignedPermissionCodes { get; private set; } = [];
+        public DateTimeOffset CreatedAt { get; init; }
+        public Deleted IsDeleted { get; private set; } = false;
+        public DeletedTime DeletedAt { get; private set; } = new(DateTimeOffset.MinValue);
+
+        public Role(string name, string description, bool isDisabled)
+        {
+            CreatedAt = DateTimeOffset.UtcNow;
+            Name = name;
+            Description = description;
+            IsDisabled = isDisabled;
+            AssignedPermissionCodes = [];
+        }
+
+        public void UpdateRoleInfo(string name, string description, bool isDisabled)
+        {
+            Name = name;
+            Description = description;
+            IsDisabled = isDisabled;
+            AddDomainEvent(new RoleInfoChangedDomainEvent(this));
+        }
+
+        public void UpdatePermissions(ICollection<string> permissionCodes)
+        {
+            AssignedPermissionCodes = permissionCodes;
+            AddDomainEvent(new RolePermissionsChangedDomainEvent(this));
+        }
+
+        public void Delete()
+        {
+            IsDeleted = true;
+            AddDomainEvent(new RoleDeletedDomainEvent(this));
+        }
+    }
+}

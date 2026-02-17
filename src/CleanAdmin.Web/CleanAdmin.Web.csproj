@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\CleanAdmin.ServiceDefaults\CleanAdmin.ServiceDefaults.csproj" />
+        <ProjectReference Include="..\CleanAdmin.Web.Client\CleanAdmin.Web.Client.csproj"/>
+        <PackageReference Include="BitzArt.Blazor.Cookies.Server" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
+        <PackageReference Include="Yarp.ReverseProxy" />
+    </ItemGroup>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <Exec Command="npm run build:css"/>
+    </Target>
+</Project>

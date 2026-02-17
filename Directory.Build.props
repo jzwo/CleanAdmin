@@ -1,10 +1,10 @@
 <Project>
 	<Import Project="$(MSBuildThisFileDirectory)\eng\versions.props"/>
 	<PropertyGroup>
-		<Authors>NcpAdminBlazor</Authors>
-		<Product>NcpAdminBlazor</Product>
-		<owners>NcpAdminBlazor</owners>
-		<PackagePrefix>NcpAdminBlazor</PackagePrefix>
+		<Authors>CleanAdmin</Authors>
+		<Product>CleanAdmin</Product>
+		<owners>CleanAdmin</owners>
+		<PackagePrefix>CleanAdmin</PackagePrefix>
 		<PackageIconUrl></PackageIconUrl>
 		<PackageProjectUrl></PackageProjectUrl>
 		<PackageLicenseUrl></PackageLicenseUrl>

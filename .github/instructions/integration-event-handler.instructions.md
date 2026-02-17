@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.ApiService/Application/IntegrationEventHandlers/*.cs"
+applyTo: "src/CleanAdmin.ApiService/Application/IntegrationEventHandlers/*.cs"
 ---
 
 # 集成事件处理器开发指南
@@ -11,7 +11,7 @@ applyTo: "src/NcpAdminBlazor.ApiService/Application/IntegrationEventHandlers/*.c
 ## 文件与目录
 
 类文件命名应遵循以下规则：
-- 应放置在 `src/NcpAdminBlazor.ApiService/Application/IntegrationEventHandlers/` 目录下
+- 应放置在 `src/CleanAdmin.ApiService/Application/IntegrationEventHandlers/` 目录下
 - 文件名格式为 `{IntegrationEvent}HandlerFor{Action}.cs` ,其中{Action}需要准确描述该Handler的目的
 - 每个集成事件对应一个处理器文件
 
@@ -28,13 +28,13 @@ applyTo: "src/NcpAdminBlazor.ApiService/Application/IntegrationEventHandlers/*.c
 
 ## 代码示例
 
-**文件**: `src/NcpAdminBlazor.ApiService/Application/IntegrationEventHandlers/UserCreatedIntegrationEventHandlerForSendNotifyEmail.cs`
+**文件**: `src/CleanAdmin.ApiService/Application/IntegrationEventHandlers/UserCreatedIntegrationEventHandlerForSendNotifyEmail.cs`
 
 ```csharp
-using NcpAdminBlazor.ApiService.Application.IntegrationEvents;
-using NcpAdminBlazor.ApiService.Application.Commands;
+using CleanAdmin.ApiService.Application.IntegrationEvents;
+using CleanAdmin.ApiService.Application.Commands;
 
-namespace NcpAdminBlazor.ApiService.Application.IntegrationEventHandlers;
+namespace CleanAdmin.ApiService.Application.IntegrationEventHandlers;
 
 public class UserCreatedIntegrationEventHandlerForSendNotifyEmail(
     ILogger<UserCreatedIntegrationEventHandlerForSendNotifyEmail> logger,

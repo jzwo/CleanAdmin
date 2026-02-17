@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.Domain/DomainEvents/*.cs"
+applyTo: "src/CleanAdmin.Domain/DomainEvents/*.cs"
 ---
 
 # 领域事件开发指南
@@ -11,7 +11,7 @@ applyTo: "src/NcpAdminBlazor.Domain/DomainEvents/*.cs"
 ## 文件与目录
 
 类文件命名应遵循以下规则：
-- 应放置在src/NcpAdminBlazor.Domain/DomainEvents目录下
+- 应放置在src/CleanAdmin.Domain/DomainEvents目录下
 - 为每个聚合添加一个领域事件文件
 - 文件名格式为 `{Aggregate}DomainEvents.cs`
 - 一个领域事件文件中可以包含多个领域事件
@@ -28,12 +28,12 @@ applyTo: "src/NcpAdminBlazor.Domain/DomainEvents/*.cs"
 
 ## 代码示例
 
-**文件**: `src/NcpAdminBlazor.Domain/DomainEvents/UserDomainEvents.cs`
+**文件**: `src/CleanAdmin.Domain/DomainEvents/UserDomainEvents.cs`
 
 ```csharp
-using NcpAdminBlazor.Domain.Aggregates.UserAggregate;
+using CleanAdmin.Domain.Aggregates.UserAggregate;
 
-namespace NcpAdminBlazor.Domain.DomainEvents;
+namespace CleanAdmin.Domain.DomainEvents;
 
 public record UserCreatedDomainEvent(User User) : IDomainEvent;
 

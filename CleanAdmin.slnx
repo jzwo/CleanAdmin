@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="eng/versions.props" />
+    <File Path="global.json" />
+    <File Path="NuGet.config" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/CleanAdmin.AppHost/CleanAdmin.AppHost.csproj" />
+  </Folder>
+  <Folder Name="/src/backend/">
+    <Project Path="src/CleanAdmin.ApiService/CleanAdmin.ApiService.csproj" />
+    <Project Path="src/CleanAdmin.Domain/CleanAdmin.Domain.csproj" />
+    <Project Path="src/CleanAdmin.Infrastructure/CleanAdmin.Infrastructure.csproj" />
+    <Project Path="src/CleanAdmin.MigrationService/CleanAdmin.MigrationService.csproj" />
+  </Folder>
+  <Folder Name="/src/frontend/">
+    <Project Path="src/CleanAdmin.Web.Client/CleanAdmin.Web.Client.csproj" />
+    <Project Path="src/CleanAdmin.Web/CleanAdmin.Web.csproj" />
+  </Folder>
+  <Folder Name="/src/shared/">
+    <Project Path="src/CleanAdmin.ServiceDefaults/CleanAdmin.ServiceDefaults.csproj" />
+    <Project Path="src/CleanAdmin.Shared/CleanAdmin.Shared.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/CleanAdmin.ApiService.Tests/CleanAdmin.ApiService.Tests.csproj" />
+    <Project Path="test/CleanAdmin.Client.Tests/CleanAdmin.Client.Tests.csproj" />
+    <Project Path="test/CleanAdmin.Domain.Tests/CleanAdmin.Domain.Tests.csproj" />
+    <Project Path="test/CleanAdmin.Infrastructure.Tests/CleanAdmin.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>

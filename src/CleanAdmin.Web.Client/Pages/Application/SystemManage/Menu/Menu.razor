@@ -1,0 +1,303 @@
+@page "/SystemManage/Menu"
+
+@using AntDesign.TableModels
+@using CleanAdmin.Web.Client.ApiSdk
+@using MenuTreeNodeDto = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceApplicationQueriesMenusMenuTreeNodeDto
+@using CreateMenuRequest = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceEndpointsMenusCreateMenuRequest
+@using UpdateMenuRequest = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceEndpointsMenusUpdateMenuRequest
+@using MenuType = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminDomainAggregatesModelMenuAggregateMenuType
+@using MenuStatus = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminDomainAggregatesModelMenuAggregateMenuStatus
+@inject ApiClient ApiClient
+@inject IMessageService MessageService
+
+<PageTitle>菜单管理</PageTitle>
+
+<PTable @ref="_pTable" TItem="MenuTreeNodeDto"
+        Title="菜单列表"
+        HidePagination="true"
+        TreeChildren="@(x => x.Children ?? [])"
+        OnLoadData="LoadMenuTreeAsync"
+        DefaultExpandAllRows>
+    <ToolbarButtons>
+        <PDrawerForm TModel="CreateMenuRequest"
+                     Title="新增菜单"
+                     Model="_createModel"
+                     OnSubmit="@HandleCreateAsync">
+            <Activator>
+                <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
+            </Activator>
+            <ChildContent Context="model">
+                <PFormItem Label="菜单名称"
+                           Rules="@([new FormValidationRule { Required = true, Message = "请输入菜单名称" }])">
+                    <Input @bind-Value="@model.MenuName" Placeholder="请输入菜单名称"/>
+                </PFormItem>
+                <PFormItem Label="菜单类型"
+                           Rules="@([new FormValidationRule { Required = true, Message = "请选择菜单类型" }])">
+                    <EnumSelect TEnum="MenuType?" @bind-Value="@model.MenuType" Placeholder="请选择菜单类型"/>
+                </PFormItem>
+                <PFormItem Label="父菜单">
+                    <TreeSelect TItem="MenuTreeNodeDto"
+                                TItemValue="string"
+                                DataSource="@_menuTreeData"
+                                @bind-Value="@_selectedParentId"
+                                TitleExpression="@(x => x.DataItem.MenuName)"
+                                KeyExpression="@(x => x.DataItem.MenuId)"
+                                ChildrenExpression="@(x => x.DataItem.Children)"
+                                Placeholder="请选择父菜单（留空为顶级菜单）"
+                                AllowClear/>
+                </PFormItem>
+                <PFormItem Label="路由路径"
+                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入路由路径" } })">
+                    <Input @bind-Value="@model.RoutePath" Placeholder="请输入路由路径"/>
+                </PFormItem>
+                <PFormItem Label="组件路径">
+                    <Input @bind-Value="@model.ComponentPath" Placeholder="请输入组件路径"/>
+                </PFormItem>
+                <PFormItem Label="图标">
+                    <AntDesign.Input @bind-Value="@model.Icon" Placeholder="请输入图标">
+                        <AddOnAfter>
+                            <iconify-icon icon="@model.Icon"></iconify-icon>
+                        </AddOnAfter>
+                    </AntDesign.Input>
+                </PFormItem>
+                <PFormItem Label="排序号"
+                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入排序号" } })">
+                    <AntDesign.InputNumber @bind-Value="@model.SortOrder" Min="0" Placeholder="请输入排序号"/>
+                </PFormItem>
+                <PFormItem Label="权限码">
+                    <Input @bind-Value="@model.PermissionCode" Placeholder="请输入权限码"/>
+                </PFormItem>
+            </ChildContent>
+        </PDrawerForm>
+    </ToolbarButtons>
+    <ColumnDefinitions>
+        <PropertyColumn Property="c => c.MenuName" Title="菜单名称">
+            <Space Class="flex items-center">
+                <SpaceItem Class="flex items-center">
+                    @if (!string.IsNullOrEmpty(context.Icon))
+                    {
+                        <iconify-icon icon="@context.Icon"></iconify-icon>
+                    }
+                </SpaceItem>
+                <SpaceItem>@context.MenuName</SpaceItem>
+            </Space>
+        </PropertyColumn>
+        <PropertyColumn Width="12%" Property="c => c.MenuType" Title="菜单类型">
+            <Tag Color="@GetMenuTypeColor(context.MenuType)">@GetMenuTypeText(context.MenuType)</Tag>
+        </PropertyColumn>
+        <PropertyColumn Width="20%" Property="c => c.RoutePath" Title="路由路径"/>
+        <PropertyColumn Width="8%" Property="c => c.ComponentPath" Title="组件路径"/>
+        <PropertyColumn Width="8%" Property="c => c.SortOrder" Title="排序号"/>
+        <PropertyColumn Width="8%" Property="c => c.IsVisible" Title="可见性">
+            <Tag
+                Color="@(context.IsVisible == true ? "green" : "red")">@(context.IsVisible == true ? "显示" : "隐藏")</Tag>
+        </PropertyColumn>
+        <PropertyColumn Width="8%" Property="c => c.Status" Title="状态">
+            <Tag
+                Color="@(context.Status == MenuStatus.Enabled ? "green" : "red")">@(context.Status == MenuStatus.Enabled ? "启用" : "禁用")</Tag>
+        </PropertyColumn>
+        <ActionColumn Title="操作" Width="12%">
+            <Space>
+                <SpaceItem>
+                    @* 编辑菜单抽屉表单 *@
+                    <PDrawerForm TModel="UpdateMenuRequest"
+                                 Title="编辑菜单"
+                                 Model="_editModel"
+                                 OnSubmit="@HandleEditAsync">
+                        <Activator>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
+                                    OnClick="@(() => OnOpenEditDrawer(context))">
+                                编辑
+                            </Button>
+                        </Activator>
+                        <ChildContent Context="model">
+                            <PFormItem Label="菜单名称"
+                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入菜单名称" }])">
+                                <Input @bind-Value="@model.MenuName" Placeholder="请输入菜单名称"/>
+                            </PFormItem>
+                            <PFormItem Label="路由路径"
+                                       Rules="@([new FormValidationRule { Required = true, Message = "请输入路由路径" }])">
+                                <Input @bind-Value="@model.RoutePath" Placeholder="请输入路由路径"/>
+                            </PFormItem>
+                            <PFormItem Label="组件路径">
+                                <Input @bind-Value="@model.ComponentPath" Placeholder="请输入组件路径"/>
+                            </PFormItem>
+                            <PFormItem Label="图标">
+                                <AntDesign.Input @bind-Value="@model.Icon" Placeholder="请输入图标">
+                                    <AddOnAfter>
+                                        <iconify-icon icon="@model.Icon"></iconify-icon>
+                                    </AddOnAfter>
+                                </AntDesign.Input>
+                            </PFormItem>
+                            <PFormItem Label="权限码">
+                                <Input @bind-Value="@model.PermissionCode" Placeholder="请输入权限码"/>
+                            </PFormItem>
+                        </ChildContent>
+                    </PDrawerForm>
+                </SpaceItem>
+                <SpaceItem>
+                    <Popconfirm Title="确定要删除该菜单吗？"
+                                OnConfirm="() => OnDelete(context)"
+                                OkText="确定"
+                                CancelText="取消">
+                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
+                            删除
+                        </Button>
+                    </Popconfirm>
+                </SpaceItem>
+            </Space>
+        </ActionColumn>
+    </ColumnDefinitions>
+</PTable>
+
+
+@code {
+    private PTable<MenuTreeNodeDto>? _pTable;
+    private List<MenuTreeNodeDto> _menuTreeData = new();
+    private readonly CreateMenuRequest _createModel = new();
+    private UpdateMenuRequest _editModel = new();
+    private string? _currentEditMenuId;
+    private string? _selectedParentId;
+
+    /// <summary>
+    /// 加载菜单树数据
+    /// </summary>
+    private async Task<(int Total, IEnumerable<MenuTreeNodeDto> Data)> LoadMenuTreeAsync(QueryModel<MenuTreeNodeDto> queryModel)
+    {
+        try
+        {
+            var response = await ApiClient.Api.Menus.Tree.All.GetAsync();
+            if (response is { Success: true, Data: { } data })
+            {
+                _menuTreeData = data;
+                return (data.Count, data);
+            }
+            else
+            {
+                await MessageService.ErrorAsync(response?.Message ?? "获取菜单树失败");
+                return (0, []);
+            }
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"获取菜单树失败: {ex.Message}");
+            return (0, []);
+        }
+    }
+
+
+    /// <summary>
+    /// 处理新增菜单
+    /// </summary>
+    private async Task<(bool, string?)> HandleCreateAsync(CreateMenuRequest model)
+    {
+        try
+        {
+            // 设置父菜单ID
+            model.ParentId = _selectedParentId;
+
+            var response = await ApiClient.Api.Menus.PostAsync(model);
+            if (response is { Success: true })
+            {
+                _selectedParentId = null;
+                return (true, null);
+            }
+
+            return (false, response?.Message);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// 打开编辑抽屉
+    /// </summary>
+    private void OnOpenEditDrawer(MenuTreeNodeDto menu)
+    {
+        _currentEditMenuId = menu.MenuId;
+        _editModel = new UpdateMenuRequest
+        {
+            MenuName = menu.MenuName,
+            RoutePath = menu.RoutePath,
+            ComponentPath = menu.ComponentPath,
+            Icon = menu.Icon,
+            PermissionCode = menu.PermissionCode
+        };
+    }
+
+    /// <summary>
+    /// 处理编辑菜单
+    /// </summary>
+    private async Task<(bool, string?)> HandleEditAsync(UpdateMenuRequest model)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(_currentEditMenuId))
+            {
+                return (false, "菜单ID不能为空");
+            }
+
+            var response = await ApiClient.Api.Menus[_currentEditMenuId].PutAsync(model);
+            return response is { Success: true } ? (true, null) : (false, response?.Message);
+        }
+        catch (Exception ex)
+        {
+            return (false, ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// 删除菜单
+    /// </summary>
+    private async Task OnDelete(MenuTreeNodeDto menu)
+    {
+        try
+        {
+            var response = await ApiClient.Api.Menus[menu.MenuId].DeleteAsync();
+            if (response is { Success: true })
+            {
+                await MessageService.SuccessAsync("删除成功");
+                _pTable?.ReloadData();
+            }
+            else
+            {
+                await MessageService.ErrorAsync(response?.Message ?? "删除失败");
+            }
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"删除失败: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 获取菜单类型颜色
+    /// </summary>
+    private string GetMenuTypeColor(MenuType? menuType)
+    {
+        return menuType switch
+        {
+            MenuType.Directory => "blue",
+            MenuType.Menu => "green",
+            MenuType.Button => "orange",
+            _ => "default"
+        };
+    }
+
+    /// <summary>
+    /// 获取菜单类型文本
+    /// </summary>
+    private string GetMenuTypeText(MenuType? menuType)
+    {
+        return menuType switch
+        {
+            MenuType.Directory => "目录",
+            MenuType.Menu => "菜单",
+            MenuType.Button => "按钮",
+            _ => "未知"
+        };
+    }
+
+}

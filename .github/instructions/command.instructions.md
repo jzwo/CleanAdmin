@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.ApiService/Application/Commands/**/*.cs"
+applyTo: "src/CleanAdmin.ApiService/Application/Commands/**/*.cs"
 ---
 
 # 命令开发指南
@@ -11,7 +11,7 @@ applyTo: "src/NcpAdminBlazor.ApiService/Application/Commands/**/*.cs"
 ## 文件与目录
 
 类文件命名应遵循以下规则：
-- 应放置在 `src/NcpAdminBlazor.ApiService/Application/Commands/{Module}/` 目录下
+- 应放置在 `src/CleanAdmin.ApiService/Application/Commands/{Module}/` 目录下
 - 命令文件名格式为 `{Action}{Entity}Command.cs`
 - 同一个命令及其对应的验证器和处理器定义在同一文件中
 - 不同的命令放在不同文件中
@@ -51,20 +51,20 @@ applyTo: "src/NcpAdminBlazor.ApiService/Application/Commands/**/*.cs"
 - `global using NetCorePal.Extensions.Primitives;` - 用于KnownException等
 
 命令处理器中常需手动添加的引用：
-- `using NcpAdminBlazor.Domain.AggregatesModel.{Aggregate};` - 聚合根引用
-- `using NcpAdminBlazor.Infrastructure.Repositories;` - 仓储接口引用
+- `using CleanAdmin.Domain.AggregatesModel.{Aggregate};` - 聚合根引用
+- `using CleanAdmin.Infrastructure.Repositories;` - 仓储接口引用
 
 因此在命令文件中无需重复添加GlobalUsings中已定义的using语句。
 
 ## 代码示例
 
-**文件**: `src/NcpAdminBlazor.ApiService/Application/Commands/CreateUserCommand.cs`
+**文件**: `src/CleanAdmin.ApiService/Application/Commands/CreateUserCommand.cs`
 
 ```csharp
-using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
-using NcpAdminBlazor.Infrastructure.Repositories;
+using CleanAdmin.Domain.AggregatesModel.UserAggregate;
+using CleanAdmin.Infrastructure.Repositories;
 
-namespace NcpAdminBlazor.ApiService.Application.Commands;
+namespace CleanAdmin.ApiService.Application.Commands;
 
 public record CreateUserCommand(string Name, string Email) : ICommand<UserId>;
 

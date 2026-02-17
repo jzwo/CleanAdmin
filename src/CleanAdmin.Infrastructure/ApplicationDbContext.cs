@@ -1,0 +1,30 @@
+﻿using CleanAdmin.Domain.AggregatesModel.RoleAggregate;
+using MediatR;
+using CleanAdmin.Domain.AggregatesModel.UserAggregate;
+using CleanAdmin.Domain.AggregatesModel.MenuAggregate;
+using NetCorePal.Extensions.DistributedTransactions.CAP.Persistence;
+
+namespace CleanAdmin.Infrastructure;
+
+public partial class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator)
+    : AppDbContextBase(options, mediator), IPostgreSqlCapDataStorage
+{
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        ArgumentNullException.ThrowIfNull(modelBuilder);
+
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        base.OnModelCreating(modelBuilder);
+    }
+
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        ConfigureStronglyTypedIdValueConverter(configurationBuilder);
+        base.ConfigureConventions(configurationBuilder);
+    }
+
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Menu> Menus => Set<Menu>();
+}

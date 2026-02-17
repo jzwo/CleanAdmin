@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.Infrastructure/EntityConfigurations/*.cs"
+applyTo: "src/CleanAdmin.Infrastructure/EntityConfigurations/*.cs"
 ---
 
 # 实体配置开发指南
@@ -11,7 +11,7 @@ applyTo: "src/NcpAdminBlazor.Infrastructure/EntityConfigurations/*.cs"
 ## 文件与目录
 
 类文件命名应遵循以下规则：
-- 应放置在 `src/NcpAdminBlazor.Infrastructure/EntityConfigurations/` 目录下
+- 应放置在 `src/CleanAdmin.Infrastructure/EntityConfigurations/` 目录下
 - 文件名格式为 `{EntityName}EntityTypeConfiguration.cs`
 - 每个实体一个配置文件
 - 实现 `IEntityTypeConfiguration<T>` 接口
@@ -80,14 +80,14 @@ builder.Property(x => x.Id)
 
 ## 代码示例
 
-**文件**: `src/NcpAdminBlazor.Infrastructure/EntityConfigurations/UserEntityTypeConfiguration.cs`
+**文件**: `src/CleanAdmin.Infrastructure/EntityConfigurations/UserEntityTypeConfiguration.cs`
 
 ```csharp
-using NcpAdminBlazor.Domain.AggregatesModel.UserAggregate;
+using CleanAdmin.Domain.AggregatesModel.UserAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace NcpAdminBlazor.Infrastructure.EntityConfigurations;
+namespace CleanAdmin.Infrastructure.EntityConfigurations;
 
 public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
 {

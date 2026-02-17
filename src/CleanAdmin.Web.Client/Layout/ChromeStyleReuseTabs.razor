@@ -1,0 +1,57 @@
+@using CleanAdmin.Web.Client.Services.State
+@inject ReuseTabsService ReuseTabsService
+@inject FullscreenState FullscreenState
+@implements IDisposable
+
+<div class="h-full">
+    <ReuseTabs Class="layout-tabs h-full flex flex-col"
+               TabBarClass="chrome-tabs-bar shrink-0 border-b border-border bg-appbar px-3"
+               TabPaneClass="h-full">
+        <TabPaneTemplate>
+            <Content Class="h-full p-3 overflow-auto">
+                @context.Body
+            </Content>
+        </TabPaneTemplate>
+        <TabBarExtraContent>
+            <div class="flex justify-end">
+                <Button Type="@ButtonType.Text" OnClick="@ReloadPage">
+                    <Icon Component="@IconHelper.TailwindIcon("icon-[mdi--reload]")"/>
+                </Button>
+                <Button Type="@ButtonType.Text" OnClick="@ToggleFullscreen">
+                    <Icon
+                        Component="@(FullscreenState.IsFullscreen ? IconHelper.TailwindIcon("icon-[mingcute--fullscreen-exit-line]") : IconHelper.TailwindIcon("icon-[mingcute--fullscreen-line]"))"/>
+                </Button>
+            </div>
+        </TabBarExtraContent>
+    </ReuseTabs>
+</div>
+
+@code {
+    [Parameter] public string Class { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        FullscreenState.OnChanged += OnFullscreenStateChanged;
+    }
+
+    private void OnFullscreenStateChanged()
+    {
+        StateHasChanged();
+    }
+
+    private void ReloadPage()
+    {
+        ReuseTabsService.ReloadPage();
+    }
+
+    private void ToggleFullscreen()
+    {
+        FullscreenState.IsFullscreen = !FullscreenState.IsFullscreen;
+    }
+
+    public void Dispose()
+    {
+        FullscreenState.OnChanged -= OnFullscreenStateChanged;
+    }
+
+}

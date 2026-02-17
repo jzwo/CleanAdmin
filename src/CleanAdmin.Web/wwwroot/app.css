@@ -1,0 +1,39 @@
+@import "tailwindcss" source(none) important;
+
+@theme {
+    /* 在这里定义你的设计系统变量 */
+    --color-border: var(--ant-border-color-split);
+    --color-sider: #ffffff;
+    --color-appbar: #ffffff;
+    --color-body-bg: var(--ant-layout-body-background);
+    --color-bg-base: var(--ant-background-color-base);
+    --color-text: var(--ant-text-color);
+    --radius-borderbase: var(--ant-border-radius-base);
+    --color-item-hover-bg: var(--ant-item-hover-bg);
+    --color-item-active-bg: var(--ant-item-active-bg);
+    --color-content-bg: var(--ant-card-background);
+}
+
+@layer base {
+    .dark {
+        --color-sider: var(--ant-layout-sider-background);
+        --color-appbar: var(--ant-layout-header-background);
+    }
+
+    iconify-icon {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+    }
+}
+
+@plugin "@iconify/tailwind4";
+/* Use source(none) to completely disable automatic source detection */
+/* You can use @source "path" to manually specify a source */
+/* view more:https://tailwindcss.com/docs/detecting-classes-in-source-files#disabling-automatic-detection */
+@source "../Components";
+@source "../../CleanAdmin.Web.Client/Pages";
+@source "../../CleanAdmin.Web.Client/Layout";
+@source "../../CleanAdmin.Web.Client/Components";
+
+

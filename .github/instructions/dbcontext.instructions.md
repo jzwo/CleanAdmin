@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.Infrastructure/ApplicationDbContext.cs"
+applyTo: "src/CleanAdmin.Infrastructure/ApplicationDbContext.cs"
 ---
 
 # DbContext 添加聚合指南
@@ -12,7 +12,7 @@ ApplicationDbContext 是应用程序与数据库交互的核心组件，负责�
 ## 文件与目录
 
 类文件命名应遵循以下规则：
-- 文件在 `src/NcpAdminBlazor.Infrastructure/ApplicationDbContext.cs`
+- 文件在 `src/CleanAdmin.Infrastructure/ApplicationDbContext.cs`
 
 ## 开发规则
 
@@ -24,7 +24,7 @@ ApplicationDbContext 是应用程序与数据库交互的核心组件，负责�
 
 ## 代码示例
 
-**文件**: `src/NcpAdminBlazor.Infrastructure/ApplicationDbContext.cs`
+**文件**: `src/CleanAdmin.Infrastructure/ApplicationDbContext.cs`
 
 ```csharp
 public partial class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IMediator mediator)

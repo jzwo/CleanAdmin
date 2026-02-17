@@ -1,5 +1,5 @@
 ---
-applyTo: "src/NcpAdminBlazor.ApiService/Application/IntegrationEventConverters/*.cs"
+applyTo: "src/CleanAdmin.ApiService/Application/IntegrationEventConverters/*.cs"
 ---
 
 # 集成事件转换器开发指南
@@ -11,7 +11,7 @@ applyTo: "src/NcpAdminBlazor.ApiService/Application/IntegrationEventConverters/*
 ## 文件与目录
 
 类文件命名应遵循以下规则：
-- 转换器应放置在 `src/NcpAdminBlazor.ApiService/Application/IntegrationEventConverters/` 目录下
+- 转换器应放置在 `src/CleanAdmin.ApiService/Application/IntegrationEventConverters/` 目录下
 - 转换器文件名格式为 `{Entity}{Action}IntegrationEventConverter.cs`
 
 ## 开发规则
@@ -24,13 +24,13 @@ applyTo: "src/NcpAdminBlazor.ApiService/Application/IntegrationEventConverters/*
 
 ## 代码示例
 
-**文件**: `src/NcpAdminBlazor.ApiService/Application/IntegrationEventConverters/UserCreatedIntegrationEventConverter.cs`
+**文件**: `src/CleanAdmin.ApiService/Application/IntegrationEventConverters/UserCreatedIntegrationEventConverter.cs`
 
 ```csharp
-using NcpAdminBlazor.Domain.DomainEvents;
-using NcpAdminBlazor.ApiService.Application.IntegrationEvents;
+using CleanAdmin.Domain.DomainEvents;
+using CleanAdmin.ApiService.Application.IntegrationEvents;
 
-namespace NcpAdminBlazor.ApiService.Application.IntegrationEventConverters;
+namespace CleanAdmin.ApiService.Application.IntegrationEventConverters;
 
 public class UserCreatedIntegrationEventConverter 
     : IIntegrationEventConverter<UserCreatedDomainEvent, UserCreatedIntegrationEvent>
