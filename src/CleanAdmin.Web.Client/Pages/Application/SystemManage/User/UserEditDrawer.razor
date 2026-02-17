@@ -166,25 +166,18 @@
 
     private async Task<(bool, string?)> HandleSubmitAsync(UpdateUserRequest model)
     {
-        try
+        if (string.IsNullOrEmpty(_currentEditUserId))
         {
-            if (string.IsNullOrEmpty(_currentEditUserId))
-            {
-                return (false, "用户ID不能为空");
-            }
-
-            model.AssignedRoleIds = _assignedRoleIds
-                .Where(roleId => !string.IsNullOrWhiteSpace(roleId))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            var response = await ApiClient.Api.User[_currentEditUserId].Update.PostAsync(model);
-            return response is { Success: true } ? (true, null) : (false, response?.Message);
+            return (false, "用户ID不能为空");
         }
-        catch (Exception ex)
-        {
-            return (false, ex.Message);
-        }
+
+        model.AssignedRoleIds = _assignedRoleIds
+            .Where(roleId => !string.IsNullOrWhiteSpace(roleId))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var response = await ApiClient.Api.User[_currentEditUserId].Update.PostAsync(model);
+        return response is { Success: true } ? (true, null) : (false, response?.Message);
     }
 
 }

@@ -1,6 +1,8 @@
 @using OneOf;
+@using CleanAdmin.Web.Client.ApiSdk.Models;
 @typeparam TModel where TModel : class, new()
 @inject IMessageService MessageService
+@inject ILogger<PDrawerForm<TModel>> Logger
 
 @if (Activator != null)
 {
@@ -296,7 +298,6 @@
         try
         {
             var (success, message) = await OnSubmit.Invoke(Model);
-            _loading = false;
             if (success)
             {
                 if (!DisableTableReload) Table?.ReloadDataByCurrentQueryModel();
@@ -310,9 +311,22 @@
                 await MessageService.ErrorAsync(message ?? "操作失败");
             }
         }
+        catch (FastEndpointsErrorResponse ex)
+        {
+            Logger.LogError(ex, "PDrawerForm submit failed (FastEndpoints). StatusCode={StatusCode}, Message={Message}",
+                ex.StatusCode,
+                ex.Message);
+            await MessageService.ErrorAsync("操作失败");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "PDrawerForm submit failed.");
+            await MessageService.ErrorAsync("操作失败");
+        }
         finally
         {
             _loading = false;
+            StateHasChanged();
         }
     }
 

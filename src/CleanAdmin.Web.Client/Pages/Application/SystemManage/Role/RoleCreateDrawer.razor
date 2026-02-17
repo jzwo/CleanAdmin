@@ -1,7 +1,6 @@
 @using CreateRoleRequest = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceEndpointsRolesCreateRoleRequest
 @using CleanAdmin.Web.Client.ApiSdk
 @inject ApiClient ApiClient
-@inject ILogger<RoleCreateDrawer> Logger
 
 <PDrawerForm TModel="CreateRoleRequest"
              Title="新增角色"
@@ -40,22 +39,14 @@
 
     private async Task<(bool, string?)> HandleSubmitAsync(CreateRoleRequest model)
     {
-        try
+        var response = await ApiClient.Api.Roles.PostAsync(model);
+        if (response is not { Success: true })
         {
-            var response = await ApiClient.Api.Roles.PostAsync(model);
-            if (response is not { Success: true })
-            {
-                return (false, response?.Message);
-            }
+            return (false, response?.Message);
+        }
 
-            await OnSuccess.InvokeAsync();
-            return (true, null);
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, "创建角色失败");
-            return (false, ex.Message);
-        }
+        await OnSuccess.InvokeAsync();
+        return (true, null);
     }
 
 }

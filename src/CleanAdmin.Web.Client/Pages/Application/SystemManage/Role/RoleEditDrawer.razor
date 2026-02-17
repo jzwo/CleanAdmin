@@ -59,20 +59,13 @@
 
     private async Task<(bool, string?)> HandleSubmitAsync(UpdateRoleRequest model)
     {
-        try
+        if (string.IsNullOrWhiteSpace(_currentEditRoleId))
         {
-            if (string.IsNullOrWhiteSpace(_currentEditRoleId))
-            {
-                return (false, "角色ID不能为空");
-            }
+            return (false, "角色ID不能为空");
+        }
 
-            var response = await ApiClient.Api.Roles[_currentEditRoleId].Info.PostAsync(model);
-            return response is not { Success: true } ? (false, response?.Message) : (true, null);
-        }
-        catch (Exception ex)
-        {
-            return (false, ex.Message);
-        }
+        var response = await ApiClient.Api.Roles[_currentEditRoleId].Info.PostAsync(model);
+        return response is not { Success: true } ? (false, response?.Message) : (true, null);
     }
 
 }

@@ -37,15 +37,8 @@
 
     private async Task<(bool, string?)> HandleSubmitAsync(CreateUserRequest model)
     {
-        try
-        {
-            var response = await ApiClient.Api.Users.PostAsync(model);
-            return response is { Success: true } ? (true, null) : (false, response?.Message);
-        }
-        catch (Exception ex)
-        {
-            return (false, ex.Message);
-        }
+        var response = await ApiClient.Api.Users.PostAsync(model);
+        return response is { Success: true } ? (true, null) : (false, response?.Message);
     }
 
 }

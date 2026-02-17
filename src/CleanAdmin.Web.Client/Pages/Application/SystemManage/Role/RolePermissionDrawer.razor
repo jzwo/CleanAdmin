@@ -211,32 +211,30 @@
 
     private async Task<(bool, string?)> HandleSubmitAsync(UpdateRolePermissionsRequest _)
     {
-        try
+        if (string.IsNullOrWhiteSpace(_currentRoleId))
         {
-            var finalCheckedMenuIds = _checkedKeys
-                .Concat(_forcedCheckedMenuIds)
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Distinct(StringComparer.OrdinalIgnoreCase);
-
-            var permissionCodes = finalCheckedMenuIds
-                .Select(menuId => _menuIdToPermissionCode.GetValueOrDefault(menuId))
-                .Where(permissionCode => !string.IsNullOrWhiteSpace(permissionCode))
-                .Select(permissionCode => permissionCode!)
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToList();
-
-            var request = new UpdateRolePermissionsRequest
-            {
-                PermissionCodes = permissionCodes
-            };
-
-            var response = await ApiClient.Api.Roles[_currentRoleId].Permissions.PostAsync(request);
-            return response is not { Success: true } ? (false, response?.Message) : (true, null);
+            return (false, "角色ID不能为空");
         }
-        catch (Exception ex)
+
+        var finalCheckedMenuIds = _checkedKeys
+            .Concat(_forcedCheckedMenuIds)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+
+        var permissionCodes = finalCheckedMenuIds
+            .Select(menuId => _menuIdToPermissionCode.GetValueOrDefault(menuId))
+            .Where(permissionCode => !string.IsNullOrWhiteSpace(permissionCode))
+            .Select(permissionCode => permissionCode!)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        var request = new UpdateRolePermissionsRequest
         {
-            return (false, ex.Message);
-        }
+            PermissionCodes = permissionCodes
+        };
+
+        var response = await ApiClient.Api.Roles[_currentRoleId].Permissions.PostAsync(request);
+        return response is not { Success: true } ? (false, response?.Message) : (true, null);
     }
 
 }

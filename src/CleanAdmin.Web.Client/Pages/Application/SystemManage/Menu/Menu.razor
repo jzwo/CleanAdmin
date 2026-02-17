@@ -191,24 +191,17 @@
     /// </summary>
     private async Task<(bool, string?)> HandleCreateAsync(CreateMenuRequest model)
     {
-        try
-        {
-            // 设置父菜单ID
-            model.ParentId = _selectedParentId;
+        // 设置父菜单ID
+        model.ParentId = _selectedParentId;
 
-            var response = await ApiClient.Api.Menus.PostAsync(model);
-            if (response is { Success: true })
-            {
-                _selectedParentId = null;
-                return (true, null);
-            }
-
-            return (false, response?.Message);
-        }
-        catch (Exception ex)
+        var response = await ApiClient.Api.Menus.PostAsync(model);
+        if (response is { Success: true })
         {
-            return (false, ex.Message);
+            _selectedParentId = null;
+            return (true, null);
         }
+
+        return (false, response?.Message);
     }
 
     /// <summary>
@@ -232,20 +225,13 @@
     /// </summary>
     private async Task<(bool, string?)> HandleEditAsync(UpdateMenuRequest model)
     {
-        try
+        if (string.IsNullOrEmpty(_currentEditMenuId))
         {
-            if (string.IsNullOrEmpty(_currentEditMenuId))
-            {
-                return (false, "菜单ID不能为空");
-            }
+            return (false, "菜单ID不能为空");
+        }
 
-            var response = await ApiClient.Api.Menus[_currentEditMenuId].PutAsync(model);
-            return response is { Success: true } ? (true, null) : (false, response?.Message);
-        }
-        catch (Exception ex)
-        {
-            return (false, ex.Message);
-        }
+        var response = await ApiClient.Api.Menus[_currentEditMenuId].PutAsync(model);
+        return response is { Success: true } ? (true, null) : (false, response?.Message);
     }
 
     /// <summary>
