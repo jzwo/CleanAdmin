@@ -8,9 +8,12 @@
 <PDrawerForm TModel="UpdateRolePermissionsRequest"
              Title="分配权限"
              Model="_model"
+             Width="@DrawerWidth"
+             OnClosed="@(() => IsOpenChanged.InvokeAsync(false))"
+             DisableTableReload
              OnSubmit="@HandleSubmitAsync">
     <Activator>
-        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="@OnOpenDrawerAsync">
+        <Button OnClick="@OnOpenDrawerAsync">
             分配权限
         </Button>
     </Activator>
@@ -43,7 +46,7 @@
                       CheckOnClickNode="false"
                       DefaultExpandAll
                       SearchValue="@_searchKey"
-                      MatchedClass="text-red-50"
+                      MatchedClass="text-red-500"
                       @bind-CheckedKeys="_checkedKeys"
                       OnCheck="OnTreeCheck">
                     <Nodes>
@@ -60,7 +63,9 @@
 
 @code {
     [Parameter, EditorRequired] public RoleListItemDto Role { get; set; } = new();
-
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+    public const string DrawerWidth = "400";
     private readonly UpdateRolePermissionsRequest _model = new();
     private string? _currentRoleId;
     private bool _loadingPermissions;
@@ -73,6 +78,7 @@
 
     private async Task OnOpenDrawerAsync()
     {
+        await IsOpenChanged.InvokeAsync(true);
         _currentRoleId = Role.RoleId;
 
         if (string.IsNullOrWhiteSpace(_currentRoleId))

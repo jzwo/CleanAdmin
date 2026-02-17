@@ -6,7 +6,9 @@
 <PDrawerForm TModel="UpdateRoleRequest"
              Title="编辑角色"
              Model="_model"
-             OnSubmit="@HandleSubmitAsync">
+             OnSubmit="@HandleSubmitAsync"
+             ContentClass="w-100 mr-auto"
+             Width="@DrawerWidth">
     <Activator>
         <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
                 OnClick="@OnOpenDrawer">
@@ -33,12 +35,14 @@
                 </SelectOptions>
             </Select>
         </PFormItem>
+        <RolePermissionDrawer Role="@Role" @bind-IsOpen="_permissionDrawerOpen"/>
     </ChildContent>
 </PDrawerForm>
 
 @code {
     [Parameter, EditorRequired] public RoleListItemDto Role { get; set; } = new();
-
+    private string DrawerWidth => _permissionDrawerOpen ? $"{480 + int.Parse(RolePermissionDrawer.DrawerWidth)}" : "480";
+    private bool _permissionDrawerOpen;
     private UpdateRoleRequest _model = new();
     private string? _currentEditRoleId;
 

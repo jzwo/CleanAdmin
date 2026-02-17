@@ -30,13 +30,10 @@
             </Tag>
         </PropertyColumn>
         <PropertyColumn Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
-        <ActionColumn Title="操作" Width="240">
+        <ActionColumn Title="操作" Width="180">
             <Space>
                 <SpaceItem>
                     <RoleEditDrawer Role="@item"/>
-                </SpaceItem>
-                <SpaceItem>
-                    <RolePermissionDrawer Role="@item"/>
                 </SpaceItem>
                 <SpaceItem>
                     <Popconfirm Title="确定要删除该角色吗？"

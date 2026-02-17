@@ -11,9 +11,11 @@
 <Drawer Title="@Title"
         @bind-Visible="@_visible"
         Width="@Width"
+        OnClose="@(() => OnClosed.InvokeAsync())"
+        WrapClassName="@WrapClassName"
         MaskClosable="@(!_loading)">
-    <div class="flex flex-col h-full">
-        <div class="flex-1 overflow-y-auto">
+    <div class=@("flex flex-col h-full")>
+        <div class=@("flex-1 overflow-y-auto " + ContentClass)>
             <PForm @ref="_form"
                    TModel="TModel"
                    Model="@Model"
@@ -66,6 +68,10 @@
     private bool _loading;
     [CascadingParameter] private IPTable? Table { get; set; }
 
+    [Parameter] public bool DisableTableReload { get; set; }
+
+    [Parameter] public string? ContentClass { get; set; }
+
     #region Drawer Parameters
 
     /// <summary>
@@ -92,6 +98,8 @@
     [Parameter]
     public string SubmitText { get; set; } = "确定";
 
+    [Parameter] public string? WrapClassName { get; set; }
+
     #endregion
 
     #region Form Parameters
@@ -109,10 +117,10 @@
     public FormLayout Layout { get; set; } = FormLayout.Horizontal;
 
     /// <summary>
-    /// 标签列宽度（默认 4）
+    /// 标签列宽度（默认 6）
     /// </summary>
     [Parameter]
-    public OneOf<string, int> LabelColSpan { get; set; } = 4;
+    public OneOf<string, int> LabelColSpan { get; set; } = 6;
 
     /// <summary>
     /// 输入框列宽度（默认 14）
@@ -291,7 +299,7 @@
             _loading = false;
             if (success)
             {
-                Table?.ReloadDataByCurrentQueryModel();
+                if (!DisableTableReload) Table?.ReloadDataByCurrentQueryModel();
                 await CloseAsync();
                 StateHasChanged();
                 await MessageService.SuccessAsync(message ?? "操作成功");
