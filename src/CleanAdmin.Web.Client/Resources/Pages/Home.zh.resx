@@ -1,69 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
-            
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <data name="Title" xml:space="preserve">
-        <value>主页</value>
-    </data>
-    <data name="Welcome" xml:space="preserve">
-        <value>欢迎使用 CleanAdmin</value>
-    </data>
-    <data name="Description" xml:space="preserve">
-        <value>这是国际化和本地化功能的演示。</value>
-    </data>
-    <data name="CurrentLanguage" xml:space="preserve">
-        <value>当前语言</value>
-    </data>
-    <data name="ChangeLanguage" xml:space="preserve">
-        <value>切换语言</value>
-    </data>
-    <data name="DatePickerLabel" xml:space="preserve">
-        <value>选择日期</value>
-    </data>
-    <data name="TimePickerLabel" xml:space="preserve">
-        <value>选择时间</value>
-    </data>
-    <data name="CalendarLabel" xml:space="preserve">
-        <value>日历组件</value>
-    </data>
-    <data name="TableTitle" xml:space="preserve">
-        <value>示例数据表格</value>
-    </data>
-    <data name="ColumnName" xml:space="preserve">
-        <value>名称</value>
-    </data>
-    <data name="ColumnDate" xml:space="preserve">
-        <value>日期</value>
-    </data>
-    <data name="ColumnStatus" xml:space="preserve">
-        <value>状态</value>
-    </data>
-    <data name="StatusActive" xml:space="preserve">
-        <value>激活</value>
-    </data>
-    <data name="StatusInactive" xml:space="preserve">
-        <value>未激活</value>
-    </data>
-    <data name="EmptyDataText" xml:space="preserve">
-        <value>暂无数据</value>
-    </data>
-    <data name="PaginationInfo" xml:space="preserve">
-        <value>共 {0} 条</value>
-    </data>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="Good morning, administrator. Have a great day." xml:space="preserve">
+    <value>早安，管理员，祝你开心每一天。</value>
+  </data>
+  <data name="CleanAdmin platform | 12 tasks today | 2 alerts" xml:space="preserve">
+    <value>CleanAdmin 平台 | 今日待办 12 项 | 异常告警 2 条</value>
+  </data>
+  <data name="New Task" xml:space="preserve">
+    <value>新建任务</value>
+  </data>
+  <data name="Publish Plan" xml:space="preserve">
+    <value>发布计划</value>
+  </data>
+  <data name="Total Visits" xml:space="preserve">
+    <value>总访问量</value>
+  </data>
+  <data name="Daily Visits" xml:space="preserve">
+    <value>日均访问</value>
+  </data>
+  <data name="Week over week +12.3%" xml:space="preserve">
+    <value>周同比 +12.3%</value>
+  </data>
+  <data name="Payments" xml:space="preserve">
+    <value>支付笔数</value>
+  </data>
+  <data name="Payment Conversion Rate" xml:space="preserve">
+    <value>支付转化率</value>
+  </data>
+  <data name="+3.1% vs yesterday" xml:space="preserve">
+    <value>较昨日 +3.1%</value>
+  </data>
+  <data name="Campaigns" xml:space="preserve">
+    <value>运营活动数</value>
+  </data>
+  <data name="Campaign Completion Rate" xml:space="preserve">
+    <value>活动完成率</value>
+  </data>
+  <data name="2 campaigns nearing deadline" xml:space="preserve">
+    <value>2 个活动临近截止</value>
+  </data>
+  <data name="Online Users" xml:space="preserve">
+    <value>线上用户</value>
+  </data>
+  <data name="Peak Concurrency" xml:space="preserve">
+    <value>峰值并发</value>
+  </data>
+  <data name="System health 99.98%" xml:space="preserve">
+    <value>系统健康度 99.98%</value>
+  </data>
+  <data name="Operational Analytics" xml:space="preserve">
+    <value>运营分析</value>
+  </data>
+  <data name="Trend layout inspired by Ant Design Pro" xml:space="preserve">
+    <value>参考 Ant Design Pro 的趋势分析布局</value>
+  </data>
+  <data name="Today" xml:space="preserve">
+    <value>今日</value>
+  </data>
+  <data name="This Week" xml:space="preserve">
+    <value>本周</value>
+  </data>
+  <data name="This Month" xml:space="preserve">
+    <value>本月</value>
+  </data>
+  <data name="Revenue" xml:space="preserve">
+    <value>销售额</value>
+  </data>
+  <data name="Visits" xml:space="preserve">
+    <value>访问量</value>
+  </data>
+  <data name="Traffic Source Column Chart" xml:space="preserve">
+    <value>访问来源柱状图</value>
+  </data>
+  <data name="Project Progress" xml:space="preserve">
+    <value>项目进度</value>
+  </data>
+  <data name="Team Efficiency Ranking" xml:space="preserve">
+    <value>团队效率排行</value>
+  </data>
+  <data name="points" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="Latest Tickets" xml:space="preserve">
+    <value>最新工单</value>
+  </data>
+  <data name="Ticket ID" xml:space="preserve">
+    <value>工单号</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>标题</value>
+  </data>
+  <data name="Owner" xml:space="preserve">
+    <value>负责人</value>
+  </data>
+  <data name="Created Time" xml:space="preserve">
+    <value>创建时间</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>优先级</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="Activity" xml:space="preserve">
+    <value>动态</value>
+  </data>
+  <data name="Payment callback retry strategy released" xml:space="preserve">
+    <value>支付回调重试策略发布</value>
+  </data>
+  <data name="10 minutes ago" xml:space="preserve">
+    <value>10 分钟前</value>
+  </data>
+  <data name="CRM iteration entered integration testing" xml:space="preserve">
+    <value>CRM 迭代进入联调阶段</value>
+  </data>
+  <data name="38 minutes ago" xml:space="preserve">
+    <value>38 分钟前</value>
+  </data>
+  <data name="Operation campaign configured and online" xml:space="preserve">
+    <value>运营活动配置完成并上线</value>
+  </data>
+  <data name="1 hour ago" xml:space="preserve">
+    <value>1 小时前</value>
+  </data>
+  <data name="Weekly technical review completed" xml:space="preserve">
+    <value>周度技术评审完成</value>
+  </data>
+  <data name="Today 09:30" xml:space="preserve">
+    <value>今天 09:30</value>
+  </data>
+  <data name="Membership Center Refactor" xml:space="preserve">
+    <value>会员中心重构</value>
+  </data>
+  <data name="In Progress" xml:space="preserve">
+    <value>进行中</value>
+  </data>
+  <data name="Order Aggregate Split" xml:space="preserve">
+    <value>订单聚合拆分</value>
+  </data>
+  <data name="At Risk" xml:space="preserve">
+    <value>风险预警</value>
+  </data>
+  <data name="Financial Report Upgrade" xml:space="preserve">
+    <value>财务报表升级</value>
+  </data>
+  <data name="On Track" xml:space="preserve">
+    <value>按计划</value>
+  </data>
+  <data name="Message Center Revamp" xml:space="preserve">
+    <value>消息中心改版</value>
+  </data>
+  <data name="Pending Test" xml:space="preserve">
+    <value>待提测</value>
+  </data>
+  <data name="Order Domain Team" xml:space="preserve">
+    <value>订单域团队</value>
+  </data>
+  <data name="Membership Domain Team" xml:space="preserve">
+    <value>会员域团队</value>
+  </data>
+  <data name="Risk Control Domain Team" xml:space="preserve">
+    <value>风控域团队</value>
+  </data>
+  <data name="Operations Domain Team" xml:space="preserve">
+    <value>运营域团队</value>
+  </data>
+  <data name="High" xml:space="preserve">
+    <value>高</value>
+  </data>
+  <data name="Medium" xml:space="preserve">
+    <value>中</value>
+  </data>
+  <data name="Low" xml:space="preserve">
+    <value>低</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>处理中</value>
+  </data>
+  <data name="Pending Assignment" xml:space="preserve">
+    <value>待分配</value>
+  </data>
+  <data name="Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Direct" xml:space="preserve">
+    <value>直接访问</value>
+  </data>
+  <data name="Search Engine" xml:space="preserve">
+    <value>搜索引擎</value>
+  </data>
+  <data name="External Link" xml:space="preserve">
+    <value>外部链接</value>
+  </data>
+  <data name="Campaign Ads" xml:space="preserve">
+    <value>活动投放</value>
+  </data>
+  <data name="Mon" xml:space="preserve">
+    <value>周一</value>
+  </data>
+  <data name="Tue" xml:space="preserve">
+    <value>周二</value>
+  </data>
+  <data name="Wed" xml:space="preserve">
+    <value>周三</value>
+  </data>
+  <data name="Thu" xml:space="preserve">
+    <value>周四</value>
+  </data>
+  <data name="Fri" xml:space="preserve">
+    <value>周五</value>
+  </data>
+  <data name="Sat" xml:space="preserve">
+    <value>周六</value>
+  </data>
+  <data name="Sun" xml:space="preserve">
+    <value>周日</value>
+  </data>
+  <data name="Week 1" xml:space="preserve">
+    <value>1周</value>
+  </data>
+  <data name="Week 2" xml:space="preserve">
+    <value>2周</value>
+  </data>
+  <data name="Week 3" xml:space="preserve">
+    <value>3周</value>
+  </data>
+  <data name="Week 4" xml:space="preserve">
+    <value>4周</value>
+  </data>
+  <data name="Week 5" xml:space="preserve">
+    <value>5周</value>
+  </data>
+  <data name="Week 6" xml:space="preserve">
+    <value>6周</value>
+  </data>
+  <data name="Week 7" xml:space="preserve">
+    <value>7周</value>
+  </data>
+  <data name="Week 8" xml:space="preserve">
+    <value>8周</value>
+  </data>
+  <data name="Week 9" xml:space="preserve">
+    <value>9周</value>
+  </data>
+  <data name="Week 10" xml:space="preserve">
+    <value>10周</value>
+  </data>
+  <data name="Week 11" xml:space="preserve">
+    <value>11周</value>
+  </data>
+  <data name="Week 12" xml:space="preserve">
+    <value>12周</value>
+  </data>
+  <data name="Business task #{0}" xml:space="preserve">
+    <value>业务处理任务 #{0}</value>
+  </data>
+  <data name="Wang Nan" xml:space="preserve">
+    <value>王楠</value>
+  </data>
+  <data name="Chen Tao" xml:space="preserve">
+    <value>陈涛</value>
+  </data>
+  <data name="Li Xin" xml:space="preserve">
+    <value>李欣</value>
+  </data>
 </root>

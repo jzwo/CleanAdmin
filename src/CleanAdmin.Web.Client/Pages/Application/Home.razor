@@ -1,200 +1,427 @@
-﻿@page "/"
-@using AntDesign.TableModels
-@using Console = System.Console
+@page "/"
 @attribute [Authorize]
+@attribute [ReuseTabsPage(Pin = true)]
 
 @inject IStringLocalizer<Home> L
 
-<PageTitle>@L["Title"]</PageTitle>
+<PageTitle>@L["Home"]</PageTitle>
 
-@* PTable 组件测试区域 *@
-<PTable @ref="_pTable" TItem="SampleData" OnLoadData="LoadDataAsync">
-    <SearchTemplate>
-        <PTableSearchForm Model="_searchModel">
-            <PFormItem Label="名称">
-                <Input @bind-Value="@_searchModel.Name" Placeholder="请输入名称" AllowClear/>
-            </PFormItem>
-            <PFormItem Label="状态">
-                <Select @bind-Value="@_searchModel.IsActive"
-                        Placeholder="请选择状态"
-                        AllowClear
-                        TItemValue="bool?"
-                        TItem="bool?">
-                    <SelectOptions>
-                        <SelectOption Value="@((bool?)true)" Label="活跃"/>
-                        <SelectOption Value="@((bool?)false)" Label="未活跃"/>
-                    </SelectOptions>
-                </Select>
-            </PFormItem>
-        </PTableSearchForm>
-    </SearchTemplate>
-    <ToolbarButtons>
-        <PDrawerForm @ref="_drawerForm" TModel="CreateModel" Title="新增项" Model="_createModel"
-                     OnClosed="@HandleDrawerClosed">
-            <Activator>
-                <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
-            </Activator>
-            <ChildContent Context="model">
-                <PFormItem Label="名称"
-                           Rules="@(new[] { new FormValidationRule { Required = true, Message = "请输入名称" } })">
-                    <Input @bind-Value="@model.Name" Placeholder="请输入名称"/>
-                </PFormItem>
-                <PFormItem Label="状态">
-                    <Switch @bind-Checked="@model.IsActive" CheckedChildren="活跃" UnCheckedChildren="未活跃"/>
-                </PFormItem>
-            </ChildContent>
-        </PDrawerForm>
-    </ToolbarButtons>
-    <ColumnDefinitions Context="item">
-        <PropertyColumn Property="c => c.Id" Title="ID" Width="80"/>
-        <PropertyColumn Property="c => c.Name" Title="@L["ColumnName"]" Sortable/>
-        <PropertyColumn Property="c => c.Date" Title="@L["ColumnDate"]" Format="yyyy-MM-dd HH:mm:ss" Sortable/>
-        <PropertyColumn Property="c => c.IsActive" Title="@L["ColumnStatus"]">
-            <Tag Color="@(item.IsActive ? "green" : "red")">
-                @(item.IsActive ? L["StatusActive"] : L["StatusInactive"])
-            </Tag>
-        </PropertyColumn>
-        <ActionColumn Title="操作" Width="150">
+<div class="space-y-4">
+    <Card Class="mb-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <Avatar Class="bg-[#1677ff]">CA</Avatar>
+                <div>
+                    <div class="text-base font-semibold">@L["Good morning, administrator. Have a great day."]</div>
+                    <div class="text-text-secondary">@L["CleanAdmin  | 12 tasks today | 2 alerts"]</div>
+                </div>
+            </div>
             <Space>
                 <SpaceItem>
-                    <Button Type="@ButtonType.Link" OnClick="() => HandleView(item)">查看</Button>
+                    <Button Icon="@IconType.Outline.Plus">@L["New Task"]</Button>
                 </SpaceItem>
                 <SpaceItem>
-                    <Button Type="@ButtonType.Link" Danger OnClick="() => HandleDelete(item)">删除</Button>
+                    <Button Type="@ButtonType.Primary" Icon='@IconType.Outline.Rocket'>@L["Publish Plan"]</Button>
                 </SpaceItem>
             </Space>
-        </ActionColumn>
-    </ColumnDefinitions>
-</PTable>
+        </div>
+    </Card>
+
+    <Row Gutter="16" Class="mb-4">
+        <AntDesign.Col Span="6">
+            <Card Class="min-h-35">
+                <Statistic Title='@L["Total Visits"]' Value="@_overview.TotalVisits"/>
+                <div class="mt-2 flex justify-between text-text-secondary">
+                    <span>@L["Daily Visits"]</span>
+                    <span>@_overview.DailyVisits</span>
+                </div>
+                <div class="text-xs text-green-700">@L["Week over week +12.3%"]</div>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="6">
+            <Card Class="min-h-35">
+                <Statistic Title='@L["Payments"]' Value="@_overview.Payments"/>
+                <div class="mt-2 flex justify-between text-text-secondary">
+                    <span>@L["Payment Conversion Rate"]</span>
+                    <span>@($"{_overview.PaymentRate}%")</span>
+                </div>
+                <div class="text-xs text-green-700">@L["+3.1% vs yesterday"]</div>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="6">
+            <Card Class="min-h-35">
+                <Statistic Title='@L["Campaigns"]' Value="@_overview.Campaigns"/>
+                <div class="mt-2 flex justify-between text-text-secondary">
+                    <span>@L["Campaign Completion Rate"]</span>
+                    <span>@($"{_overview.CampaignRate}%")</span>
+                </div>
+                <div class="text-xs text-amber-700">@L["2 campaigns nearing deadline"]</div>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="6">
+            <Card Class="min-h-35">
+                <Statistic Title='@L["Online Users"]' Value="@_overview.OnlineUsers"/>
+                <div class="mt-2 flex justify-between text-text-secondary">
+                    <span>@L["Peak Concurrency"]</span>
+                    <span>@_overview.PeakOnline</span>
+                </div>
+                <div class="text-xs text-blue-600">@L["System health 99.98%"]</div>
+            </Card>
+        </AntDesign.Col>
+    </Row>
+
+    <Card Class="mb-4">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+                <div class="text-base font-semibold">@L["Operational Analytics"]</div>
+                <div class="text-text-secondary">@L["Trend layout inspired by Ant Design Pro"]</div>
+            </div>
+            <Space>
+                <SpaceItem>
+                    <Button Size="@ButtonSize.Small"
+                            Type="@(_selectedPeriod == PeriodType.Day ? ButtonType.Primary : ButtonType.Default)"
+                            OnClick="@(() => SetPeriod(PeriodType.Day))">@L["Today"]</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Size="@ButtonSize.Small"
+                            Type="@(_selectedPeriod == PeriodType.Week ? ButtonType.Primary : ButtonType.Default)"
+                            OnClick="@(() => SetPeriod(PeriodType.Week))">@L["This Week"]</Button>
+                </SpaceItem>
+                <SpaceItem>
+                    <Button Size="@ButtonSize.Small"
+                            Type="@(_selectedPeriod == PeriodType.Month ? ButtonType.Primary : ButtonType.Default)"
+                            OnClick="@(() => SetPeriod(PeriodType.Month))">@L["This Month"]</Button>
+                </SpaceItem>
+            </Space>
+        </div>
+
+        <Row Gutter="16">
+            <AntDesign.Col Span="16">
+                <Card Size="CardSize.Small" Bordered>
+                    <div class="mb-3 flex items-center justify-between">
+                        <div>
+                            <div class="text-text-secondary">@L["Revenue"]</div>
+                            <div class="text-[28px] font-semibold leading-tight">@CurrentTrendData.TotalSalesText</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-text-secondary">@L["Visits"]</div>
+                            <div
+                                class="text-xl font-semibold leading-tight">@CurrentTrendData.TotalVisits.ToString("N0")</div>
+                        </div>
+                    </div>
+                    <AntDesign.Charts.Line Data="@CurrentTrendData.LineData" Config="@_lineConfig"/>
+                </Card>
+            </AntDesign.Col>
+            <AntDesign.Col Span="8">
+                <Card Size="CardSize.Small" Bordered Title='@L["Traffic Source Column Chart"]'>
+                    <AntDesign.Charts.Column Data="@CurrentTrendData.ColumnData" Config="@_columnConfig"/>
+                </Card>
+            </AntDesign.Col>
+        </Row>
+    </Card>
+
+    <Row Gutter="16" Class="mb-4">
+        <AntDesign.Col Span="16">
+            <Card Title='@L["Project Progress"]'>
+                <div>
+                    @foreach (var item in _progressItems)
+                    {
+                        <div class="mb-4 w-full">
+                            <div class="mb-1.5 flex items-center justify-between">
+                                <span class="font-semibold">@L[item.NameKey]</span>
+                                <Tag Color="@item.TagColor">@L[item.StatusKey]</Tag>
+                            </div>
+                            <Progress Percent="@item.Percent" StrokeColor="@item.BarColor"></Progress>
+                        </div>
+                    }
+                </div>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="8">
+            <Card Title='@L["Team Efficiency Ranking"]'>
+                <div>
+                    @foreach (var team in _teamRanks)
+                    {
+                        <Card Size="CardSize.Small" Bordered Class="mb-2">
+                            <div class="mb-1.5 flex items-center justify-between">
+                                <span class="font-semibold">@L[team.NameKey]</span>
+                                <Tag Color="@team.TagColor">@team.Score @L["points"]</Tag>
+                            </div>
+                            <Progress Percent="@team.Score" ShowInfo="false" StrokeColor="@team.BarColor"></Progress>
+                        </Card>
+                    }
+                </div>
+            </Card>
+        </AntDesign.Col>
+    </Row>
+
+    <Row Gutter="16">
+        <AntDesign.Col Span="16">
+            <Card Title="@L["Latest Tickets"]">
+                <Table TItem="TicketItem" DataSource="@_allTickets" Bordered>
+                    <PropertyColumn Property="c => c.Id" Title='@L["Ticket ID"]' Width="100"/>
+                    <PropertyColumn Property="c => c.Title" Title='@L["Title"]'/>
+                    <PropertyColumn Property="c => c.Owner" Title='@L["Owner"]' Width="120"/>
+                    <PropertyColumn Property="c => c.CreatedAt" Title='@L["Created Time"]' Format="yyyy-MM-dd HH:mm"
+                                    Width="160"/>
+                    <PropertyColumn Property="c => c.Priority" Title='@L["Priority"]' Width="100">
+                        <Tag Color="@GetPriorityColor(context.Priority)">@L[context.Priority]</Tag>
+                    </PropertyColumn>
+                    <PropertyColumn Property="c => c.Status" Title='@L["Status"]' Width="100">
+                        <Tag Color="@GetStatusColor(context.Status)">@L[context.Status]</Tag>
+                    </PropertyColumn>
+                </Table>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="8">
+            <Card Title='@L["Activity"]'>
+                <Timeline>
+                    @foreach (var item in _timeline)
+                    {
+                        <TimelineItem Color="@item.Color">
+                            <span class="font-semibold">@L[item.TitleKey]</span>
+                            <br/>
+                            <span class="text-text-secondary">@L[item.TimeKey]</span>
+                        </TimelineItem>
+                    }
+                </Timeline>
+            </Card>
+        </AntDesign.Col>
+    </Row>
+</div>
 
 @code {
-    private PTable<SampleData>? _pTable;
-    private PDrawerForm<CreateModel>? _drawerForm;
-    private readonly SearchModel _searchModel = new();
-    private CreateModel _createModel = new();
+    private PeriodType _selectedPeriod = PeriodType.Week;
+    private List<TicketItem> _allTickets = [];
 
-    // 模拟数据源（实际项目中会从API获取）
-    private static readonly List<SampleData> AllData = Enumerable.Range(1, 100)
-        .Select(i => new SampleData
-        {
-            Id = i,
-            Name = $"Item {i}",
-            Date = DateTime.Now.AddDays(-i).AddHours(i),
-            IsActive = i % 3 != 0
-        }).ToList();
-
-    /// <summary>
-    /// PTable 数据加载回调
-    /// </summary>
-    private async Task<(int Total, IEnumerable<SampleData> Data)> LoadDataAsync(QueryModel<SampleData> queryModel)
+    private readonly OverviewMetrics _overview = new()
     {
-        // 模拟网络延迟
-        await Task.Delay(300);
+        TotalVisits = 125846,
+        DailyVisits = 4268,
+        Payments = 684,
+        PaymentRate = 74,
+        Campaigns = 36,
+        CampaignRate = 68,
+        OnlineUsers = 1382,
+        PeakOnline = 2120
+    };
 
-        // 根据搜索条件过滤
-        var query = AllData.AsQueryable();
+    private readonly List<ProgressItem> _progressItems =
+    [
+        new("Membership Center Refactor", "In Progress", 78, "blue", "#1677ff"),
+        new("Order Aggregate Split", "At Risk", 56, "orange", "#fa8c16"),
+        new("Financial Report Upgrade", "On Track", 89, "green", "#52c41a"),
+        new("Message Center Revamp", "Pending Test", 42, "gold", "#d4b106")
+    ];
 
-        if (!string.IsNullOrWhiteSpace(_searchModel.Name))
+    private readonly List<TeamRankItem> _teamRanks =
+    [
+        new("Order Domain Team", 95, "green", "#52c41a"),
+        new("Membership Domain Team", 88, "blue", "#1677ff"),
+        new("Risk Control Domain Team", 81, "cyan", "#13c2c2"),
+        new("Operations Domain Team", 76, "gold", "#faad14")
+    ];
+
+    private readonly List<TimelineEvent> _timeline =
+    [
+        new("green", "Payment callback retry strategy released", "10 minutes ago"),
+        new("blue", "CRM iteration entered integration testing", "38 minutes ago"),
+        new("orange", "Operation campaign configured and online", "1 hour ago"),
+        new("gray", "Weekly technical review completed", "Today 09:30")
+    ];
+
+    private readonly AntDesign.Charts.LineConfig _lineConfig = new()
+    {
+        AutoFit = true,
+        Padding = "auto",
+        XField = "date",
+        YField = "value",
+        Smooth = true,
+        Color = new[] { "#1677ff" }
+    };
+
+    private readonly AntDesign.Charts.ColumnConfig _columnConfig = new()
+    {
+        AutoFit = true,
+        Padding = "auto",
+        XField = "type",
+        YField = "value",
+        Color = new[] { "#1677ff" }
+    };
+
+    protected override void OnInitialized()
+    {
+        _allTickets = Enumerable.Range(1, 60)
+            .Select(i => new TicketItem
+            {
+                Id = $"TK-{1000 + i}",
+                Title = string.Format(L["Business task #{0}"], i),
+                Owner = i % 3 == 0 ? L["Wang Nan"].Value : i % 2 == 0 ? L["Chen Tao"].Value : L["Li Xin"].Value,
+                CreatedAt = DateTime.Now.AddHours(-i * 3),
+                Priority = GetPriority(i),
+                Status = GetStatus(i)
+            }).ToList();
+    }
+
+    private TrendData CurrentTrendData => BuildTrendData(_selectedPeriod);
+
+    private TrendData BuildTrendData(PeriodType period)
+    {
+        return period switch
         {
-            query = query.Where(x => x.Name.Contains(_searchModel.Name, StringComparison.OrdinalIgnoreCase));
+            PeriodType.Day => new(
+                "$ 14,280",
+                12764,
+                [
+                    new { date = "00:00", value = 120 },
+                    new { date = "03:00", value = 168 },
+                    new { date = "06:00", value = 210 },
+                    new { date = "09:00", value = 258 },
+                    new { date = "12:00", value = 220 },
+                    new { date = "15:00", value = 302 },
+                    new { date = "18:00", value = 356 },
+                    new { date = "21:00", value = 318 }
+                ],
+                [
+                    new { type = L["Direct"].Value, value = 3680 },
+                    new { type = L["Search Engine"].Value, value = 4420 },
+                    new { type = L["External Link"].Value, value = 2190 },
+                    new { type = L["Campaign Ads"].Value, value = 2474 }
+                ]),
+            PeriodType.Week => new(
+                "$ 98,430",
+                86520,
+                [
+                    new { date = L["Mon"].Value, value = 410 },
+                    new { date = L["Tue"].Value, value = 520 },
+                    new { date = L["Wed"].Value, value = 488 },
+                    new { date = L["Thu"].Value, value = 615 },
+                    new { date = L["Fri"].Value, value = 702 },
+                    new { date = L["Sat"].Value, value = 760 },
+                    new { date = L["Sun"].Value, value = 698 }
+                ],
+                [
+                    new { type = L["Direct"].Value, value = 23120 },
+                    new { type = L["Search Engine"].Value, value = 29640 },
+                    new { type = L["External Link"].Value, value = 12410 },
+                    new { type = L["Campaign Ads"].Value, value = 21350 }
+                ]),
+            _ => new(
+                "$ 412,760",
+                368940,
+                [
+                    new { date = L["Week 1"].Value, value = 520 },
+                    new { date = L["Week 2"].Value, value = 610 },
+                    new { date = L["Week 3"].Value, value = 685 },
+                    new { date = L["Week 4"].Value, value = 742 },
+                    new { date = L["Week 5"].Value, value = 790 },
+                    new { date = L["Week 6"].Value, value = 860 },
+                    new { date = L["Week 7"].Value, value = 902 },
+                    new { date = L["Week 8"].Value, value = 948 },
+                    new { date = L["Week 9"].Value, value = 884 },
+                    new { date = L["Week 10"].Value, value = 930 },
+                    new { date = L["Week 11"].Value, value = 986 },
+                    new { date = L["Week 12"].Value, value = 1042 }
+                ],
+                [
+                    new { type = L["Direct"].Value, value = 92150 },
+                    new { type = L["Search Engine"].Value, value = 128320 },
+                    new { type = L["External Link"].Value, value = 58360 },
+                    new { type = L["Campaign Ads"].Value, value = 90110 }
+                ])
+        };
+    }
+
+    private void SetPeriod(PeriodType period)
+    {
+        _selectedPeriod = period;
+    }
+
+    private static string GetPriority(int index)
+    {
+        if (index % 5 == 0)
+        {
+            return "High";
         }
 
-        if (_searchModel.IsActive.HasValue)
+        if (index % 2 == 0)
         {
-            query = query.Where(x => x.IsActive == _searchModel.IsActive.Value);
+            return "Medium";
         }
 
-        var total = query.Count();
-
-        // 分页
-        var data = query
-            .Skip((queryModel.PageIndex - 1) * queryModel.PageSize)
-            .Take(queryModel.PageSize)
-            .ToList();
-
-        return (total, data);
+        return "Low";
     }
 
-
-    /// <summary>
-    /// 查看操作
-    /// </summary>
-    private void HandleView(SampleData item)
+    private static string GetStatus(int index)
     {
-        // 这里可以打开详情弹窗等
-        Console.WriteLine($"查看: {item.Name}");
-    }
-
-    /// <summary>
-    /// 删除操作
-    /// </summary>
-    private void HandleDelete(SampleData item)
-    {
-        // 这里可以弹出确认框然后删除
-        Console.WriteLine($"删除: {item.Name}");
-    }
-
-    /// <summary>
-    /// 新增操作
-    /// </summary>
-    private async Task<bool> HandleCreateAsync(CreateModel model)
-    {
-        // 模拟网络请求
-        await Task.Delay(500);
-
-        // 添加到数据源
-        var newId = AllData.Max(x => x.Id) + 1;
-        AllData.Insert(0, new SampleData
+        if (index % 4 == 0)
         {
-            Id = newId,
-            Name = model.Name ?? string.Empty,
-            Date = DateTime.Now,
-            IsActive = model.IsActive
-        });
+            return "Processing";
+        }
 
-        Console.WriteLine($"新增成功: {model.Name}");
+        if (index % 3 == 0)
+        {
+            return "Pending Assignment";
+        }
 
-        // 刷新表格
-        _pTable!.ReloadData();
-
-        return true; // 返回 true 表示成功，抽屉将自动关闭
+        return "Completed";
     }
 
-    /// <summary>
-    /// 抽屉关闭后重置表单数据
-    /// </summary>
-    private void HandleDrawerClosed()
+    private static string GetPriorityColor(string priority) => priority switch
     {
-        _createModel = new CreateModel();
+        "High" => "red",
+        "Medium" => "gold",
+        _ => "green"
+    };
+
+    private static string GetStatusColor(string status) => status switch
+    {
+        "Processing" => "blue",
+        "Pending Assignment" => "orange",
+        _ => "green"
+    };
+
+    private sealed class OverviewMetrics
+    {
+        public int TotalVisits { get; init; }
+        public int DailyVisits { get; init; }
+        public int Payments { get; init; }
+        public int PaymentRate { get; init; }
+        public int Campaigns { get; init; }
+        public int CampaignRate { get; init; }
+        public int OnlineUsers { get; init; }
+        public int PeakOnline { get; init; }
     }
 
-    /// <summary>
-    /// 新增模型
-    /// </summary>
-    public class CreateModel
+    private enum PeriodType
     {
-        public string? Name { get; set; }
-        public bool IsActive { get; set; } = true;
+        Day,
+        Week,
+        Month
     }
 
-    /// <summary>
-    /// 搜索模型
-    /// </summary>
-    public class SearchModel
+    private sealed class TrendData(string totalSalesText, int totalVisits, object[] lineData, object[] columnData)
     {
-        public string? Name { get; set; }
-        public bool? IsActive { get; set; }
+        public string TotalSalesText { get; } = totalSalesText;
+        public int TotalVisits { get; } = totalVisits;
+        public object[] LineData { get; } = lineData;
+        public object[] ColumnData { get; } = columnData;
     }
 
-    /// <summary>
-    /// 示例数据模型
-    /// </summary>
-    public class SampleData
+    private sealed record ProgressItem(string NameKey, string StatusKey, int Percent, string TagColor, string BarColor);
+
+    private sealed record TeamRankItem(string NameKey, int Score, string TagColor, string BarColor);
+
+    private sealed record TimelineEvent(string Color, string TitleKey, string TimeKey);
+
+    private sealed class TicketItem
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public DateTime Date { get; set; }
-        public bool IsActive { get; set; }
+        public string Id { get; init; } = string.Empty;
+        public string Title { get; init; } = string.Empty;
+        public string Owner { get; init; } = string.Empty;
+        public DateTime CreatedAt { get; init; }
+        public string Priority { get; init; } = string.Empty;
+        public string Status { get; init; } = string.Empty;
     }
 
 }
