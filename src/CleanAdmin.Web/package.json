@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@ant-design/pro-layout": "^6.0.0",
     "antd": "^4.24.2"
   },
   "devDependencies": {
