@@ -1,6 +1,6 @@
 @page "/"
 @attribute [Authorize]
-@attribute [ReuseTabsPage(Pin = true)]
+@attribute [ReuseTabsPage(Pin = true, Closable = false)]
 
 @inject IStringLocalizer<Home> L
 
@@ -13,7 +13,7 @@
                 <Avatar Class="bg-[#1677ff]">CA</Avatar>
                 <div>
                     <div class="text-base font-semibold">@L["Good morning, administrator. Have a great day."]</div>
-                    <div class="text-text-secondary">@L["CleanAdmin  | 12 tasks today | 2 alerts"]</div>
+                    <div class="text-text-secondary">@L["CleanAdmin platform | 12 tasks today | 2 alerts"]</div>
                 </div>
             </div>
             <Space>
@@ -21,7 +21,7 @@
                     <Button Icon="@IconType.Outline.Plus">@L["New Task"]</Button>
                 </SpaceItem>
                 <SpaceItem>
-                    <Button Type="@ButtonType.Primary" Icon='@IconType.Outline.Rocket'>@L["Publish Plan"]</Button>
+                    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Rocket">@L["Publish Plan"]</Button>
                 </SpaceItem>
             </Space>
         </div>
@@ -70,12 +70,8 @@
         </AntDesign.Col>
     </Row>
 
-    <Card Class="mb-4">
-        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <div>
-                <div class="text-base font-semibold">@L["Operational Analytics"]</div>
-                <div class="text-text-secondary">@L["Trend layout inspired by Ant Design Pro"]</div>
-            </div>
+    <Card Title="@L["Operational Analytics"]">
+        <Extra>
             <Space>
                 <SpaceItem>
                     <Button Size="@ButtonSize.Small"
@@ -93,31 +89,33 @@
                             OnClick="@(() => SetPeriod(PeriodType.Month))">@L["This Month"]</Button>
                 </SpaceItem>
             </Space>
-        </div>
-
-        <Row Gutter="16">
-            <AntDesign.Col Span="16">
-                <Card Size="CardSize.Small" Bordered>
-                    <div class="mb-3 flex items-center justify-between">
-                        <div>
-                            <div class="text-text-secondary">@L["Revenue"]</div>
-                            <div class="text-[28px] font-semibold leading-tight">@CurrentTrendData.TotalSalesText</div>
+        </Extra>
+        <ChildContent>
+            <Row Gutter="16">
+                <AntDesign.Col Span="16">
+                    <Card Size="CardSize.Small" Bordered>
+                        <div class="mb-3 flex items-center justify-between">
+                            <div>
+                                <div class="text-text-secondary">@L["Revenue"]</div>
+                                <div
+                                    class="text-[28px] font-semibold leading-tight">@CurrentTrendData.TotalSalesText</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-text-secondary">@L["Visits"]</div>
+                                <div
+                                    class="text-xl font-semibold leading-tight">@CurrentTrendData.TotalVisits.ToString("N0")</div>
+                            </div>
                         </div>
-                        <div class="text-right">
-                            <div class="text-text-secondary">@L["Visits"]</div>
-                            <div
-                                class="text-xl font-semibold leading-tight">@CurrentTrendData.TotalVisits.ToString("N0")</div>
-                        </div>
-                    </div>
-                    <AntDesign.Charts.Line Data="@CurrentTrendData.LineData" Config="@_lineConfig"/>
-                </Card>
-            </AntDesign.Col>
-            <AntDesign.Col Span="8">
-                <Card Size="CardSize.Small" Bordered Title='@L["Traffic Source Column Chart"]'>
-                    <AntDesign.Charts.Column Data="@CurrentTrendData.ColumnData" Config="@_columnConfig"/>
-                </Card>
-            </AntDesign.Col>
-        </Row>
+                        <AntDesign.Charts.Line Data="@CurrentTrendData.LineData" Config="@_lineConfig"/>
+                    </Card>
+                </AntDesign.Col>
+                <AntDesign.Col Span="8">
+                    <Card Size="CardSize.Small" Bordered Title='@L["Traffic Source Column Chart"]'>
+                        <AntDesign.Charts.Column Data="@CurrentTrendData.ColumnData" Config="@_columnConfig"/>
+                    </Card>
+                </AntDesign.Col>
+            </Row>
+        </ChildContent>
     </Card>
 
     <Row Gutter="16" Class="mb-4">
