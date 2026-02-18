@@ -12,28 +12,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="PageTitle" xml:space="preserve">
+  <data name="Login" xml:space="preserve">
     <value>登录</value>
   </data>
-  <data name="UsernamePlaceholder" xml:space="preserve">
+  <data name="Password Login" xml:space="preserve">
+    <value>密码登录</value>
+  </data>
+  <data name="Username" xml:space="preserve">
     <value>用户名</value>
   </data>
-  <data name="PasswordPlaceholder" xml:space="preserve">
+  <data name="Password" xml:space="preserve">
     <value>密码</value>
   </data>
-  <data name="RememberMe" xml:space="preserve">
+  <data name="Remember me" xml:space="preserve">
     <value>记住我</value>
   </data>
-  <data name="ForgotPassword" xml:space="preserve">
-    <value>忘记密码?</value>
+  <data name="Forgot password?" xml:space="preserve">
+    <value>忘记密码？</value>
   </data>
-  <data name="ConfirmButton" xml:space="preserve">
+  <data name="Confirm" xml:space="preserve">
     <value>确认</value>
   </data>
-  <data name="CodeLogin" xml:space="preserve">
+  <data name="Code Login" xml:space="preserve">
     <value>验证码登录</value>
   </data>
   <data name="Register" xml:space="preserve">
     <value>注册账号</value>
+  </data>
+  <data name="Login Successful" xml:space="preserve">
+    <value>登录成功</value>
+  </data>
+  <data name="Welcome back!" xml:space="preserve">
+    <value>欢迎回来！</value>
+  </data>
+  <data name="Login Failed" xml:space="preserve">
+    <value>登录失败</value>
   </data>
 </root>

@@ -10,16 +10,16 @@
 @inject IMessageService MessageService
 @inject INotificationService NotificationService
 
-<PageTitle>@L["PageTitle"]</PageTitle>
+<PageTitle>@L["Login"]</PageTitle>
 
-<Title Level="4" Class="mb-6">密码登录</Title>
+<Title Level="4" Class="mb-6">@L["Password Login"]</Title>
 
 <Form Model="@_model"
       OnFinish="OnFinish">
     <FluentValidator/>
     <FormItem>
         <AntDesign.Input @bind-Value="@context.Username"
-                         Placeholder="@L["UsernamePlaceholder"].Value"
+                         Placeholder="@L["Username"]"
                          Size="InputSize.Large">
             <Prefix>
                 <Icon Type="user"/>
@@ -29,7 +29,7 @@
 
     <FormItem>
         <InputPassword @bind-Value="@context.Password"
-                       Placeholder="@L["PasswordPlaceholder"].Value"
+                       Placeholder="@L["Password"]"
                        Size="InputSize.Large"
                        VisibilityToggle="true">
             <Prefix>
@@ -41,9 +41,9 @@
     <FormItem>
         <Flex Justify="FlexJustify.SpaceBetween" Align="FlexAlign.Center">
             <Checkbox @bind-Value="_model.RememberMe">
-                @L["RememberMe"]
+                @L["Remember me"]
             </Checkbox>
-            <a href="#">@L["ForgotPassword"]</a>
+            <a href="#">@L["Forgot password?"]</a>
         </Flex>
     </FormItem>
 
@@ -53,14 +53,14 @@
                 Block="true"
                 Size="ButtonSize.Large"
                 Loading="@_loading">
-            @L["ConfirmButton"]
+            @L["Confirm"]
         </Button>
     </FormItem>
 
     <FormItem>
         <Flex Gap="FlexGap.Middle">
             <Button Block="true" Size="ButtonSize.Large">
-                @L["CodeLogin"]
+                @L["Code Login"]
             </Button>
             <Button Block="true" Size="ButtonSize.Large">
                 @L["Register"]
@@ -108,13 +108,13 @@
                 NavigationManager.NavigateTo(!string.IsNullOrWhiteSpace(ReturnUrl) ? ReturnUrl! : Home.PageUri);
                 _ = NotificationService.Success(new NotificationConfig()
                 {
-                    Message = "登录成功",
-                    Description = "欢迎回来！",
+                    Message = $"{L["Login Successful"]}",
+                    Description = $"{L["Welcome back!"]}",
                 });
             }
             else
             {
-                _ = MessageService.ErrorAsync(response?.Message ?? "登录失败");
+                _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Login Failed"]}");
             }
         }
         finally

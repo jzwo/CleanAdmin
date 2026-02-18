@@ -4,6 +4,7 @@
 
 @inject Document Document
 @inject FullscreenState FullscreenState
+@inject IStringLocalizer<MainLayout> L
 
 @implements IDisposable
 
@@ -13,18 +14,11 @@
                CollapsedWidth="48"
                class="@($"{(FullscreenState.IsFullscreen ? "hidden" : "")} border-r border-border bg-sider")">
             <div class="flex items-center justify-center h-14">
-                <div class="flex items-center gap-2">
-                    <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor" opacity="0.3"/>
-                        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round"/>
-                        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                              stroke-linejoin="round"/>
-                    </svg>
+            <div class="flex items-center gap-2">
+                    <CleanAdminLogo />
                     @if (!_collapsed)
                     {
-                        <span class="text-xl font-semibold text-text">CleanAdmin</span>
+                        <span class="text-xl font-semibold text-text">@L["Clean Admin"]</span>
                     }
                 </div>
             </div>
@@ -34,9 +28,10 @@
             <Header
                 Class="@($"{(FullscreenState.IsFullscreen ? "hidden" : "")} h-12 px-2 border-b border-border flex items-center bg-appbar")">
                 <Button Type="@ButtonType.Text" OnClick="@CollapseToggle">
-                    <Icon Type="@(_collapsed ? IconType.Outline.MenuUnfold : IconType.Outline.MenuFold)"/>
+                    <Icon
+                        Component="@(_collapsed ? IconHelper.TailwindIcon("icon-[ri--menu-fold-4-line]") : IconHelper.TailwindIcon("icon-[ri--menu-unfold-4-line]"))"/>
                 </Button>
-                <AutoBreadcrumb />
+                <AutoBreadcrumb/>
 
                 <div class="h-full flex items-center justify-end">
                     <ThemeToggle/>

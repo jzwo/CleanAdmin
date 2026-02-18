@@ -259,7 +259,7 @@
             {
                 Id = $"TK-{1000 + i}",
                 Title = string.Format(L["Business task #{0}"], i),
-                Owner = i % 3 == 0 ? L["Wang Nan"].Value : i % 2 == 0 ? L["Chen Tao"].Value : L["Li Xin"].Value,
+                Owner = i % 3 == 0 ? $"{L["Wang Nan"]}" : i % 2 == 0 ? $"{L["Chen Tao"]}" : $"{L["Li Xin"]}",
                 CreatedAt = DateTime.Now.AddHours(-i * 3),
                 Priority = GetPriority(i),
                 Status = GetStatus(i)
@@ -284,51 +284,51 @@
                     new { date = "21:00", value = 318 }
                 ],
                 [
-                    new { type = L["Direct"].Value, value = 3680 },
-                    new { type = L["Search Engine"].Value, value = 4420 },
-                    new { type = L["External Link"].Value, value = 2190 },
-                    new { type = L["Campaign Ads"].Value, value = 2474 }
+                    new { type = $"{L["Direct"]}", value = 3680 },
+                    new { type = $"{L["Search Engine"]}", value = 4420 },
+                    new { type = $"{L["External Link"]}", value = 2190 },
+                    new { type = $"{L["Campaign Ads"]}", value = 2474 }
                 ]),
             PeriodType.Week => new(
                 "$ 98,430",
                 86520,
                 [
-                    new { date = L["Mon"].Value, value = 410 },
-                    new { date = L["Tue"].Value, value = 520 },
-                    new { date = L["Wed"].Value, value = 488 },
-                    new { date = L["Thu"].Value, value = 615 },
-                    new { date = L["Fri"].Value, value = 702 },
-                    new { date = L["Sat"].Value, value = 760 },
-                    new { date = L["Sun"].Value, value = 698 }
+                    new { date = $"{L["Mon"]}", value = 410 },
+                    new { date = $"{L["Tue"]}", value = 520 },
+                    new { date = $"{L["Wed"]}", value = 488 },
+                    new { date = $"{L["Thu"]}", value = 615 },
+                    new { date = $"{L["Fri"]}", value = 702 },
+                    new { date = $"{L["Sat"]}", value = 760 },
+                    new { date = $"{L["Sun"]}", value = 698 }
                 ],
                 [
-                    new { type = L["Direct"].Value, value = 23120 },
-                    new { type = L["Search Engine"].Value, value = 29640 },
-                    new { type = L["External Link"].Value, value = 12410 },
-                    new { type = L["Campaign Ads"].Value, value = 21350 }
+                    new { type = $"{L["Direct"]}", value = 23120 },
+                    new { type = $"{L["Search Engine"]}", value = 29640 },
+                    new { type = $"{L["External Link"]}", value = 12410 },
+                    new { type = $"{L["Campaign Ads"]}", value = 21350 }
                 ]),
             _ => new(
                 "$ 412,760",
                 368940,
                 [
-                    new { date = L["Week 1"].Value, value = 520 },
-                    new { date = L["Week 2"].Value, value = 610 },
-                    new { date = L["Week 3"].Value, value = 685 },
-                    new { date = L["Week 4"].Value, value = 742 },
-                    new { date = L["Week 5"].Value, value = 790 },
-                    new { date = L["Week 6"].Value, value = 860 },
-                    new { date = L["Week 7"].Value, value = 902 },
-                    new { date = L["Week 8"].Value, value = 948 },
-                    new { date = L["Week 9"].Value, value = 884 },
-                    new { date = L["Week 10"].Value, value = 930 },
-                    new { date = L["Week 11"].Value, value = 986 },
-                    new { date = L["Week 12"].Value, value = 1042 }
+                    new { date = $"{L["Week 1"]}", value = 520 },
+                    new { date = $"{L["Week 2"]}", value = 610 },
+                    new { date = $"{L["Week 3"]}", value = 685 },
+                    new { date = $"{L["Week 4"]}", value = 742 },
+                    new { date = $"{L["Week 5"]}", value = 790 },
+                    new { date = $"{L["Week 6"]}", value = 860 },
+                    new { date = $"{L["Week 7"]}", value = 902 },
+                    new { date = $"{L["Week 8"]}", value = 948 },
+                    new { date = $"{L["Week 9"]}", value = 884 },
+                    new { date = $"{L["Week 10"]}", value = 930 },
+                    new { date = $"{L["Week 11"]}", value = 986 },
+                    new { date = $"{L["Week 12"]}", value = 1042 }
                 ],
                 [
-                    new { type = L["Direct"].Value, value = 92150 },
-                    new { type = L["Search Engine"].Value, value = 128320 },
-                    new { type = L["External Link"].Value, value = 58360 },
-                    new { type = L["Campaign Ads"].Value, value = 90110 }
+                    new { type = $"{L["Direct"]}", value = 92150 },
+                    new { type = $"{L["Search Engine"]}", value = 128320 },
+                    new { type = $"{L["External Link"]}", value = 58360 },
+                    new { type = $"{L["Campaign Ads"]}", value = 90110 }
                 ])
         };
     }
