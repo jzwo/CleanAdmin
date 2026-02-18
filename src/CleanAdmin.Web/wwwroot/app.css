@@ -27,6 +27,32 @@
     }
 }
 
+@layer utilities {
+    .scrollbar-custom::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .scrollbar-custom::-webkit-scrollbar-thumb {
+        background-color: #00000080;
+        border-radius: 6px
+    }
+    
+    .scrollbar-custom::-webkit-scrollbar-track-piece {
+        background-color: #0000;
+        border-radius: 0
+    }
+
+    .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+        background-color: #00000080;
+        border-radius: 6px
+    }
+
+    .scrollbar-custom {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0,0,0,.5) transparent;
+    }
+}
+
 @plugin "@iconify/tailwind4";
 /* Use source(none) to completely disable automatic source detection */
 /* You can use @source "path" to manually specify a source */
