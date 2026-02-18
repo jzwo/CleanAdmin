@@ -76,17 +76,17 @@
                 <SpaceItem>
                     <Button Size="@ButtonSize.Small"
                             Type="@(_selectedPeriod == PeriodType.Day ? ButtonType.Primary : ButtonType.Default)"
-                            OnClick="@(() => SetPeriod(PeriodType.Day))">@L["Today"]</Button>
+                            OnClick="@(() => SetPeriodAsync(PeriodType.Day))">@L["Today"]</Button>
                 </SpaceItem>
                 <SpaceItem>
                     <Button Size="@ButtonSize.Small"
                             Type="@(_selectedPeriod == PeriodType.Week ? ButtonType.Primary : ButtonType.Default)"
-                            OnClick="@(() => SetPeriod(PeriodType.Week))">@L["This Week"]</Button>
+                            OnClick="@(() => SetPeriodAsync(PeriodType.Week))">@L["This Week"]</Button>
                 </SpaceItem>
                 <SpaceItem>
                     <Button Size="@ButtonSize.Small"
                             Type="@(_selectedPeriod == PeriodType.Month ? ButtonType.Primary : ButtonType.Default)"
-                            OnClick="@(() => SetPeriod(PeriodType.Month))">@L["This Month"]</Button>
+                            OnClick="@(() => SetPeriodAsync(PeriodType.Month))">@L["This Month"]</Button>
                 </SpaceItem>
             </Space>
         </Extra>
@@ -98,20 +98,20 @@
                             <div>
                                 <div class="text-text-secondary">@L["Revenue"]</div>
                                 <div
-                                    class="text-[28px] font-semibold leading-tight">@CurrentTrendData.TotalSalesText</div>
+                                    class="text-[28px] font-semibold leading-tight">@_currentTrendData.TotalSalesText</div>
                             </div>
                             <div class="text-right">
                                 <div class="text-text-secondary">@L["Visits"]</div>
                                 <div
-                                    class="text-xl font-semibold leading-tight">@CurrentTrendData.TotalVisits.ToString("N0")</div>
+                                    class="text-xl font-semibold leading-tight">@_currentTrendData.TotalVisits.ToString("N0")</div>
                             </div>
                         </div>
-                        <AntDesign.Charts.Line Data="@CurrentTrendData.LineData" Config="@_lineConfig"/>
+                        <AntDesign.Charts.Line @ref="_lineChart" Data="@_currentTrendData.LineData" Config="@_lineConfig"/>
                     </Card>
                 </AntDesign.Col>
                 <AntDesign.Col Span="8">
                     <Card Size="CardSize.Small" Bordered Title='@L["Traffic Source Column Chart"]'>
-                        <AntDesign.Charts.Column Data="@CurrentTrendData.ColumnData" Config="@_columnConfig"/>
+                        <AntDesign.Charts.Column @ref="_columnChart" Data="@_currentTrendData.ColumnData" Config="@_columnConfig"/>
                     </Card>
                 </AntDesign.Col>
             </Row>
@@ -190,6 +190,9 @@
 
 @code {
     private PeriodType _selectedPeriod = PeriodType.Week;
+    private TrendData _currentTrendData = null!;
+    private AntDesign.Charts.IChartComponent _lineChart = null!;
+    private AntDesign.Charts.IChartComponent _columnChart = null!;
     private List<TicketItem> _allTickets = [];
 
     private readonly OverviewMetrics _overview = new()
@@ -249,6 +252,8 @@
 
     protected override void OnInitialized()
     {
+        _currentTrendData = BuildTrendData(_selectedPeriod);
+
         _allTickets = Enumerable.Range(1, 60)
             .Select(i => new TicketItem
             {
@@ -260,8 +265,6 @@
                 Status = GetStatus(i)
             }).ToList();
     }
-
-    private TrendData CurrentTrendData => BuildTrendData(_selectedPeriod);
 
     private TrendData BuildTrendData(PeriodType period)
     {
@@ -330,9 +333,18 @@
         };
     }
 
-    private void SetPeriod(PeriodType period)
+    private async Task SetPeriodAsync(PeriodType period)
     {
+        if (_selectedPeriod == period)
+        {
+            return;
+        }
+
         _selectedPeriod = period;
+        _currentTrendData = BuildTrendData(period);
+
+        await _lineChart.ChangeData(_currentTrendData.LineData);
+        await _columnChart.ChangeData(_currentTrendData.ColumnData);
     }
 
     private static string GetPriority(int index)
