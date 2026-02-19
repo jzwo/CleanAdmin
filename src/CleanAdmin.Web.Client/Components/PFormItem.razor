@@ -1,23 +1,7 @@
 @using OneOf;
+@inherits FormItem
 @implements IDisposable
 
-@{
-    RenderFragment formItemContent = @<FormItem Label="@Label"
-                                                LabelTemplate="@LabelTemplate"
-                                                LabelAlign="@LabelAlign"
-                                                LabelStyle="@LabelStyle"
-                                                LabelCol="@LabelCol"
-                                                WrapperCol="@WrapperCol"
-                                                Required="@Required"
-                                                NoStyle="@NoStyle"
-                                                Rules="@Rules"
-                                                Help="@Help"
-                                                ToolTip="@ToolTip"
-                                                Class="@FormItemClass"
-                                                Style="@Style">
-                                         @ChildContent
-                                     </FormItem>;
-}
 @if (UseGrid)
 {
     <GridCol Span="@ActualSpan"
@@ -28,15 +12,23 @@
              Xl="@ActualXl"
              Xxl="@ActualXxl"
              Class="@HiddenClass">
-        @formItemContent
+        @BaseContent
     </GridCol>
+}
+else if (IsVisible)
+{
+    @BaseContent
 }
 else
 {
-    @formItemContent
+    <div class="hidden">
+        @BaseContent
+    </div>
 }
 
 @code {
+
+    private RenderFragment BaseContent => builder => base.BuildRenderTree(builder);
 
     /// <summary>
     /// 父级 PForm 组件
@@ -66,22 +58,15 @@ else
     private string? HiddenClass => IsVisible ? null : "hidden";
 
     /// <summary>
-    /// FormItem 的样式类（非 Grid 模式下需要合并隐藏类）
+    /// 初始化并注册字段
     /// </summary>
-    private string? FormItemClass => UseGrid
-        ? Class
-        : IsVisible
-            ? Class
-            : string.IsNullOrEmpty(Class)
-                ? "hidden"
-                : $"{Class} hidden";
-
     protected override void OnInitialized()
     {
+        base.OnInitialized();
         Parent?.AddField(this);
     }
 
-    public void Dispose()
+    public new void Dispose()
     {
         Parent?.RemoveField(this);
     }
@@ -205,94 +190,6 @@ else
             _xxlSet = true;
         }
     }
-
-    #endregion
-
-    #region FormItem Parameters
-
-    /// <summary>
-    /// 标签文本
-    /// </summary>
-    [Parameter]
-    public string? Label { get; set; }
-
-    /// <summary>
-    /// 自定义标签模板
-    /// </summary>
-    [Parameter]
-    public RenderFragment? LabelTemplate { get; set; }
-
-    /// <summary>
-    /// 标签列布局
-    /// </summary>
-    [Parameter]
-    public ColLayoutParam? LabelCol { get; set; }
-
-    /// <summary>
-    /// 标签对齐方式
-    /// </summary>
-    [Parameter]
-    public AntLabelAlignType? LabelAlign { get; set; }
-
-    /// <summary>
-    /// 标签样式
-    /// </summary>
-    [Parameter]
-    public string? LabelStyle { get; set; }
-
-    /// <summary>
-    /// 输入框列布局
-    /// </summary>
-    [Parameter]
-    public ColLayoutParam? WrapperCol { get; set; }
-
-    /// <summary>
-    /// 是否必填
-    /// </summary>
-    [Parameter]
-    public bool Required { get; set; }
-
-    /// <summary>
-    /// 无样式，作为纯字段控件使用
-    /// </summary>
-    [Parameter]
-    public bool NoStyle { get; set; }
-
-    /// <summary>
-    /// 校验规则
-    /// </summary>
-    [Parameter]
-    public FormValidationRule[]? Rules { get; set; }
-
-    /// <summary>
-    /// 提示信息
-    /// </summary>
-    [Parameter]
-    public string? Help { get; set; }
-
-    /// <summary>
-    /// 标签提示信息
-    /// </summary>
-    [Parameter]
-    public string? ToolTip { get; set; }
-
-    /// <summary>
-    /// 样式类
-    /// </summary>
-    [Parameter]
-    public string? Class { get; set; }
-
-    /// <summary>
-    /// 内联样式
-    /// </summary>
-    [Parameter]
-    public string? Style { get; set; }
-
-    /// <summary>
-    /// 子内容
-    /// </summary>
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
 
     #endregion
 
