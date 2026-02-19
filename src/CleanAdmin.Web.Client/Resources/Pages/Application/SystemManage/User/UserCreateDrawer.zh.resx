@@ -14,6 +14,7 @@
   <data name="Please enter real name" xml:space="preserve"><value>请输入真实姓名</value></data>
   <data name="Email" xml:space="preserve"><value>邮箱</value></data>
   <data name="Please enter email" xml:space="preserve"><value>请输入邮箱</value></data>
+  <data name="Please enter a valid email address" xml:space="preserve"><value>请输入有效的邮箱地址</value></data>
   <data name="Phone" xml:space="preserve"><value>手机号</value></data>
   <data name="Please enter phone" xml:space="preserve"><value>请输入手机号</value></data>
 </root>

@@ -6,18 +6,19 @@
 <PDrawerForm TModel="CreateRoleRequest"
              Title='@L["Create Role"]'
              Model="_model"
+             LabelColSpan="8"
              OnSubmit="@HandleSubmitAsync">
     <Activator>
         <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
     </Activator>
     <ChildContent Context="model">
-        <PFormItem Label='@L["Role Name"]'>
+        <PFormItem Label='@L["Role Name"]' Required>
             <Input @bind-Value="@model.Name" Placeholder='@L["Please enter role name"]'/>
         </PFormItem>
-        <PFormItem Label='@L["Role Description"]'>
+        <PFormItem Label='@L["Role Description"]' Required>
             <Input @bind-Value="@model.Description" Placeholder='@L["Please enter role description"]'/>
         </PFormItem>
-        <PFormItem Label='@L["Status"]'>
+        <PFormItem Label='@L["Status"]' Required>
             <Select @bind-Value="@model.IsDisabled"
                     Placeholder='@L["Please select status"]'
                     TItemValue="bool?"

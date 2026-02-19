@@ -1,8 +1,6 @@
 @using OneOf;
-@using FluentValidation;
 @typeparam TModel where TModel : class, new()
 @implements IPForm
-@inject IServiceProvider ServiceProvider
 @inject IStringLocalizer<SharedResource> L
 
 <CascadingValue Value="(IPForm)this" IsFixed="true">
@@ -21,10 +19,6 @@
           Class="@Class"
           Style="@Style">
 
-        @if (HasFluentValidator)
-        {
-            <FluentValidator/>
-        }
         @if (Validator != null)
         {
             @Validator
@@ -69,11 +63,6 @@
 @code {
     private Form<TModel>? _form;
     private readonly List<PFormItem> _fields = new();
-
-    /// <summary>
-    /// 检查容器中是否注册了 TModel 对应的验证器
-    /// </summary>
-    private bool HasFluentValidator => ServiceProvider.GetServices<IValidator<TModel>>().Any();
 
     #region Collapse Parameters
 

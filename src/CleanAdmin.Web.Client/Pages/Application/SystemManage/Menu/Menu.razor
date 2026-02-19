@@ -28,10 +28,10 @@
                 <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
             </Activator>
             <ChildContent Context="model">
-                <PFormItem Label='@L["Menu Name"]'>
+                <PFormItem Label='@L["Menu Name"]' Required>
                     <Input @bind-Value="@model.MenuName" Placeholder='@L["Please enter menu name"]'/>
                 </PFormItem>
-                <PFormItem Label='@L["Menu Type"]'>
+                <PFormItem Label='@L["Menu Type"]' Required>
                     <EnumSelect TEnum="MenuType?" @bind-Value="@model.MenuType" Placeholder='@L["Please select menu type"]'/>
                 </PFormItem>
                 <PFormItem Label='@L["Parent Menu"]'>
@@ -58,7 +58,7 @@
                         </AddOnAfter>
                     </AntDesign.Input>
                 </PFormItem>
-                <PFormItem Label='@L["Sort Order"]'>
+                <PFormItem Label='@L["Sort Order"]' Required>
                     <AntDesign.InputNumber @bind-Value="@model.SortOrder" Min="0" Placeholder='@L["Please enter sort order"]'/>
                 </PFormItem>
                 <PFormItem Label='@L["Permission Code"]'>
@@ -108,7 +108,7 @@
                             </Button>
                         </Activator>
                         <ChildContent Context="model">
-                            <PFormItem Label='@L["Menu Name"]'>
+                            <PFormItem Label='@L["Menu Name"]' Required>
                                 <Input @bind-Value="@model.MenuName" Placeholder='@L["Please enter menu name"]'/>
                             </PFormItem>
                             <PFormItem Label='@L["Route Path"]'>

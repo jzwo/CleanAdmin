@@ -1,5 +1,4 @@
 using Bit.Butil;
-using Blazilla.Extensions;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
@@ -26,7 +25,6 @@ public static class ServiceCollectionExtensions
             options.SupportedCultures = ["zh-CN", "en-US"];
         });
         services.AddScoped<ICultureService, CultureService>();
-        services.AddValidatorsFromAssemblyContaining<Program>();
         services.AddScoped<FullscreenState>();
     }
 

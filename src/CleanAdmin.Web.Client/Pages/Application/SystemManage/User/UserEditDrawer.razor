@@ -24,13 +24,18 @@
         }
         else
         {
-            <PFormItem Label='@L["Username"]'>
+            <PFormItem Label='@L["Username"]' Required>
                 <Input @bind-Value="@model.Username" Placeholder='@L["Please enter username"]'/>
             </PFormItem>
-            <PFormItem Label='@L["Real Name"]'>
+            <PFormItem Label='@L["Real Name"]' Required>
                 <Input @bind-Value="@model.RealName" Placeholder='@L["Please enter real name"]'/>
             </PFormItem>
-            <PFormItem Label='@L["Email"]'>
+            <PFormItem Label='@L["Email"]'
+                       Rules="@(new[]
+                       {
+                           new FormValidationRule { Required = true, Message = $"{L["Please enter email"]}" },
+                           new FormValidationRule { Type = FormFieldType.Email, Message = $"{L["Please enter a valid email address"]}" }
+                       })">
                 <Input @bind-Value="@model.Email" Placeholder='@L["Please enter email"]'/>
             </PFormItem>
             <PFormItem Label='@L["Phone"]'>

@@ -21,8 +21,14 @@
   <data name="Username" xml:space="preserve">
     <value>用户名</value>
   </data>
+  <data name="Please enter username" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>密码</value>
+  </data>
+  <data name="Please enter password" xml:space="preserve">
+    <value>请输入密码</value>
   </data>
   <data name="Remember me" xml:space="preserve">
     <value>记住我</value>

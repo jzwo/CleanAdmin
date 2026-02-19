@@ -16,10 +16,10 @@
 
 <Form Model="@_model"
       OnFinish="OnFinish">
-    <FluentValidator/>
-    <FormItem>
+    <FormItem Rules="@([new FormValidationRule { Required = true, Message = $"{L["Please enter username"]}" }])">
         <AntDesign.Input @bind-Value="@context.Username"
                          Placeholder="@L["Username"]"
+                         MaxLength="50"
                          Size="InputSize.Large">
             <Prefix>
                 <Icon Type="user"/>
@@ -27,7 +27,8 @@
         </AntDesign.Input>
     </FormItem>
 
-    <FormItem>
+    <FormItem
+        Rules="@([new FormValidationRule { Required = true, Message = $"{L["Please enter password"]}" }])">
         <InputPassword @bind-Value="@context.Password"
                        Placeholder="@L["Password"]"
                        Size="InputSize.Large"
