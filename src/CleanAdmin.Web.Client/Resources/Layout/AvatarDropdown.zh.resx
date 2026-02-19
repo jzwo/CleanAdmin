@@ -12,13 +12,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Clean Admin" xml:space="preserve">
-    <value>Clean 管理系统</value>
+  <data name="Profile Center" xml:space="preserve">
+    <value>个人中心</value>
   </data>
-  <data name="An unhandled error has occurred." xml:space="preserve">
-    <value>发生了未处理的错误。</value>
-  </data>
-  <data name="Reload" xml:space="preserve">
-    <value>重新加载</value>
+  <data name="Sign Out" xml:space="preserve">
+    <value>退出登录</value>
   </data>
 </root>

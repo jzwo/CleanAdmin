@@ -5,25 +5,26 @@
 @using SearchQueryParameters = CleanAdmin.Web.Client.ApiSdk.Api.User.List.ListRequestBuilder.ListRequestBuilderGetQueryParameters
 @inject ApiClient ApiClient
 @inject IMessageService MessageService
+@inject IStringLocalizer<User> L
 
-<PageTitle>用户管理</PageTitle>
+<PageTitle>@L["User Management"]</PageTitle>
 
 <PTable @ref="_pTable" TItem="UserListItemDto"
-        Title="用户列表"
+        Title='@L["User List"]'
         OnLoadData="LoadDataAsync">
     <SearchTemplate>
         <PTableSearchForm TModel="SearchQueryParameters" Model="_searchModel">
-            <PFormItem Label="用户名">
-                <Input @bind-Value="@_searchModel.Username" Placeholder="请输入用户名" AllowClear/>
+            <PFormItem Label='@L["Username"]'>
+                <Input @bind-Value="@_searchModel.Username" Placeholder='@L["Please enter username"]' AllowClear/>
             </PFormItem>
-            <PFormItem Label="真实姓名">
-                <Input @bind-Value="@_searchModel.RealName" Placeholder="请输入真实姓名" AllowClear/>
+            <PFormItem Label='@L["Real Name"]'>
+                <Input @bind-Value="@_searchModel.RealName" Placeholder='@L["Please enter real name"]' AllowClear/>
             </PFormItem>
-            <PFormItem Label="邮箱">
-                <Input @bind-Value="@_searchModel.Email" Placeholder="请输入邮箱" AllowClear/>
+            <PFormItem Label='@L["Email"]'>
+                <Input @bind-Value="@_searchModel.Email" Placeholder='@L["Please enter email"]' AllowClear/>
             </PFormItem>
-            <PFormItem Label="手机号">
-                <Input @bind-Value="@_searchModel.Phone" Placeholder="请输入手机号" AllowClear/>
+            <PFormItem Label='@L["Phone"]'>
+                <Input @bind-Value="@_searchModel.Phone" Placeholder='@L["Please enter phone"]' AllowClear/>
             </PFormItem>
         </PTableSearchForm>
     </SearchTemplate>
@@ -31,23 +32,23 @@
         <UserCreateDrawer/>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
-        <PropertyColumn Property="c => c.Username" Title="用户名"/>
-        <PropertyColumn Property="c => c.RealName" Title="真实姓名"/>
-        <PropertyColumn Property="c => c.Email" Title="邮箱"/>
-        <PropertyColumn Property="c => c.Phone" Title="手机号"/>
-        <PropertyColumn Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
-        <ActionColumn Title="操作" Width="180">
+        <PropertyColumn Property="c => c.Username" Title='@L["Username"]'/>
+        <PropertyColumn Property="c => c.RealName" Title='@L["Real Name"]'/>
+        <PropertyColumn Property="c => c.Email" Title='@L["Email"]'/>
+        <PropertyColumn Property="c => c.Phone" Title='@L["Phone"]'/>
+        <PropertyColumn Property="c => c.CreatedAt" Title='@L["Created Time"]' Format="yyyy-MM-dd HH:mm:ss"/>
+        <ActionColumn Title='@L["Actions"]' Width="180">
             <Space>
                 <SpaceItem>
                     <UserEditDrawer User="@item"/>
                 </SpaceItem>
                 <SpaceItem>
-                    <Popconfirm Title="确定要删除该用户吗？"
+                    <Popconfirm Title='@L["Are you sure to delete this user?"]'
                                 OnConfirm="() => OnDelete(item)"
-                                OkText="确定"
-                                CancelText="取消">
+                                OkText='@L["Confirm"]'
+                                CancelText='@L["Cancel"]'>
                         <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
-                            删除
+                            @L["Delete"]
                         </Button>
                     </Popconfirm>
                 </SpaceItem>
@@ -86,13 +87,13 @@
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? "获取用户列表失败");
+                await MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to get user list"]}");
                 return (0, []);
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"获取用户列表失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Failed to get user list"]}: {ex.Message}");
             return (0, []);
         }
     }
@@ -104,17 +105,17 @@
             var response = await ApiClient.Api.User[user.Id!].DeletePath.DeleteAsync();
             if (response is { Success: true })
             {
-                await MessageService.SuccessAsync("删除成功");
+                await MessageService.SuccessAsync($"{L["Deleted successfully"]}");
                 _pTable?.ReloadData();
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? "删除失败");
+                await MessageService.ErrorAsync(response?.Message ?? $"{L["Delete failed"]}");
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"删除失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Delete failed"]}: {ex.Message}");
         }
     }
 

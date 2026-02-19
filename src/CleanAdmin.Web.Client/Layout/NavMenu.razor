@@ -2,6 +2,7 @@
 @using CleanAdmin.Web.Client.ApiSdk.Models
 @inject ApiClient ApiClient
 @inject AuthenticationStateProvider AuthStateProvider
+@inject IStringLocalizer<NavMenu> L
 
 <div>
     @if (_isLoading)
@@ -22,7 +23,7 @@
     else
     {
         <div class="menu-empty" style="padding: 20px; text-align: center; color: #999;">
-            <p>暂无菜单</p>
+            <p>@L["No menu available"]</p>
         </div>
     }
 </div>
@@ -57,7 +58,7 @@
         }
         catch (Exception ex)
         {
-            await System.Console.Error.WriteLineAsync($"加载菜单失败: {ex.Message}");
+            await System.Console.Error.WriteLineAsync($"{L["Failed to load menu"]}: {ex.Message}");
             await System.Console.Error.WriteLineAsync(ex.StackTrace);
             _menuItems = [];
         }

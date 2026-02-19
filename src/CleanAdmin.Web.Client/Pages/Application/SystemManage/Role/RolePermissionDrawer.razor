@@ -4,9 +4,10 @@
 @using UpdateRolePermissionsRequest = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceEndpointsRolesUpdateRolePermissionsRequest
 @inject ApiClient ApiClient
 @inject IMessageService MessageService
+@inject IStringLocalizer<RolePermissionDrawer> L
 
 <PDrawerForm TModel="UpdateRolePermissionsRequest"
-             Title="分配权限"
+             Title='@L["Assign Permissions"]'
              Model="_model"
              Width="@DrawerWidth"
              OnClosed="@(() => IsOpenChanged.InvokeAsync(false))"
@@ -14,7 +15,7 @@
              OnSubmit="@HandleSubmitAsync">
     <Activator>
         <Button OnClick="@OnOpenDrawerAsync">
-            分配权限
+            @L["Assign Permissions"]
         </Button>
     </Activator>
     <ChildContent>
@@ -33,11 +34,11 @@
             <div>
                 <div class="mb-3 flex items-center gap-2">
                     <Search @bind-Value="_searchKey"
-                            Placeholder="搜索权限名称"
+                            Placeholder='@L["Search permission name"]'
                             BindOnInput
                             AllowClear/>
-                    <Button OnClick="@CheckAllPermissions">全选</Button>
-                    <Button OnClick="@ClearAllPermissions">清空</Button>
+                    <Button OnClick="@CheckAllPermissions">@L["Select All"]</Button>
+                    <Button OnClick="@ClearAllPermissions">@L["Clear"]</Button>
                 </div>
 
                 <Tree TItem="string"
@@ -85,7 +86,7 @@
         {
             _permissionTree = [];
             _checkedKeys = [];
-            await MessageService.ErrorAsync("角色ID不能为空");
+            await MessageService.ErrorAsync($"{L["Role ID cannot be empty"]}");
             return;
         }
 
@@ -105,7 +106,7 @@
             {
                 _permissionTree = [];
                 _checkedKeys = [];
-                await MessageService.ErrorAsync(permissionTreeResponse?.Message ?? "获取权限树失败");
+                await MessageService.ErrorAsync(permissionTreeResponse?.Message ?? $"{L["Failed to get permission tree"]}");
                 return;
             }
 
@@ -129,7 +130,7 @@
         {
             _permissionTree = [];
             _checkedKeys = [];
-            await MessageService.ErrorAsync($"加载权限数据失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Failed to load permission data"]}: {ex.Message}");
         }
         finally
         {
@@ -213,7 +214,7 @@
     {
         if (string.IsNullOrWhiteSpace(_currentRoleId))
         {
-            return (false, "角色ID不能为空");
+            return (false, $"{L["Role ID cannot be empty"]}");
         }
 
         var finalCheckedMenuIds = _checkedKeys

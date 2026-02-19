@@ -1,4 +1,5 @@
 @typeparam TModel where TModel : class, new()
+@inject IStringLocalizer<SharedResource> L
 
 <PForm @ref="_form"
        TModel="TModel"
@@ -24,21 +25,21 @@
                                 HtmlType="submit"
                                 Icon="@IconType.Outline.Search"
                                 Loading="@Loading">
-                            @SearchText
+                            @GetSearchText()
                         </Button>
                     </SpaceItem>
                     <SpaceItem>
                         <Button OnClick="@HandleReset"
                                 Icon="@IconType.Outline.Reload"
                                 Disabled="@Loading">
-                            @ResetText
+                            @GetResetText()
                         </Button>
                     </SpaceItem>
                     @if (!DisableCollapse && _form?.FieldCount > CollapseCount)
                     {
                         <SpaceItem>
                             <Button OnClick="@ToggleExpand" Class="px-0" Type="@ButtonType.Link">
-                                @(_expanded ? CollapseText : ExpandText)
+                                @(_expanded ? GetCollapseText() : GetExpandText())
                                 <Icon Type="@(_expanded ? IconType.Outline.Up : IconType.Outline.Down)"></Icon>
                             </Button>
                         </SpaceItem>
@@ -103,25 +104,25 @@
     /// 搜索按钮文字
     /// </summary>
     [Parameter]
-    public string SearchText { get; set; } = "查询";
+    public string SearchText { get; set; } = string.Empty;
 
     /// <summary>
     /// 重置按钮文字
     /// </summary>
     [Parameter]
-    public string ResetText { get; set; } = "重置";
+    public string ResetText { get; set; } = string.Empty;
 
     /// <summary>
     /// 展开按钮文字
     /// </summary>
     [Parameter]
-    public string ExpandText { get; set; } = "展开";
+    public string ExpandText { get; set; } = string.Empty;
 
     /// <summary>
     /// 收起按钮文字
     /// </summary>
     [Parameter]
-    public string CollapseText { get; set; } = "收起";
+    public string CollapseText { get; set; } = string.Empty;
 
     /// <summary>
     /// 是否禁用折叠功能
@@ -173,6 +174,14 @@
     {
         _expanded = !_expanded;
     }
+
+    private string GetSearchText() => string.IsNullOrWhiteSpace(SearchText) ? $"{L["Search"]}" : SearchText;
+
+    private string GetResetText() => string.IsNullOrWhiteSpace(ResetText) ? $"{L["Reset"]}" : ResetText;
+
+    private string GetExpandText() => string.IsNullOrWhiteSpace(ExpandText) ? $"{L["Expand"]}" : ExpandText;
+
+    private string GetCollapseText() => string.IsNullOrWhiteSpace(CollapseText) ? $"{L["Collapse"]}" : CollapseText;
 
 }
 

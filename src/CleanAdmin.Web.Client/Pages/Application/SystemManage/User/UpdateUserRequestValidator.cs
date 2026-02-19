@@ -1,20 +1,21 @@
 using FluentValidation;
 using CleanAdmin.Web.Client.ApiSdk.Models;
+using Microsoft.Extensions.Localization;
 
 namespace CleanAdmin.Web.Client.Pages.Application.SystemManage.User;
 
 public class UpdateUserRequestValidator : AbstractValidator<CleanAdminApiServiceEndpointsUsersUpdateUserRequest>
 {
-    public UpdateUserRequestValidator()
+    public UpdateUserRequestValidator(IStringLocalizer<UpdateUserRequestValidator> l)
     {
         RuleFor(x => x.Username)
-            .NotEmpty().WithMessage("请输入用户名");
+            .NotEmpty().WithMessage(_ => $"{l["Please enter username"]}");
 
         RuleFor(x => x.RealName)
-            .NotEmpty().WithMessage("请输入真实姓名");
+            .NotEmpty().WithMessage(_ => $"{l["Please enter real name"]}");
 
         RuleFor(x => x.Email)
-            .EmailAddress().WithMessage("请输入有效的邮箱地址")
+            .EmailAddress().WithMessage(_ => $"{l["Please enter a valid email address"]}")
             .When(x => !string.IsNullOrWhiteSpace(x.Email));
     }
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Role Management" xml:space="preserve"><value>角色管理</value></data>
+  <data name="Role List" xml:space="preserve"><value>角色列表</value></data>
+  <data name="Role Name" xml:space="preserve"><value>角色名称</value></data>
+  <data name="Please enter role name" xml:space="preserve"><value>请输入角色名称</value></data>
+  <data name="Role Description" xml:space="preserve"><value>角色描述</value></data>
+  <data name="Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Disabled" xml:space="preserve"><value>禁用</value></data>
+  <data name="Enabled" xml:space="preserve"><value>启用</value></data>
+  <data name="Created Time" xml:space="preserve"><value>创建时间</value></data>
+  <data name="Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Are you sure to delete this role?" xml:space="preserve"><value>确定要删除该角色吗？</value></data>
+  <data name="Confirm" xml:space="preserve"><value>确定</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Failed to get role list" xml:space="preserve"><value>获取角色列表失败</value></data>
+  <data name="Role ID cannot be empty" xml:space="preserve"><value>角色ID不能为空</value></data>
+  <data name="Deleted successfully" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Delete failed" xml:space="preserve"><value>删除失败</value></data>
+</root>

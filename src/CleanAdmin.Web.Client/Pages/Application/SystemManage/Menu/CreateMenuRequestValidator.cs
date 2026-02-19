@@ -1,22 +1,23 @@
 using FluentValidation;
 using CleanAdmin.Web.Client.ApiSdk.Models;
+using Microsoft.Extensions.Localization;
 
 namespace CleanAdmin.Web.Client.Pages.Application.SystemManage.Menu;
 
 public class CreateMenuRequestValidator : AbstractValidator<CleanAdminApiServiceEndpointsMenusCreateMenuRequest>
 {
-    public CreateMenuRequestValidator()
+    public CreateMenuRequestValidator(IStringLocalizer<CreateMenuRequestValidator> l)
     {
         RuleFor(x => x.MenuName)
-            .NotEmpty().WithMessage("请输入菜单名称");
+            .NotEmpty().WithMessage(_ => $"{l["Please enter menu name"]}");
 
         RuleFor(x => x.MenuType)
-            .NotNull().WithMessage("请选择菜单类型");
+            .NotNull().WithMessage(_ => $"{l["Please select menu type"]}");
 
         RuleFor(x => x.RoutePath)
-            .NotEmpty().WithMessage("请输入路由路径");
+            .NotEmpty().WithMessage(_ => $"{l["Please enter route path"]}");
 
         RuleFor(x => x.SortOrder)
-            .NotNull().WithMessage("请输入排序号");
+            .NotNull().WithMessage(_ => $"{l["Please enter sort order"]}");
     }
 }

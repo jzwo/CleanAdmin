@@ -3,6 +3,7 @@
 @typeparam TModel where TModel : class, new()
 @implements IPForm
 @inject IServiceProvider ServiceProvider
+@inject IStringLocalizer<SharedResource> L
 
 <CascadingValue Value="(IPForm)this" IsFixed="true">
     <Form @ref="_form"
@@ -48,14 +49,14 @@
                 <Space>
                     <SpaceItem>
                         <Button Type="@ButtonType.Primary" HtmlType="submit" Loading="@Loading">
-                            @SubmitText
+                            @GetSubmitText()
                         </Button>
                     </SpaceItem>
                     @if (ShowResetButton)
                     {
                         <SpaceItem>
                             <Button OnClick="@HandleReset" Disabled="@Loading">
-                                @ResetText
+                                @GetResetText()
                             </Button>
                         </SpaceItem>
                     }
@@ -274,13 +275,13 @@
     /// 提交按钮文字
     /// </summary>
     [Parameter]
-    public string SubmitText { get; set; } = "提交";
+    public string SubmitText { get; set; } = string.Empty;
 
     /// <summary>
     /// 重置按钮文字
     /// </summary>
     [Parameter]
-    public string ResetText { get; set; } = "重置";
+    public string ResetText { get; set; } = string.Empty;
 
     #endregion
 
@@ -371,6 +372,10 @@
 
         return null;
     }
+
+    private string GetSubmitText() => string.IsNullOrWhiteSpace(SubmitText) ? $"{L["Submit"]}" : SubmitText;
+
+    private string GetResetText() => string.IsNullOrWhiteSpace(ResetText) ? $"{L["Reset"]}" : ResetText;
 
     #region Field Registration
 

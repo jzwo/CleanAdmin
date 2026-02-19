@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Edit User" xml:space="preserve"><value>编辑用户</value></data>
+  <data name="Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Username" xml:space="preserve"><value>用户名</value></data>
+  <data name="Please enter username" xml:space="preserve"><value>请输入用户名</value></data>
+  <data name="Real Name" xml:space="preserve"><value>真实姓名</value></data>
+  <data name="Please enter real name" xml:space="preserve"><value>请输入真实姓名</value></data>
+  <data name="Email" xml:space="preserve"><value>邮箱</value></data>
+  <data name="Please enter email" xml:space="preserve"><value>请输入邮箱</value></data>
+  <data name="Phone" xml:space="preserve"><value>手机号</value></data>
+  <data name="Please enter phone" xml:space="preserve"><value>请输入手机号</value></data>
+  <data name="Roles" xml:space="preserve"><value>角色</value></data>
+  <data name="Please select roles" xml:space="preserve"><value>请选择角色</value></data>
+  <data name="User ID cannot be empty" xml:space="preserve"><value>用户ID不能为空</value></data>
+  <data name="Failed to get assignable roles" xml:space="preserve"><value>获取可分配角色失败</value></data>
+  <data name="Failed to get user details" xml:space="preserve"><value>获取用户详情失败</value></data>
+  <data name="Failed to load edit data" xml:space="preserve"><value>加载编辑信息失败</value></data>
+</root>

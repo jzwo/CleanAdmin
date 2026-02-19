@@ -9,31 +9,32 @@
 @using MenuStatus = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminDomainAggregatesModelMenuAggregateMenuStatus
 @inject ApiClient ApiClient
 @inject IMessageService MessageService
+@inject IStringLocalizer<Menu> L
 
-<PageTitle>菜单管理</PageTitle>
+<PageTitle>@L["Menu Management"]</PageTitle>
 
 <PTable @ref="_pTable" TItem="MenuTreeNodeDto"
-        Title="菜单列表"
+        Title='@L["Menu List"]'
         HidePagination="true"
         TreeChildren="@(x => x.Children ?? [])"
         OnLoadData="LoadMenuTreeAsync"
         DefaultExpandAllRows>
     <ToolbarButtons>
         <PDrawerForm TModel="CreateMenuRequest"
-                     Title="新增菜单"
+                     Title='@L["Create Menu"]'
                      Model="_createModel"
                      OnSubmit="@HandleCreateAsync">
             <Activator>
-                <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
+                <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
             </Activator>
             <ChildContent Context="model">
-                <PFormItem Label="菜单名称">
-                    <Input @bind-Value="@model.MenuName" Placeholder="请输入菜单名称"/>
+                <PFormItem Label='@L["Menu Name"]'>
+                    <Input @bind-Value="@model.MenuName" Placeholder='@L["Please enter menu name"]'/>
                 </PFormItem>
-                <PFormItem Label="菜单类型">
-                    <EnumSelect TEnum="MenuType?" @bind-Value="@model.MenuType" Placeholder="请选择菜单类型"/>
+                <PFormItem Label='@L["Menu Type"]'>
+                    <EnumSelect TEnum="MenuType?" @bind-Value="@model.MenuType" Placeholder='@L["Please select menu type"]'/>
                 </PFormItem>
-                <PFormItem Label="父菜单">
+                <PFormItem Label='@L["Parent Menu"]'>
                     <TreeSelect TItem="MenuTreeNodeDto"
                                 TItemValue="string"
                                 DataSource="@_menuTreeData"
@@ -41,33 +42,33 @@
                                 TitleExpression="@(x => x.DataItem.MenuName)"
                                 KeyExpression="@(x => x.DataItem.MenuId)"
                                 ChildrenExpression="@(x => x.DataItem.Children)"
-                                Placeholder="请选择父菜单（留空为顶级菜单）"
+                                Placeholder='@L["Please select parent menu (leave empty for top-level)"]'
                                 AllowClear/>
                 </PFormItem>
-                <PFormItem Label="路由路径">
-                    <Input @bind-Value="@model.RoutePath" Placeholder="请输入路由路径"/>
+                <PFormItem Label='@L["Route Path"]'>
+                    <Input @bind-Value="@model.RoutePath" Placeholder='@L["Please enter route path"]'/>
                 </PFormItem>
-                <PFormItem Label="组件路径">
-                    <Input @bind-Value="@model.ComponentPath" Placeholder="请输入组件路径"/>
+                <PFormItem Label='@L["Component Path"]'>
+                    <Input @bind-Value="@model.ComponentPath" Placeholder='@L["Please enter component path"]'/>
                 </PFormItem>
-                <PFormItem Label="图标">
-                    <AntDesign.Input @bind-Value="@model.Icon" Placeholder="请输入图标">
+                <PFormItem Label='@L["Icon"]'>
+                    <AntDesign.Input @bind-Value="@model.Icon" Placeholder='@L["Please enter icon"]'>
                         <AddOnAfter>
                             <iconify-icon icon="@model.Icon"></iconify-icon>
                         </AddOnAfter>
                     </AntDesign.Input>
                 </PFormItem>
-                <PFormItem Label="排序号">
-                    <AntDesign.InputNumber @bind-Value="@model.SortOrder" Min="0" Placeholder="请输入排序号"/>
+                <PFormItem Label='@L["Sort Order"]'>
+                    <AntDesign.InputNumber @bind-Value="@model.SortOrder" Min="0" Placeholder='@L["Please enter sort order"]'/>
                 </PFormItem>
-                <PFormItem Label="权限码">
-                    <Input @bind-Value="@model.PermissionCode" Placeholder="请输入权限码"/>
+                <PFormItem Label='@L["Permission Code"]'>
+                    <Input @bind-Value="@model.PermissionCode" Placeholder='@L["Please enter permission code"]'/>
                 </PFormItem>
             </ChildContent>
         </PDrawerForm>
     </ToolbarButtons>
     <ColumnDefinitions>
-        <PropertyColumn Property="c => c.MenuName" Title="菜单名称">
+        <PropertyColumn Property="c => c.MenuName" Title='@L["Menu Name"]'>
             <Space Class="flex items-center">
                 <SpaceItem Class="flex items-center">
                     @if (!string.IsNullOrEmpty(context.Icon))
@@ -78,64 +79,64 @@
                 <SpaceItem>@context.MenuName</SpaceItem>
             </Space>
         </PropertyColumn>
-        <PropertyColumn Width="12%" Property="c => c.MenuType" Title="菜单类型">
+        <PropertyColumn Width="12%" Property="c => c.MenuType" Title='@L["Menu Type"]'>
             <Tag Color="@GetMenuTypeColor(context.MenuType)">@GetMenuTypeText(context.MenuType)</Tag>
         </PropertyColumn>
-        <PropertyColumn Width="20%" Property="c => c.RoutePath" Title="路由路径"/>
-        <PropertyColumn Width="8%" Property="c => c.ComponentPath" Title="组件路径"/>
-        <PropertyColumn Width="8%" Property="c => c.SortOrder" Title="排序号"/>
-        <PropertyColumn Width="8%" Property="c => c.IsVisible" Title="可见性">
+        <PropertyColumn Width="20%" Property="c => c.RoutePath" Title='@L["Route Path"]'/>
+        <PropertyColumn Width="8%" Property="c => c.ComponentPath" Title='@L["Component Path"]'/>
+        <PropertyColumn Width="8%" Property="c => c.SortOrder" Title='@L["Sort Order"]'/>
+        <PropertyColumn Width="8%" Property="c => c.IsVisible" Title='@L["Visibility"]'>
             <Tag
-                Color="@(context.IsVisible == true ? "green" : "red")">@(context.IsVisible == true ? "显示" : "隐藏")</Tag>
+                Color="@(context.IsVisible == true ? "green" : "red")">@(context.IsVisible == true ? L["Visible"] : L["Hidden"])</Tag>
         </PropertyColumn>
-        <PropertyColumn Width="8%" Property="c => c.Status" Title="状态">
+        <PropertyColumn Width="8%" Property="c => c.Status" Title='@L["Status"]'>
             <Tag
-                Color="@(context.Status == MenuStatus.Enabled ? "green" : "red")">@(context.Status == MenuStatus.Enabled ? "启用" : "禁用")</Tag>
+                Color="@(context.Status == MenuStatus.Enabled ? "green" : "red")">@(context.Status == MenuStatus.Enabled ? L["Enabled"] : L["Disabled"])</Tag>
         </PropertyColumn>
-        <ActionColumn Title="操作" Width="12%">
+        <ActionColumn Title='@L["Actions"]' Width="12%">
             <Space>
                 <SpaceItem>
                     @* 编辑菜单抽屉表单 *@
                     <PDrawerForm TModel="UpdateMenuRequest"
-                                 Title="编辑菜单"
+                                 Title='@L["Edit Menu"]'
                                  Model="_editModel"
                                  OnSubmit="@HandleEditAsync">
                         <Activator>
                             <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
                                     OnClick="@(() => OnOpenEditDrawer(context))">
-                                编辑
+                                @L["Edit"]
                             </Button>
                         </Activator>
                         <ChildContent Context="model">
-                            <PFormItem Label="菜单名称">
-                                <Input @bind-Value="@model.MenuName" Placeholder="请输入菜单名称"/>
+                            <PFormItem Label='@L["Menu Name"]'>
+                                <Input @bind-Value="@model.MenuName" Placeholder='@L["Please enter menu name"]'/>
                             </PFormItem>
-                            <PFormItem Label="路由路径">
-                                <Input @bind-Value="@model.RoutePath" Placeholder="请输入路由路径"/>
+                            <PFormItem Label='@L["Route Path"]'>
+                                <Input @bind-Value="@model.RoutePath" Placeholder='@L["Please enter route path"]'/>
                             </PFormItem>
-                            <PFormItem Label="组件路径">
-                                <Input @bind-Value="@model.ComponentPath" Placeholder="请输入组件路径"/>
+                            <PFormItem Label='@L["Component Path"]'>
+                                <Input @bind-Value="@model.ComponentPath" Placeholder='@L["Please enter component path"]'/>
                             </PFormItem>
-                            <PFormItem Label="图标">
-                                <AntDesign.Input @bind-Value="@model.Icon" Placeholder="请输入图标">
+                            <PFormItem Label='@L["Icon"]'>
+                                <AntDesign.Input @bind-Value="@model.Icon" Placeholder='@L["Please enter icon"]'>
                                     <AddOnAfter>
                                         <iconify-icon icon="@model.Icon"></iconify-icon>
                                     </AddOnAfter>
                                 </AntDesign.Input>
                             </PFormItem>
-                            <PFormItem Label="权限码">
-                                <Input @bind-Value="@model.PermissionCode" Placeholder="请输入权限码"/>
+                            <PFormItem Label='@L["Permission Code"]'>
+                                <Input @bind-Value="@model.PermissionCode" Placeholder='@L["Please enter permission code"]'/>
                             </PFormItem>
                         </ChildContent>
                     </PDrawerForm>
                 </SpaceItem>
                 <SpaceItem>
-                    <Popconfirm Title="确定要删除该菜单吗？"
+                    <Popconfirm Title='@L["Are you sure to delete this menu?"]'
                                 OnConfirm="() => OnDelete(context)"
-                                OkText="确定"
-                                CancelText="取消">
+                                OkText='@L["Confirm"]'
+                                CancelText='@L["Cancel"]'>
                         <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
-                            删除
+                            @L["Delete"]
                         </Button>
                     </Popconfirm>
                 </SpaceItem>
@@ -168,13 +169,13 @@
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? "获取菜单树失败");
+                await MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to get menu tree"]}");
                 return (0, []);
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"获取菜单树失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Failed to get menu tree"]}: {ex.Message}");
             return (0, []);
         }
     }
@@ -221,7 +222,7 @@
     {
         if (string.IsNullOrEmpty(_currentEditMenuId))
         {
-            return (false, "菜单ID不能为空");
+            return (false, $"{L["Menu ID cannot be empty"]}");
         }
 
         var response = await ApiClient.Api.Menus[_currentEditMenuId].PutAsync(model);
@@ -238,17 +239,17 @@
             var response = await ApiClient.Api.Menus[menu.MenuId].DeleteAsync();
             if (response is { Success: true })
             {
-                await MessageService.SuccessAsync("删除成功");
+                await MessageService.SuccessAsync($"{L["Deleted successfully"]}");
                 _pTable?.ReloadData();
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? "删除失败");
+                await MessageService.ErrorAsync(response?.Message ?? $"{L["Delete failed"]}");
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"删除失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Delete failed"]}: {ex.Message}");
         }
     }
 
@@ -273,10 +274,10 @@
     {
         return menuType switch
         {
-            MenuType.Directory => "目录",
-            MenuType.Menu => "菜单",
-            MenuType.Button => "按钮",
-            _ => "未知"
+            MenuType.Directory => $"{L["Directory"]}",
+            MenuType.Menu => $"{L["Menu"]}",
+            MenuType.Button => $"{L["Button"]}",
+            _ => $"{L["Unknown"]}"
         };
     }
 

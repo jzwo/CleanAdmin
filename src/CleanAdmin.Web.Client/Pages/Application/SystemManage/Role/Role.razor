@@ -5,16 +5,17 @@
 @using SearchQueryParameters = CleanAdmin.Web.Client.ApiSdk.Api.Roles.RolesRequestBuilder.RolesRequestBuilderGetQueryParameters
 @inject ApiClient ApiClient
 @inject IMessageService MessageService
+@inject IStringLocalizer<Role> L
 
-<PageTitle>角色管理</PageTitle>
+<PageTitle>@L["Role Management"]</PageTitle>
 
 <PTable @ref="_pTable" TItem="RoleListItemDto"
-        Title="角色列表"
+        Title='@L["Role List"]'
         OnLoadData="LoadDataAsync">
     <SearchTemplate>
         <PTableSearchForm TModel="SearchQueryParameters" Model="_searchModel">
-            <PFormItem Label="角色名称">
-                <Input @bind-Value="@_searchModel.Name" Placeholder="请输入角色名称" AllowClear/>
+            <PFormItem Label='@L["Role Name"]'>
+                <Input @bind-Value="@_searchModel.Name" Placeholder='@L["Please enter role name"]' AllowClear/>
             </PFormItem>
         </PTableSearchForm>
     </SearchTemplate>
@@ -22,26 +23,26 @@
         <RoleCreateDrawer OnSuccess="OnRoleChangedAsync"/>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
-        <PropertyColumn Property="c => c.Name" Title="角色名称"/>
-        <PropertyColumn Property="c => c.Description" Title="角色描述"/>
-        <PropertyColumn Property="c => c.IsDisabled" Title="状态">
+        <PropertyColumn Property="c => c.Name" Title='@L["Role Name"]'/>
+        <PropertyColumn Property="c => c.Description" Title='@L["Role Description"]'/>
+        <PropertyColumn Property="c => c.IsDisabled" Title='@L["Status"]'>
             <Tag Color="@(item.IsDisabled == true ? "red" : "green")">
-                @(item.IsDisabled == true ? "禁用" : "启用")
+                @(item.IsDisabled == true ? L["Disabled"] : L["Enabled"])
             </Tag>
         </PropertyColumn>
-        <PropertyColumn Property="c => c.CreatedAt" Title="创建时间" Format="yyyy-MM-dd HH:mm:ss"/>
-        <ActionColumn Title="操作" Width="180">
+        <PropertyColumn Property="c => c.CreatedAt" Title='@L["Created Time"]' Format="yyyy-MM-dd HH:mm:ss"/>
+        <ActionColumn Title='@L["Actions"]' Width="180">
             <Space>
                 <SpaceItem>
                     <RoleEditDrawer Role="@item"/>
                 </SpaceItem>
                 <SpaceItem>
-                    <Popconfirm Title="确定要删除该角色吗？"
+                    <Popconfirm Title='@L["Are you sure to delete this role?"]'
                                 OnConfirm="() => OnDelete(item)"
-                                OkText="确定"
-                                CancelText="取消">
+                                OkText='@L["Confirm"]'
+                                CancelText='@L["Cancel"]'>
                         <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
-                            删除
+                            @L["Delete"]
                         </Button>
                     </Popconfirm>
                 </SpaceItem>
@@ -72,12 +73,12 @@
                 return (data.Total ?? 0, data.Items?.ToList() ?? []);
             }
 
-            await MessageService.ErrorAsync(response?.Message ?? "获取角色列表失败");
+            await MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to get role list"]}");
             return (0, []);
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"获取角色列表失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Failed to get role list"]}: {ex.Message}");
             return (0, []);
         }
     }
@@ -93,24 +94,24 @@
         {
             if (string.IsNullOrWhiteSpace(role.RoleId))
             {
-                await MessageService.ErrorAsync("角色ID不能为空");
+                await MessageService.ErrorAsync($"{L["Role ID cannot be empty"]}");
                 return;
             }
 
             var response = await ApiClient.Api.Roles[role.RoleId].DeleteAsync();
             if (response is { Success: true })
             {
-                await MessageService.SuccessAsync("删除成功");
+                await MessageService.SuccessAsync($"{L["Deleted successfully"]}");
                 _pTable?.ReloadData();
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? "删除失败");
+                await MessageService.ErrorAsync(response?.Message ?? $"{L["Delete failed"]}");
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"删除失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Delete failed"]}: {ex.Message}");
         }
     }
 

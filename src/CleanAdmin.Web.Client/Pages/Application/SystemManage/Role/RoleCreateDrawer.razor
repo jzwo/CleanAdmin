@@ -1,29 +1,30 @@
 @using CreateRoleRequest = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceEndpointsRolesCreateRoleRequest
 @using CleanAdmin.Web.Client.ApiSdk
 @inject ApiClient ApiClient
+@inject IStringLocalizer<RoleCreateDrawer> L
 
 <PDrawerForm TModel="CreateRoleRequest"
-             Title="新增角色"
+             Title='@L["Create Role"]'
              Model="_model"
              OnSubmit="@HandleSubmitAsync">
     <Activator>
-        <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
+        <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
     </Activator>
     <ChildContent Context="model">
-        <PFormItem Label="角色名称">
-            <Input @bind-Value="@model.Name" Placeholder="请输入角色名称"/>
+        <PFormItem Label='@L["Role Name"]'>
+            <Input @bind-Value="@model.Name" Placeholder='@L["Please enter role name"]'/>
         </PFormItem>
-        <PFormItem Label="角色描述">
-            <Input @bind-Value="@model.Description" Placeholder="请输入角色描述"/>
+        <PFormItem Label='@L["Role Description"]'>
+            <Input @bind-Value="@model.Description" Placeholder='@L["Please enter role description"]'/>
         </PFormItem>
-        <PFormItem Label="状态">
+        <PFormItem Label='@L["Status"]'>
             <Select @bind-Value="@model.IsDisabled"
-                    Placeholder="请选择状态"
+                    Placeholder='@L["Please select status"]'
                     TItemValue="bool?"
                     TItem="bool?">
                 <SelectOptions>
-                    <SelectOption Value="@((bool?)false)" Label="启用"/>
-                    <SelectOption Value="@((bool?)true)" Label="禁用"/>
+                    <SelectOption Value="@((bool?)false)" Label='@L["Enabled"]'/>
+                    <SelectOption Value="@((bool?)true)" Label='@L["Disabled"]'/>
                 </SelectOptions>
             </Select>
         </PFormItem>

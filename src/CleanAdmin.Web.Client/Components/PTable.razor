@@ -2,6 +2,7 @@
 @attribute [CascadingTypeParameter(nameof(TItem))]
 @typeparam TItem
 @implements IPTable
+@inject IStringLocalizer<SharedResource> L
 
 <div class="h-full flex flex-col">
     <CascadingValue Value="this" IsFixed="true">
@@ -34,9 +35,9 @@
                         <Overlay>
                             <Menu SelectedKeys="@(new[] { _tableSize.ToString() })"
                                   OnMenuItemClicked="@HandleTableSizeChangeAsync">
-                                <MenuItem Key="@nameof(TableSize.Default)">默认</MenuItem>
-                                <MenuItem Key="@nameof(TableSize.Middle)">中等</MenuItem>
-                                <MenuItem Key="@nameof(TableSize.Small)">紧凑</MenuItem>
+                                <MenuItem Key="@nameof(TableSize.Default)">@L["Default"]</MenuItem>
+                                <MenuItem Key="@nameof(TableSize.Middle)">@L["Medium"]</MenuItem>
+                                <MenuItem Key="@nameof(TableSize.Small)">@L["Compact"]</MenuItem>
                             </Menu>
                         </Overlay>
                         <ChildContent>

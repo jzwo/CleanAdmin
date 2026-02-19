@@ -1,29 +1,30 @@
 @using CleanAdmin.Web.Client.ApiSdk
 @using CreateUserRequest = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceEndpointsUsersCreateUserRequest
 @inject ApiClient ApiClient
+@inject IStringLocalizer<UserCreateDrawer> L
 
 <PDrawerForm TModel="CreateUserRequest"
-             Title="新增用户"
+             Title='@L["Create User"]'
              Model="_model"
              OnSubmit="@HandleSubmitAsync">
     <Activator>
-        <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">新增</Button>
+        <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
     </Activator>
     <ChildContent Context="model">
-        <PFormItem Label="用户名">
-            <Input @bind-Value="@model.Username" Placeholder="请输入用户名"/>
+        <PFormItem Label='@L["Username"]'>
+            <Input @bind-Value="@model.Username" Placeholder='@L["Please enter username"]'/>
         </PFormItem>
-        <PFormItem Label="密码">
-            <InputPassword @bind-Value="@model.Password" Placeholder="请输入密码"/>
+        <PFormItem Label='@L["Password"]'>
+            <InputPassword @bind-Value="@model.Password" Placeholder='@L["Please enter password"]'/>
         </PFormItem>
-        <PFormItem Label="真实姓名">
-            <Input @bind-Value="@model.RealName" Placeholder="请输入真实姓名"/>
+        <PFormItem Label='@L["Real Name"]'>
+            <Input @bind-Value="@model.RealName" Placeholder='@L["Please enter real name"]'/>
         </PFormItem>
-        <PFormItem Label="邮箱">
-            <Input @bind-Value="@model.Email" Placeholder="请输入邮箱"/>
+        <PFormItem Label='@L["Email"]'>
+            <Input @bind-Value="@model.Email" Placeholder='@L["Please enter email"]'/>
         </PFormItem>
-        <PFormItem Label="手机号">
-            <Input @bind-Value="@model.Phone" Placeholder="请输入手机号"/>
+        <PFormItem Label='@L["Phone"]'>
+            <Input @bind-Value="@model.Phone" Placeholder='@L["Please enter phone"]'/>
         </PFormItem>
     </ChildContent>
 </PDrawerForm>

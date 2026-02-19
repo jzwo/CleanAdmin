@@ -3,6 +3,7 @@
 @typeparam TModel where TModel : class, new()
 @inject IMessageService MessageService
 @inject ILogger<PDrawerForm<TModel>> Logger
+@inject IStringLocalizer<SharedResource> L
 
 @if (Activator != null)
 {
@@ -51,11 +52,11 @@
         <div class="shrink-0 -mx-[24px] -mb-[24px] px-6 py-2.5 border-t border-border text-right">
             <Space>
                 <SpaceItem>
-                    <Button OnClick="@CloseAsync" Disabled="@_loading">取消</Button>
+                    <Button OnClick="@CloseAsync" Disabled="@_loading">@L["Cancel"]</Button>
                 </SpaceItem>
                 <SpaceItem>
                     <Button Type="@ButtonType.Primary" OnClick="@Submit" Loading="@_loading">
-                        @SubmitText
+                        @GetSubmitText()
                     </Button>
                 </SpaceItem>
             </Space>
@@ -98,7 +99,7 @@
     /// 提交按钮文字
     /// </summary>
     [Parameter]
-    public string SubmitText { get; set; } = "确定";
+    public string SubmitText { get; set; } = string.Empty;
 
     [Parameter] public string? WrapClassName { get; set; }
 
@@ -303,12 +304,12 @@
                 if (!DisableTableReload) Table?.ReloadDataByCurrentQueryModel();
                 await CloseAsync();
                 StateHasChanged();
-                await MessageService.SuccessAsync(message ?? "操作成功");
+                await MessageService.SuccessAsync(message ?? $"{L["Operation succeeded"]}");
                 Reset();
             }
             else
             {
-                await MessageService.ErrorAsync(message ?? "操作失败");
+                await MessageService.ErrorAsync(message ?? $"{L["Operation failed"]}");
             }
         }
         catch (FastEndpointsErrorResponse ex)
@@ -316,12 +317,12 @@
             Logger.LogError(ex, "PDrawerForm submit failed (FastEndpoints). StatusCode={StatusCode}, Message={Message}",
                 ex.StatusCode,
                 ex.Message);
-            await MessageService.ErrorAsync("操作失败");
+            await MessageService.ErrorAsync($"{L["Operation failed"]}");
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "PDrawerForm submit failed.");
-            await MessageService.ErrorAsync("操作失败");
+            await MessageService.ErrorAsync($"{L["Operation failed"]}");
         }
         finally
         {
@@ -339,6 +340,8 @@
     /// 提交表单
     /// </summary>
     private void Submit() => _form?.Submit();
+
+    private string GetSubmitText() => string.IsNullOrWhiteSpace(SubmitText) ? $"{L["Confirm"]}" : SubmitText;
 
 
 }

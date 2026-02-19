@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Menu Management" xml:space="preserve"><value>菜单管理</value></data>
+  <data name="Menu List" xml:space="preserve"><value>菜单列表</value></data>
+  <data name="Create Menu" xml:space="preserve"><value>新增菜单</value></data>
+  <data name="Create" xml:space="preserve"><value>新增</value></data>
+  <data name="Menu Name" xml:space="preserve"><value>菜单名称</value></data>
+  <data name="Please enter menu name" xml:space="preserve"><value>请输入菜单名称</value></data>
+  <data name="Menu Type" xml:space="preserve"><value>菜单类型</value></data>
+  <data name="Please select menu type" xml:space="preserve"><value>请选择菜单类型</value></data>
+  <data name="Parent Menu" xml:space="preserve"><value>父菜单</value></data>
+  <data name="Please select parent menu (leave empty for top-level)" xml:space="preserve"><value>请选择父菜单（留空为顶级菜单）</value></data>
+  <data name="Route Path" xml:space="preserve"><value>路由路径</value></data>
+  <data name="Please enter route path" xml:space="preserve"><value>请输入路由路径</value></data>
+  <data name="Component Path" xml:space="preserve"><value>组件路径</value></data>
+  <data name="Please enter component path" xml:space="preserve"><value>请输入组件路径</value></data>
+  <data name="Icon" xml:space="preserve"><value>图标</value></data>
+  <data name="Please enter icon" xml:space="preserve"><value>请输入图标</value></data>
+  <data name="Sort Order" xml:space="preserve"><value>排序号</value></data>
+  <data name="Please enter sort order" xml:space="preserve"><value>请输入排序号</value></data>
+  <data name="Permission Code" xml:space="preserve"><value>权限码</value></data>
+  <data name="Please enter permission code" xml:space="preserve"><value>请输入权限码</value></data>
+  <data name="Visibility" xml:space="preserve"><value>可见性</value></data>
+  <data name="Visible" xml:space="preserve"><value>显示</value></data>
+  <data name="Hidden" xml:space="preserve"><value>隐藏</value></data>
+  <data name="Status" xml:space="preserve"><value>状态</value></data>
+  <data name="Enabled" xml:space="preserve"><value>启用</value></data>
+  <data name="Disabled" xml:space="preserve"><value>禁用</value></data>
+  <data name="Actions" xml:space="preserve"><value>操作</value></data>
+  <data name="Edit Menu" xml:space="preserve"><value>编辑菜单</value></data>
+  <data name="Edit" xml:space="preserve"><value>编辑</value></data>
+  <data name="Are you sure to delete this menu?" xml:space="preserve"><value>确定要删除该菜单吗？</value></data>
+  <data name="Confirm" xml:space="preserve"><value>确定</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Failed to get menu tree" xml:space="preserve"><value>获取菜单树失败</value></data>
+  <data name="Menu ID cannot be empty" xml:space="preserve"><value>菜单ID不能为空</value></data>
+  <data name="Deleted successfully" xml:space="preserve"><value>删除成功</value></data>
+  <data name="Delete failed" xml:space="preserve"><value>删除失败</value></data>
+  <data name="Directory" xml:space="preserve"><value>目录</value></data>
+  <data name="Menu" xml:space="preserve"><value>菜单</value></data>
+  <data name="Button" xml:space="preserve"><value>按钮</value></data>
+  <data name="Unknown" xml:space="preserve"><value>未知</value></data>
+</root>

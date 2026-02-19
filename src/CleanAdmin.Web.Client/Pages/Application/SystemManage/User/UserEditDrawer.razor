@@ -4,14 +4,15 @@
 @using UserListItemDto = CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceApplicationQueriesUsersUserListItemDto
 @inject ApiClient ApiClient
 @inject IMessageService MessageService
+@inject IStringLocalizer<UserEditDrawer> L
 
 <PDrawerForm TModel="UpdateUserRequest"
-             Title="编辑用户"
+             Title='@L["Edit User"]'
              Model="_model"
              OnSubmit="@HandleSubmitAsync">
     <Activator>
         <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="@OnOpenDrawerAsync">
-            编辑
+            @L["Edit"]
         </Button>
     </Activator>
     <ChildContent Context="model">
@@ -23,21 +24,21 @@
         }
         else
         {
-            <PFormItem Label="用户名">
-                <Input @bind-Value="@model.Username" Placeholder="请输入用户名"/>
+            <PFormItem Label='@L["Username"]'>
+                <Input @bind-Value="@model.Username" Placeholder='@L["Please enter username"]'/>
             </PFormItem>
-            <PFormItem Label="真实姓名">
-                <Input @bind-Value="@model.RealName" Placeholder="请输入真实姓名"/>
+            <PFormItem Label='@L["Real Name"]'>
+                <Input @bind-Value="@model.RealName" Placeholder='@L["Please enter real name"]'/>
             </PFormItem>
-            <PFormItem Label="邮箱">
-                <Input @bind-Value="@model.Email" Placeholder="请输入邮箱"/>
+            <PFormItem Label='@L["Email"]'>
+                <Input @bind-Value="@model.Email" Placeholder='@L["Please enter email"]'/>
             </PFormItem>
-            <PFormItem Label="手机号">
-                <Input @bind-Value="@model.Phone" Placeholder="请输入手机号"/>
+            <PFormItem Label='@L["Phone"]'>
+                <Input @bind-Value="@model.Phone" Placeholder='@L["Please enter phone"]'/>
             </PFormItem>
-            <PFormItem Label="角色">
+            <PFormItem Label='@L["Roles"]'>
                 <Select Mode="SelectMode.Multiple"
-                        Placeholder="请选择角色"
+                        Placeholder='@L["Please select roles"]'
                         @bind-Values="_assignedRoleIds"
                         TItemValue="string"
                         TItem="string"
@@ -84,7 +85,7 @@
             };
             _assignableRoles = [];
             _assignedRoleIds = [];
-            await MessageService.ErrorAsync("用户ID不能为空");
+            await MessageService.ErrorAsync($"{L["User ID cannot be empty"]}");
             return;
         }
 
@@ -102,7 +103,7 @@
             if (assignableRolesResponse is not { Success: true })
             {
                 _assignableRoles = [];
-                await MessageService.ErrorAsync(assignableRolesResponse?.Message ?? "获取可分配角色失败");
+                await MessageService.ErrorAsync(assignableRolesResponse?.Message ?? $"{L["Failed to get assignable roles"]}");
             }
             else
             {
@@ -120,7 +121,7 @@
                     AssignedRoleIds = []
                 };
                 _assignedRoleIds = [];
-                await MessageService.ErrorAsync(userInfoResponse?.Message ?? "获取用户详情失败");
+                await MessageService.ErrorAsync(userInfoResponse?.Message ?? $"{L["Failed to get user details"]}");
                 return;
             }
 
@@ -153,7 +154,7 @@
             };
             _assignableRoles = [];
             _assignedRoleIds = [];
-            await MessageService.ErrorAsync($"加载编辑信息失败: {ex.Message}");
+            await MessageService.ErrorAsync($"{L["Failed to load edit data"]}: {ex.Message}");
         }
         finally
         {
@@ -165,7 +166,7 @@
     {
         if (string.IsNullOrEmpty(_currentEditUserId))
         {
-            return (false, "用户ID不能为空");
+            return (false, $"{L["User ID cannot be empty"]}");
         }
 
         model.AssignedRoleIds = _assignedRoleIds

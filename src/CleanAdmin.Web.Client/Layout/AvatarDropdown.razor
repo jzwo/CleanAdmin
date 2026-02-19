@@ -3,18 +3,19 @@
 @implements IDisposable
 @inject JwtAuthStateProvider JwtAuthStateProvider
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<AvatarDropdown> L
 
 <Dropdown Trigger="@(new[] { Trigger.Click })">
     <Overlay>
         <Menu>
             <MenuItem Key="center">
                 <Icon Type="user" Theme="@IconThemeType.Outline"/>
-                个人中心
+                @L["Profile Center"]
             </MenuItem>
             <MenuDivider/>
             <MenuItem Key="logout" OnClick="@OnLogoutAsync">
                 <Icon Type="logout" Theme="@IconThemeType.Outline"/>
-                退出登录
+                @L["Sign Out"]
             </MenuItem>
         </Menu>
     </Overlay>
