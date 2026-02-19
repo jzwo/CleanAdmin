@@ -1,8 +1,12 @@
 @using AntDesign.TableModels
+@using CleanAdmin.Web.Client.Services.State
 @attribute [CascadingTypeParameter(nameof(TItem))]
 @typeparam TItem
 @implements IPTable
+@implements IDisposable
 @inject IStringLocalizer<SharedResource> L
+@inject IJSRuntime Js
+@inject FullscreenState FullscreenState
 
 <div class="h-full flex flex-col">
     <CascadingValue Value="this" IsFixed="true">
@@ -13,7 +17,7 @@
                 @SearchTemplate
             </div>
         }
-        <div class="px-4 flex-1 overflow-hidden bg-content-bg rounded-borderbase flex flex-col auto-flex-table">
+        <div class="px-4 flex-1 overflow-hidden bg-content-bg rounded-borderbase flex flex-col">
             <div class="flex items-center justify-between pb-2 pt-3 px-1">
                 <div class="text-base font-medium pl-1">
                     @Title
@@ -55,7 +59,8 @@
                    TItem="TItem"
                    Total="_total"
                    DataSource="_dataSource"
-                   ScrollY="100%"
+                   ScrollY=""
+                   AutoHeight
                    Loading="@IsLoading"
                    Size="@_tableSize"
                    @bind-PageSize="@_pageSize"
@@ -79,6 +84,11 @@
     private bool _searchFormVisible = true;
     private int _pageSize;
     private TableSize _tableSize = TableSize.Default;
+
+    protected override void OnInitialized()
+    {
+        FullscreenState.OnChanged += ResetTableHeight;
+    }
 
     protected override void OnParametersSet()
     {
@@ -147,6 +157,22 @@
     {
         if (_tableSize.ToString() == item.Key) return;
         _tableSize = Enum.Parse<TableSize>(item.Key);
+        StateHasChanged();
+        ResetTableHeight();
+    }
+
+    private void ResetTableHeight()
+    {
+        _ = InvokeAsync(async () =>
+        {
+            await Task.Delay(50);
+            await Js.InvokeVoidAsync("eval", "window.dispatchEvent(new Event('resize'))");
+        });
+    }
+
+    public void Dispose()
+    {
+        FullscreenState.OnChanged -= ResetTableHeight;
     }
 
 }
