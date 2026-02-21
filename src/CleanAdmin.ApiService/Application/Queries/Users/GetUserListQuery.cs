@@ -1,4 +1,3 @@
-using CleanAdmin.Domain.AggregatesModel.RoleAggregate;
 using CleanAdmin.Domain.AggregatesModel.UserAggregate;
 
 namespace CleanAdmin.ApiService.Application.Queries.Users;

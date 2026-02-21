@@ -1,7 +1,5 @@
 using CleanAdmin.Domain.DomainEvents;
 using CleanAdmin.ApiService.Application.Commands;
-using MediatR;
-using NetCorePal.Extensions.Domain;
 
 namespace CleanAdmin.ApiService.Application.DomainEventHandlers
 {

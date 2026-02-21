@@ -1,6 +1,5 @@
 using CleanAdmin.Domain.AggregatesModel.OrderAggregate;
 using CleanAdmin.Infrastructure.Repositories;
-using NetCorePal.Extensions.Primitives;
 
 namespace CleanAdmin.ApiService.Application.Commands;
 

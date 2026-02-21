@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Hybrid;
 using CleanAdmin.ApiService.Application.Queries.Users;
 using CleanAdmin.Domain.AggregatesModel.UserAggregate;
-using CleanAdmin.Shared.Security;
 
 namespace CleanAdmin.ApiService.Auth.Permission;
 

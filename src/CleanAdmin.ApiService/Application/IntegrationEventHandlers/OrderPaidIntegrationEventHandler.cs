@@ -1,8 +1,5 @@
 using CleanAdmin.ApiService.Application.Commands;
-using DotNetCore.CAP;
-using MediatR;
 using NetCorePal.Extensions.DistributedTransactions;
-using NetCorePal.Extensions.Primitives;
 
 namespace CleanAdmin.ApiService.Application.IntegrationEventHandlers
 {

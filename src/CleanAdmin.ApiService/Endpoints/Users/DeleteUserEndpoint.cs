@@ -1,7 +1,6 @@
 using FastEndpoints;
 using CleanAdmin.ApiService.Application.Commands.Users;
 using CleanAdmin.Domain.AggregatesModel.UserAggregate;
-using CleanAdmin.Shared.Security;
 
 namespace CleanAdmin.ApiService.Endpoints.Users;
 
