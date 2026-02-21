@@ -1,7 +1,7 @@
 using FastEndpoints;
 using CleanAdmin.ApiService.Application.Commands.Users;
 using CleanAdmin.Domain.AggregatesModel.UserAggregate;
-using CleanAdmin.Shared.Auth;
+using CleanAdmin.Shared.Security;
 
 namespace CleanAdmin.ApiService.Endpoints.Users;
 
@@ -12,7 +12,7 @@ public sealed class DeleteUserEndpoint(IMediator mediator) : Endpoint<DeleteUser
     {
         Delete("/api/user/{userId}/delete");
         Description(x => x.WithTags("User")); // 路由分组
-        Permissions(AppPermissions.Keys.System_Users_Delete); // 需要的权限
+        Permissions(AppPermissions.System_Users_Delete); // 需要的权限
     }
 
     public override async Task HandleAsync(DeleteUserRequest r, CancellationToken ct)

@@ -80,7 +80,7 @@
     <PackageVersion Include="FastEndpoints.Swagger.Swashbuckle" Version="2.3.0" />
     <PackageVersion Include="FastEndpoints.Testing" Version="7.2.0" />
     <!-- FluentValidation / permissions -->
-    <PackageVersion Include="FluentPermissions" Version="1.0.0-preview.1.2509210917" />
+    <PackageVersion Include="FluentPermissions" Version="1.0.0-preview.1.2602211042" />
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.1" />
     <!-- Hangfire -->

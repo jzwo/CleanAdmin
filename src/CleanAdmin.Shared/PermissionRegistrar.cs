@@ -1,10 +1,10 @@
 using FluentPermissions.Core.Abstractions;
 using FluentPermissions.Core.Builder;
-using CleanAdmin.Shared.Auth;
 
 namespace CleanAdmin.Shared;
 
 // ReSharper disable once UnusedType.Global
+[PermissionGenerationOptions(includeGroupAsPermission: false)]
 public class PermissionRegistrar : IPermissionRegistrar
 {
     #region

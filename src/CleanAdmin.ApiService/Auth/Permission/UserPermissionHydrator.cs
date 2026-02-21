@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Hybrid;
 using CleanAdmin.ApiService.Application.Queries.Users;
 using CleanAdmin.Domain.AggregatesModel.UserAggregate;
-using CleanAdmin.Shared.Auth;
+using CleanAdmin.Shared.Security;
 
 namespace CleanAdmin.ApiService.Auth.Permission;
 
@@ -31,7 +31,7 @@ internal sealed class UserPermissionHydrator(UserPermissionService userPermissio
 
         if (username == SystemDefaultSuperAdmin.Username)
         {
-            principal.AddIdentity(new ClaimsIdentity(AppPermissions.GetAllPermissionKeys()
+            principal.AddIdentity(new ClaimsIdentity(AppPermissions.AllCodes
                 .Select(p => new Claim("permissions", p))));
             return principal;
         }

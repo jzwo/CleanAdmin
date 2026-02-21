@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using CleanAdmin.Shared.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using CleanAdmin.Shared.Auth;
 
 namespace CleanAdmin.ApiService.Tests.Fixtures;
 
@@ -23,7 +23,7 @@ public class TestAuthHandler(
             new Claim(ClaimTypes.Name, "Test User"),
             new Claim(ClaimTypes.Role, "Admin"),
         };
-        claims = claims.Concat(AppPermissions.GetAllPermissionKeys()
+        claims = claims.Concat(AppPermissions.AllCodes
                 .Select(p => new Claim("permissions", p)))
             .ToArray();
 
