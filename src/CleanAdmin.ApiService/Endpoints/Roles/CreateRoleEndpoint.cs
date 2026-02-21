@@ -11,6 +11,7 @@ public sealed class CreateRoleEndpoint(IMediator mediator)
     {
         Post("/api/roles");
         Description(d => d.WithTags("Role"));
+        Permissions(AppPermissions.System_Roles_Create);
     }
 
     public override async Task HandleAsync(CreateRoleRequest req, CancellationToken ct)

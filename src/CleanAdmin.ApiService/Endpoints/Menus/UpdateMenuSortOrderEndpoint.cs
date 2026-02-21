@@ -14,6 +14,7 @@ public sealed class UpdateMenuSortOrderEndpoint(IMediator mediator)
     {
         Patch("/api/menus/{MenuId}/sort-order");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Menus_UpdateSortOrder);
         Summary(s =>
         {
             s.Summary = "更新菜单排序号";

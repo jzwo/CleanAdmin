@@ -14,6 +14,7 @@ public sealed class UpdateMenuEndpoint(IMediator mediator)
     {
         Put("/api/menus/{MenuId}");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Menus_Update);
         Summary(s =>
         {
             s.Summary = "更新菜单";

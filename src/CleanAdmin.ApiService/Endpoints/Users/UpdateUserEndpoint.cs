@@ -12,6 +12,7 @@ public sealed class UpdateUserEndpoint(IMediator mediator) : Endpoint<UpdateUser
     {
         Post("/api/user/{userId}/update");
         Description(x => x.WithTags("User"));
+        Permissions(AppPermissions.System_Users_Update);
     }
 
     public override async Task HandleAsync(UpdateUserRequest req, CancellationToken ct)

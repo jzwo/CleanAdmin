@@ -14,6 +14,7 @@ public sealed class DeleteMenuEndpoint(IMediator mediator)
     {
         Delete("/api/menus/{MenuId}");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Menus_Delete);
         Summary(s =>
         {
             s.Summary = "删除菜单";

@@ -11,6 +11,7 @@ public sealed class RolePermissionsEndpoint(IMediator mediator)
     {
         Get("/api/roles/{roleId}/permissions");
         Description(d => d.WithTags("Role"));
+        Permissions(AppPermissions.System_Roles_ManagePermissions);
     }
 
     public override async Task HandleAsync(RolePermissionsRequest req, CancellationToken ct)

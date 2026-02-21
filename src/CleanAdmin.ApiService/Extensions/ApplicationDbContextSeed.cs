@@ -77,7 +77,7 @@ public static class ApplicationDbContextSeed
                     componentPath: null,
                     icon: "lucide:user-cog",
                     sortOrder: 1,
-                    permissionCode: "");
+                    permissionCode: AppPermissions.System_Users_List);
 
                 var roleMenu = new Menu(
                     menuName: "角色管理",
@@ -87,7 +87,7 @@ public static class ApplicationDbContextSeed
                     componentPath: null,
                     icon: "lucide:shield-check",
                     sortOrder: 2,
-                    permissionCode: "");
+                    permissionCode: AppPermissions.System_Roles_List);
 
                 var menuMenu = new Menu(
                     menuName: "菜单管理",
@@ -96,10 +96,147 @@ public static class ApplicationDbContextSeed
                     routePath: "/SystemManage/Menu",
                     componentPath: null,
                     icon: "lucide:layout-list",
-                    sortOrder: 2,
-                    permissionCode: "");
+                    sortOrder: 3,
+                    permissionCode: AppPermissions.System_Menus_List);
 
-                await context.Menus.AddRangeAsync([userMenu, roleMenu, menuMenu], cancellationToken);
+                var userCreateButton = new Menu(
+                    menuName: "新增用户",
+                    menuType: MenuType.Button,
+                    parentId: userMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 1,
+                    permissionCode: AppPermissions.System_Users_Create);
+
+                var userUpdateButton = new Menu(
+                    menuName: "编辑用户",
+                    menuType: MenuType.Button,
+                    parentId: userMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 2,
+                    permissionCode: AppPermissions.System_Users_Update);
+
+                var userDeleteButton = new Menu(
+                    menuName: "删除用户",
+                    menuType: MenuType.Button,
+                    parentId: userMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 3,
+                    permissionCode: AppPermissions.System_Users_Delete);
+
+                var roleCreateButton = new Menu(
+                    menuName: "新增角色",
+                    menuType: MenuType.Button,
+                    parentId: roleMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 1,
+                    permissionCode: AppPermissions.System_Roles_Create);
+
+                var roleUpdateButton = new Menu(
+                    menuName: "编辑角色",
+                    menuType: MenuType.Button,
+                    parentId: roleMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 2,
+                    permissionCode: AppPermissions.System_Roles_Update);
+
+                var roleDeleteButton = new Menu(
+                    menuName: "删除角色",
+                    menuType: MenuType.Button,
+                    parentId: roleMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 3,
+                    permissionCode: AppPermissions.System_Roles_Delete);
+
+                var roleAssignPermissionsButton = new Menu(
+                    menuName: "角色权限管理",
+                    menuType: MenuType.Button,
+                    parentId: roleMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 4,
+                    permissionCode: AppPermissions.System_Roles_ManagePermissions);
+
+                var menuCreateButton = new Menu(
+                    menuName: "新增菜单",
+                    menuType: MenuType.Button,
+                    parentId: menuMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 1,
+                    permissionCode: AppPermissions.System_Menus_Create);
+
+                var menuUpdateButton = new Menu(
+                    menuName: "编辑菜单",
+                    menuType: MenuType.Button,
+                    parentId: menuMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 2,
+                    permissionCode: AppPermissions.System_Menus_Update);
+
+                var menuDeleteButton = new Menu(
+                    menuName: "删除菜单",
+                    menuType: MenuType.Button,
+                    parentId: menuMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 3,
+                    permissionCode: AppPermissions.System_Menus_Delete);
+
+                var menuSetVisibilityButton = new Menu(
+                    menuName: "菜单显隐设置",
+                    menuType: MenuType.Button,
+                    parentId: menuMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 4,
+                    permissionCode: AppPermissions.System_Menus_SetVisibility);
+
+                var menuSortOrderButton = new Menu(
+                    menuName: "调整菜单排序",
+                    menuType: MenuType.Button,
+                    parentId: menuMenu.Id,
+                    routePath: string.Empty,
+                    componentPath: null,
+                    icon: null,
+                    sortOrder: 5,
+                    permissionCode: AppPermissions.System_Menus_UpdateSortOrder);
+
+                await context.Menus.AddRangeAsync(
+                [
+                    userMenu,
+                    roleMenu,
+                    menuMenu,
+                    userCreateButton,
+                    userUpdateButton,
+                    userDeleteButton,
+                    roleCreateButton,
+                    roleUpdateButton,
+                    roleDeleteButton,
+                    roleAssignPermissionsButton,
+                    menuCreateButton,
+                    menuUpdateButton,
+                    menuDeleteButton,
+                    menuSetVisibilityButton,
+                    menuSortOrderButton
+                ], cancellationToken);
                 await context.SaveChangesAsync(cancellationToken);
             }
         }

@@ -11,6 +11,7 @@ public sealed class UserAssignableRolesEndpoint(IMediator mediator)
     {
         Get("/api/user/roles/assignable");
         Description(d => d.WithTags("User"));
+        Permissions(AppPermissions.System_Users_Update);
     }
 
     public override async Task HandleAsync(CancellationToken ct)

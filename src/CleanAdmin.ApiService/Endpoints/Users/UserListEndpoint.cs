@@ -10,6 +10,7 @@ public sealed class UserListEndpoint(IMediator mediator)
     {
         Get("/api/user/list");
         Description(d => d.WithTags("User"));
+        Permissions(AppPermissions.System_Users_List);
     }
 
     public override async Task HandleAsync(GetUserListRequest req, CancellationToken ct)

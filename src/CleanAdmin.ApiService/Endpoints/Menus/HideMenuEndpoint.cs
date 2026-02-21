@@ -14,6 +14,7 @@ public sealed class HideMenuEndpoint(IMediator mediator)
     {
         Patch("/api/menus/{MenuId}/hide");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Menus_SetVisibility);
         Summary(s =>
         {
             s.Summary = "隐藏菜单";

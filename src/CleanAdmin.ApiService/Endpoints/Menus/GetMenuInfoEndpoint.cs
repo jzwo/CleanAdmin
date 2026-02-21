@@ -14,6 +14,7 @@ public sealed class GetMenuInfoEndpoint(IMediator mediator)
     {
         Get("/api/menus/{MenuId}");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Menus_Update);
         Summary(s =>
         {
             s.Summary = "获取菜单信息";

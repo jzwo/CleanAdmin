@@ -14,6 +14,7 @@ public sealed class CreateMenuEndpoint(IMediator mediator)
     {
         Post("/api/menus");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Menus_Create);
         Summary(s =>
         {
             s.Summary = "创建菜单";

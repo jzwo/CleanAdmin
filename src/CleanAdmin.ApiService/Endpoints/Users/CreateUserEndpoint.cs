@@ -13,6 +13,7 @@ public sealed class CreateUserEndpoint(IMediator mediator)
     {
         Post("/api/users");
         Description(x => x.WithTags("User"));
+        Permissions(AppPermissions.System_Users_Create);
     }
 
     public override async Task HandleAsync(CreateUserRequest req, CancellationToken ct)

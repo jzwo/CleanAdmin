@@ -13,6 +13,7 @@ public sealed class GetMenuPermissionTreeEndpoint(IMediator mediator)
     {
         Get("/api/menus/permissions/tree");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Roles_ManagePermissions);
         Summary(s =>
         {
             s.Summary = "获取菜单权限树";

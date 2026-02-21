@@ -14,6 +14,7 @@ public sealed class ShowMenuEndpoint(IMediator mediator)
     {
         Patch("/api/menus/{MenuId}/show");
         Description(d => d.WithTags("Menu"));
+        Permissions(AppPermissions.System_Menus_SetVisibility);
         Summary(s =>
         {
             s.Summary = "显示菜单";

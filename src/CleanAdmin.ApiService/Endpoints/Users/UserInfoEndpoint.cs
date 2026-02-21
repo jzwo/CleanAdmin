@@ -10,6 +10,7 @@ public sealed class UserInfoEndpoint(IMediator mediator) : Endpoint<UserInfoRequ
     {
         Get("/api/user/{userId}/profile");
         Description(x => x.WithTags("User"));
+        Permissions(AppPermissions.System_Users_Update);
     }
 
     public override async Task HandleAsync(UserInfoRequest r, CancellationToken ct)

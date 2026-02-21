@@ -10,6 +10,7 @@ public sealed class RoleListEndpoint(IMediator mediator)
     {
         Get("/api/roles");
         Description(d => d.WithTags("Role"));
+        Permissions(AppPermissions.System_Roles_List);
     }
 
     public override async Task HandleAsync(GetRoleListRequest req, CancellationToken ct)

@@ -7,14 +7,10 @@ namespace CleanAdmin.Shared;
 [PermissionGenerationOptions(includeGroupAsPermission: false)]
 public class PermissionRegistrar : IPermissionRegistrar
 {
-    #region
-
-    private const string View = "View";
+    private const string List = "List";
     private const string Create = "Create";
-    private const string Edit = "Edit";
+    private const string Update = "Update";
     private const string Delete = "Delete";
-
-    #endregion
 
     public void Register(PermissionBuilder builder)
     {
@@ -22,24 +18,27 @@ public class PermissionRegistrar : IPermissionRegistrar
         {
             system.DefineGroup("Users", users =>
             {
-                users.AddPermission(View);
+                users.AddPermission(List);
                 users.AddPermission(Create);
-                users.AddPermission(Edit);
+                users.AddPermission(Update);
                 users.AddPermission(Delete);
             });
             system.DefineGroup("Roles", roles =>
             {
-                roles.AddPermission(View);
+                roles.AddPermission(List);
                 roles.AddPermission(Create);
-                roles.AddPermission(Edit);
+                roles.AddPermission(Update);
                 roles.AddPermission(Delete);
+                roles.AddPermission("ManagePermissions");
             });
             system.DefineGroup("Menus", menus =>
             {
-                menus.AddPermission(View);
+                menus.AddPermission(List);
                 menus.AddPermission(Create);
-                menus.AddPermission(Edit);
+                menus.AddPermission(Update);
                 menus.AddPermission(Delete);
+                menus.AddPermission("SetVisibility");
+                menus.AddPermission("UpdateSortOrder");
             });
         });
     }
