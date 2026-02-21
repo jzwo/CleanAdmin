@@ -1,4 +1,5 @@
-﻿using CleanAdmin.Domain.Common;
+using CleanAdmin.Domain.Common;
+using CleanAdmin.Domain.AggregatesModel.RoleAggregate;
 using CleanAdmin.Domain.DomainEvents;
 
 namespace CleanAdmin.Domain.AggregatesModel.UserAggregate;
@@ -63,6 +64,66 @@ public class User : Entity<UserId>, IAggregateRoot, ISoftDeletable
     public void AssignPermissions(ICollection<UserPermission> permissions)
     {
         UserPermissions = permissions;
+    }
+
+    public void UpdateRolePermissions(RoleId roleId, ICollection<string> permissionCodes)
+    {
+        var normalizedPermissionCodes = permissionCodes
+            .Where(code => !string.IsNullOrWhiteSpace(code))
+            .Select(code => code.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .ToHashSet(StringComparer.Ordinal);
+
+        var currentPermissions = UserPermissions.ToList();
+
+        foreach (var userPermission in currentPermissions)
+        {
+            if (!userPermission.SourceRoleIds.Contains(roleId))
+            {
+                continue;
+            }
+
+            if (normalizedPermissionCodes.Contains(userPermission.PermissionCode))
+            {
+                continue;
+            }
+
+            var updatedSourceRoleIds = userPermission.SourceRoleIds
+                .Where(id => id != roleId)
+                .Distinct()
+                .ToList();
+
+            if (updatedSourceRoleIds.Count == 0)
+            {
+                UserPermissions.Remove(userPermission);
+                continue;
+            }
+
+            userPermission.UpdateSourceRoles(updatedSourceRoleIds);
+        }
+
+        foreach (var permissionCode in normalizedPermissionCodes)
+        {
+            var existingUserPermission = UserPermissions
+                .FirstOrDefault(permission => permission.PermissionCode == permissionCode);
+
+            if (existingUserPermission is null)
+            {
+                UserPermissions.Add(new UserPermission(permissionCode, [roleId]));
+                continue;
+            }
+
+            if (existingUserPermission.SourceRoleIds.Contains(roleId))
+            {
+                continue;
+            }
+
+            var updatedSourceRoleIds = existingUserPermission.SourceRoleIds
+                .Append(roleId)
+                .Distinct()
+                .ToList();
+            existingUserPermission.UpdateSourceRoles(updatedSourceRoleIds);
+        }
     }
 
     public void ChangePassword(string newPasswordHash)
