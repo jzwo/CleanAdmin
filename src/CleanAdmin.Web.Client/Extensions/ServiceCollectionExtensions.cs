@@ -26,6 +26,7 @@ public static class ServiceCollectionExtensions
         });
         services.AddScoped<ICultureService, CultureService>();
         services.AddScoped<FullscreenState>();
+        services.AddScoped<IUserPermissionService, UserPermissionService>();
     }
 
     /// <summary>

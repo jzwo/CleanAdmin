@@ -23,4 +23,8 @@
         <PackageReference Include="PodNet.Blazor.TypedRoutes" />
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\CleanAdmin.Shared\CleanAdmin.Shared.csproj"/>
+    </ItemGroup>
+
 </Project>

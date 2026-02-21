@@ -20,7 +20,9 @@
         </PTableSearchForm>
     </SearchTemplate>
     <ToolbarButtons>
-        <RoleCreateDrawer OnSuccess="OnRoleChangedAsync"/>
+        <PermissionView Code="@AppPermissions.System_Roles_Create">
+            <RoleCreateDrawer OnSuccess="OnRoleChangedAsync"/>
+        </PermissionView>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
         <PropertyColumn Property="c => c.Name" Title='@L["Role Name"]'/>
@@ -34,17 +36,21 @@
         <ActionColumn Title='@L["Actions"]' Width="180">
             <Space>
                 <SpaceItem>
-                    <RoleEditDrawer Role="@item"/>
+                    <PermissionView Code="@AppPermissions.System_Roles_Update">
+                        <RoleEditDrawer Role="@item"/>
+                    </PermissionView>
                 </SpaceItem>
                 <SpaceItem>
-                    <Popconfirm Title='@L["Are you sure to delete this role?"]'
-                                OnConfirm="() => OnDelete(item)"
-                                OkText='@L["Confirm"]'
-                                CancelText='@L["Cancel"]'>
-                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
-                            @L["Delete"]
-                        </Button>
-                    </Popconfirm>
+                    <PermissionView Code="@AppPermissions.System_Roles_Delete">
+                        <Popconfirm Title='@L["Are you sure to delete this role?"]'
+                                    OnConfirm="() => OnDelete(item)"
+                                    OkText='@L["Confirm"]'
+                                    CancelText='@L["Cancel"]'>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
+                                @L["Delete"]
+                            </Button>
+                        </Popconfirm>
+                    </PermissionView>
                 </SpaceItem>
             </Space>
         </ActionColumn>

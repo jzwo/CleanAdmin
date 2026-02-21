@@ -35,7 +35,9 @@
                 </SelectOptions>
             </Select>
         </PFormItem>
-        <RolePermissionDrawer Role="@Role" @bind-IsOpen="_permissionDrawerOpen"/>
+        <PermissionView Code="@AppPermissions.System_Roles_ManagePermissions">
+            <RolePermissionDrawer Role="@Role" @bind-IsOpen="_permissionDrawerOpen"/>
+        </PermissionView>
     </ChildContent>
 </PDrawerForm>
 

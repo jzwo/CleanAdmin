@@ -29,7 +29,9 @@
         </PTableSearchForm>
     </SearchTemplate>
     <ToolbarButtons>
-        <UserCreateDrawer/>
+        <PermissionView Code="@AppPermissions.System_Users_Create">
+            <UserCreateDrawer/>
+        </PermissionView>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
         <PropertyColumn Property="c => c.Username" Title='@L["Username"]'/>
@@ -40,17 +42,21 @@
         <ActionColumn Title='@L["Actions"]' Width="180">
             <Space>
                 <SpaceItem>
-                    <UserEditDrawer User="@item"/>
+                    <PermissionView Code="@AppPermissions.System_Users_Update">
+                        <UserEditDrawer User="@item"/>
+                    </PermissionView>
                 </SpaceItem>
                 <SpaceItem>
-                    <Popconfirm Title='@L["Are you sure to delete this user?"]'
-                                OnConfirm="() => OnDelete(item)"
-                                OkText='@L["Confirm"]'
-                                CancelText='@L["Cancel"]'>
-                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
-                            @L["Delete"]
-                        </Button>
-                    </Popconfirm>
+                    <PermissionView Code="@AppPermissions.System_Users_Delete">
+                        <Popconfirm Title='@L["Are you sure to delete this user?"]'
+                                    OnConfirm="() => OnDelete(item)"
+                                    OkText='@L["Confirm"]'
+                                    CancelText='@L["Cancel"]'>
+                            <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" Danger>
+                                @L["Delete"]
+                            </Button>
+                        </Popconfirm>
+                    </PermissionView>
                 </SpaceItem>
             </Space>
         </ActionColumn>

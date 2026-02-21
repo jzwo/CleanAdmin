@@ -1,0 +1,29 @@
+@inject IUserPermissionService UserPermissionService
+
+@if (_isAuthorized)
+{
+    @ChildContent
+}
+else if (Fallback is not null)
+{
+    @Fallback
+}
+
+@code {
+    [Parameter, EditorRequired] public string Code { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Fallback { get; set; }
+
+    private bool _isAuthorized;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Code))
+        {
+            _isAuthorized = false;
+            return;
+        }
+
+        _isAuthorized = await UserPermissionService.HasPermissionAsync(Code);
+    }
+}
