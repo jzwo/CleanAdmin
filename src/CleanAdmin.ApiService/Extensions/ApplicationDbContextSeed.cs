@@ -36,7 +36,7 @@ public static class ApplicationDbContextSeed
             {
                 // 创建主菜单
                 var homeMenu = new Menu(
-                    menuName: "首页",
+                    menuName: "Home",
                     menuType: MenuType.Menu,
                     parentId: null,
                     routePath: "/",
@@ -46,7 +46,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: null);
 
                 var systemMenu = new Menu(
-                    menuName: "系统管理",
+                    menuName: "System Management",
                     menuType: MenuType.Directory,
                     parentId: null,
                     routePath: "/SystemManage",
@@ -70,7 +70,7 @@ public static class ApplicationDbContextSeed
 
                 // 创建系统管理子菜单
                 var userMenu = new Menu(
-                    menuName: "用户管理",
+                    menuName: "User Management",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
                     routePath: "/SystemManage/User",
@@ -80,7 +80,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Users_List);
 
                 var roleMenu = new Menu(
-                    menuName: "角色管理",
+                    menuName: "Role Management",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
                     routePath: "/SystemManage/Role",
@@ -90,7 +90,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Roles_List);
 
                 var menuMenu = new Menu(
-                    menuName: "菜单管理",
+                    menuName: "Menu Management",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
                     routePath: "/SystemManage/Menu",
@@ -100,7 +100,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Menus_List);
 
                 var userCreateButton = new Menu(
-                    menuName: "新增用户",
+                    menuName: "Create User",
                     menuType: MenuType.Button,
                     parentId: userMenu.Id,
                     routePath: string.Empty,
@@ -110,7 +110,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Users_Create);
 
                 var userUpdateButton = new Menu(
-                    menuName: "编辑用户",
+                    menuName: "Edit User",
                     menuType: MenuType.Button,
                     parentId: userMenu.Id,
                     routePath: string.Empty,
@@ -120,7 +120,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Users_Update);
 
                 var userDeleteButton = new Menu(
-                    menuName: "删除用户",
+                    menuName: "Delete User",
                     menuType: MenuType.Button,
                     parentId: userMenu.Id,
                     routePath: string.Empty,
@@ -130,7 +130,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Users_Delete);
 
                 var roleCreateButton = new Menu(
-                    menuName: "新增角色",
+                    menuName: "Create Role",
                     menuType: MenuType.Button,
                     parentId: roleMenu.Id,
                     routePath: string.Empty,
@@ -140,7 +140,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Roles_Create);
 
                 var roleUpdateButton = new Menu(
-                    menuName: "编辑角色",
+                    menuName: "Edit Role",
                     menuType: MenuType.Button,
                     parentId: roleMenu.Id,
                     routePath: string.Empty,
@@ -150,7 +150,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Roles_Update);
 
                 var roleDeleteButton = new Menu(
-                    menuName: "删除角色",
+                    menuName: "Delete Role",
                     menuType: MenuType.Button,
                     parentId: roleMenu.Id,
                     routePath: string.Empty,
@@ -160,7 +160,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Roles_Delete);
 
                 var roleAssignPermissionsButton = new Menu(
-                    menuName: "角色权限管理",
+                    menuName: "Manage Role Permissions",
                     menuType: MenuType.Button,
                     parentId: roleMenu.Id,
                     routePath: string.Empty,
@@ -170,7 +170,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Roles_ManagePermissions);
 
                 var menuCreateButton = new Menu(
-                    menuName: "新增菜单",
+                    menuName: "Create Menu",
                     menuType: MenuType.Button,
                     parentId: menuMenu.Id,
                     routePath: string.Empty,
@@ -180,7 +180,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Menus_Create);
 
                 var menuUpdateButton = new Menu(
-                    menuName: "编辑菜单",
+                    menuName: "Edit Menu",
                     menuType: MenuType.Button,
                     parentId: menuMenu.Id,
                     routePath: string.Empty,
@@ -190,7 +190,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Menus_Update);
 
                 var menuDeleteButton = new Menu(
-                    menuName: "删除菜单",
+                    menuName: "Delete Menu",
                     menuType: MenuType.Button,
                     parentId: menuMenu.Id,
                     routePath: string.Empty,
@@ -200,7 +200,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Menus_Delete);
 
                 var menuSetVisibilityButton = new Menu(
-                    menuName: "菜单显隐设置",
+                    menuName: "Set Menu Visibility",
                     menuType: MenuType.Button,
                     parentId: menuMenu.Id,
                     routePath: string.Empty,
@@ -210,7 +210,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Menus_SetVisibility);
 
                 var menuSortOrderButton = new Menu(
-                    menuName: "调整菜单排序",
+                    menuName: "Adjust Menu Sort Order",
                     menuType: MenuType.Button,
                     parentId: menuMenu.Id,
                     routePath: string.Empty,

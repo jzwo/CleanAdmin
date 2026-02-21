@@ -18,4 +18,22 @@
   <data name="Failed to load menu" xml:space="preserve">
     <value>加载菜单失败</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="System Management" xml:space="preserve">
+    <value>系统管理</value>
+  </data>
+  <data name="AI Chat" xml:space="preserve">
+    <value>AI 对话</value>
+  </data>
+  <data name="User Management" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
+  <data name="Role Management" xml:space="preserve">
+    <value>角色管理</value>
+  </data>
+  <data name="Menu Management" xml:space="preserve">
+    <value>菜单管理</value>
+  </data>
 </root>

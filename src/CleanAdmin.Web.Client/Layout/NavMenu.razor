@@ -7,7 +7,7 @@
 <div>
     @if (_isLoading)
     {
-        <div class="menu-loading" style="padding: 20px; text-align: center;">
+        <div class="p-5 text-center">
             <Spin/>
         </div>
     }
@@ -22,7 +22,7 @@
     }
     else
     {
-        <div class="menu-empty" style="padding: 20px; text-align: center; color: #999;">
+        <div class="p-5 text-center">
             <p>@L["No menu available"]</p>
         </div>
     }
@@ -84,7 +84,7 @@
                                 </Component>
                             </Icon>
                         }
-                        <span>@item.MenuName</span>
+                        <span>@L[item.MenuName ?? string.Empty]</span>
                     </span>
                 </TitleTemplate>
                 <ChildContent>
@@ -108,10 +108,11 @@
             <MenuItem Key="@(item.MenuId ?? Guid.NewGuid().ToString())" RouterLink="@item.RoutePath"
                       IconTemplate="@iconTemplate"
                       RouterMatch="@match">
-                @item.MenuName
+                @L[item.MenuName ?? string.Empty]
             </MenuItem>
         }
     };
+
 
 }
 
