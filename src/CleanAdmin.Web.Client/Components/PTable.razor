@@ -69,6 +69,15 @@
                    OnChange="@HandleTableChangeAsync"
                    TreeChildren="@TreeChildren"
                    DefaultExpandAllRows="@DefaultExpandAllRows">
+                <PaginationTemplate>
+                    <Pagination Class="@(context.PaginationClass + " mb-2")"
+                                Size="@(PaginationSize.Small)"
+                                ShowSizeChanger
+                                Total="context.Total"
+                                PageSize="context.PageSize"
+                                Current="context.PageIndex"
+                                OnChange="@context.HandlePageChange" />
+                </PaginationTemplate>
                 <ChildContent>
                     @ColumnDefinitions(context)
                 </ChildContent>
