@@ -8,7 +8,7 @@
 <Dropdown Trigger="@(new[] { Trigger.Click })">
     <Overlay>
         <Menu>
-            <MenuItem Key="center">
+            <MenuItem Key="center" OnClick="@OnProfileCenterAsync">
                 <Icon Type="user" Theme="@IconThemeType.Outline"/>
                 @L["Profile Center"]
             </MenuItem>
@@ -60,6 +60,12 @@
     {
         await JwtAuthStateProvider.NotifyLogoutAsync();
         NavigationManager.NavigateToLogin();
+    }
+
+    private Task OnProfileCenterAsync()
+    {
+        NavigationManager.NavigateTo("/account/profile");
+        return Task.CompletedTask;
     }
 
     public void Dispose()

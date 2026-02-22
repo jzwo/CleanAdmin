@@ -66,6 +66,14 @@ public class User : Entity<UserId>, IAggregateRoot, ISoftDeletable
         UserPermissions = permissions;
     }
 
+    public void UpdateBasicInfo(string realName, string email, string phone)
+    {
+        RealName = realName;
+        Email = email;
+        Phone = phone;
+        AddDomainEvent(new UserInfoUpdatedDomainEvent(this));
+    }
+
     public void UpdateRolePermissions(RoleId roleId, ICollection<string> permissionCodes)
     {
         var normalizedPermissionCodes = permissionCodes

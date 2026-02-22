@@ -12,7 +12,6 @@ public record UserInfoDto(
     string Email,
     string Phone,
     string RealName,
-    DateTimeOffset CreatedAt,
     List<UserRoleSummaryDto> Roles
 );
 
@@ -53,7 +52,6 @@ public class GetUserInfoQueryHandler(ApplicationDbContext context)
             user.Email,
             user.Phone,
             user.RealName,
-            user.CreatedAt,
             user.Roles);
     }
 }

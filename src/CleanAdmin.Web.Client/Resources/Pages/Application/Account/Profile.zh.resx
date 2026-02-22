@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Profile Center" xml:space="preserve">
+    <value>个人中心</value>
+  </data>
+  <data name="Basic Info" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
+  <data name="Change Password" xml:space="preserve">
+    <value>修改密码</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="Real Name" xml:space="preserve">
+    <value>真实姓名</value>
+  </data>
+  <data name="Please enter real name" xml:space="preserve">
+    <value>请输入真实姓名</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>邮箱</value>
+  </data>
+  <data name="Please enter email" xml:space="preserve">
+    <value>请输入邮箱</value>
+  </data>
+  <data name="Please enter a valid email address" xml:space="preserve">
+    <value>请输入有效的邮箱地址</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>手机号</value>
+  </data>
+  <data name="Please enter phone" xml:space="preserve">
+    <value>请输入手机号</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="Saved successfully" xml:space="preserve">
+    <value>保存成功</value>
+  </data>
+  <data name="Save failed" xml:space="preserve">
+    <value>保存失败</value>
+  </data>
+  <data name="Old Password" xml:space="preserve">
+    <value>旧密码</value>
+  </data>
+  <data name="Please enter old password" xml:space="preserve">
+    <value>请输入旧密码</value>
+  </data>
+  <data name="New Password" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="Please enter new password" xml:space="preserve">
+    <value>请输入新密码</value>
+  </data>
+  <data name="Confirm Password" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="Please confirm new password" xml:space="preserve">
+    <value>请再次输入新密码</value>
+  </data>
+  <data name="Update Password" xml:space="preserve">
+    <value>更新密码</value>
+  </data>
+  <data name="Password updated successfully" xml:space="preserve">
+    <value>密码修改成功</value>
+  </data>
+  <data name="Password update failed" xml:space="preserve">
+    <value>密码修改失败</value>
+  </data>
+  <data name="Passwords do not match" xml:space="preserve">
+    <value>两次输入的新密码不一致</value>
+  </data>
+  <data name="Failed to load profile" xml:space="preserve">
+    <value>加载个人信息失败</value>
+  </data>
+</root>

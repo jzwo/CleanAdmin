@@ -1,0 +1,234 @@
+@page "/account/profile"
+@using CleanAdmin.Web.Client.ApiSdk
+@using CleanAdmin.Web.Client.ApiSdk.Models
+@attribute [ReuseTabsPage]
+@inject ApiClient ApiClient
+@inject IMessageService MessageService
+@inject IStringLocalizer<Profile> L
+@inject ReuseTabsService ReuseTabsService
+
+<PageTitle>@L["Profile Center"]</PageTitle>
+
+<Card Class="h-full">
+    <Tabs StandaloneInCard="true" TabPosition="@TabPosition.Left">
+        <TabPane Key="basic" Tab="@L["Basic Info"]">
+            @if (_loadingProfile)
+            {
+                <div class="py-6 text-center">
+                    <Spin/>
+                </div>
+            }
+            else
+            {
+                <Form Model="_basicModel" Layout="FormLayout.Vertical" OnFinish="OnSubmitBasicInfoAsync">
+                    <FormItem Label="@L["Username"]">
+                        <Input Value="@_basicModel.Username" Disabled/>
+                    </FormItem>
+
+                    <FormItem Label="@L["Roles"]">
+                        <Input Value="@_basicModel.RoleNames" Disabled/>
+                    </FormItem>
+
+                    <FormItem Label="@L["Real Name"]"
+                              Rules="@([new FormValidationRule { Required = true, Message = $"{L["Please enter real name"]}" }])">
+                        <Input @bind-Value="_basicModel.RealName" MaxLength="50"/>
+                    </FormItem>
+
+                    <FormItem Label="@L["Email"]"
+                              Rules="@(new[]
+                                     {
+                                         new FormValidationRule { Required = true, Message = $"{L["Please enter email"]}" },
+                                         new FormValidationRule { Type = FormFieldType.Email, Message = $"{L["Please enter a valid email address"]}" }
+                                     })">
+                        <Input @bind-Value="_basicModel.Email" MaxLength="100"/>
+                    </FormItem>
+
+                    <FormItem Label="@L["Phone"]"
+                              Rules="@([new FormValidationRule { Required = true, Message = $"{L["Please enter phone"]}" }])">
+                        <Input @bind-Value="_basicModel.Phone" MaxLength="20"/>
+                    </FormItem>
+
+                    <FormItem>
+                        <Button Type="@ButtonType.Primary" HtmlType="submit" Loading="@_savingBasicInfo">
+                            @L["Save"]
+                        </Button>
+                    </FormItem>
+                </Form>
+            }
+        </TabPane>
+
+        <TabPane Key="password" Tab="@L["Change Password"]">
+            <Form Model="_passwordModel" Layout="FormLayout.Vertical" OnFinish="OnSubmitPasswordAsync">
+                <FormItem Label="@L["Old Password"]"
+                          Rules="@([new FormValidationRule { Required = true, Message = $"{L["Please enter old password"]}" }])">
+                    <InputPassword @bind-Value="_passwordModel.OldPassword" VisibilityToggle="true"/>
+                </FormItem>
+
+                <FormItem Label="@L["New Password"]"
+                          Rules="@([new FormValidationRule { Required = true, Message = $"{L["Please enter new password"]}" }])">
+                    <InputPassword @bind-Value="_passwordModel.NewPassword" VisibilityToggle="true"/>
+                </FormItem>
+
+                <FormItem Label="@L["Confirm Password"]"
+                          Rules="@([new FormValidationRule { Required = true, Message = $"{L["Please confirm new password"]}" }])">
+                    <InputPassword @bind-Value="_passwordModel.ConfirmPassword" VisibilityToggle="true"/>
+                </FormItem>
+
+                <FormItem>
+                    <Button Type="@ButtonType.Primary" HtmlType="submit" Loading="@_changingPassword">
+                        @L["Update Password"]
+                    </Button>
+                </FormItem>
+            </Form>
+        </TabPane>
+    </Tabs>
+</Card>
+
+@code {
+    private readonly BasicInfoModel _basicModel = new();
+    private readonly PasswordModel _passwordModel = new();
+
+    private bool _loadingProfile = true;
+    private bool _savingBasicInfo;
+    private bool _changingPassword;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadProfileAsync();
+        ReuseTabsService.UpdatePage(x =>
+        {
+            x.Title = @<span>
+                          <Icon Type="@IconType.Outline.User" Theme="@IconThemeType.Outline"/>@L["Profile Center"]
+                      </span>;
+        });
+    }
+
+    private async Task LoadProfileAsync()
+    {
+        _loadingProfile = true;
+
+        try
+        {
+            var response = await ApiClient.Api.User.Profile.GetAsync();
+            if (response is not { Success: true, Data: { } profile })
+            {
+                await MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to load profile"]}");
+                return;
+            }
+
+            _basicModel.Username = profile.Username ?? string.Empty;
+            _basicModel.RealName = profile.RealName ?? string.Empty;
+            _basicModel.Email = profile.Email ?? string.Empty;
+            _basicModel.Phone = profile.Phone ?? string.Empty;
+            _basicModel.RoleNames = string.Join(", ",
+                profile.Roles?
+                    .Select(role => role.RoleName)
+                    .Where(roleName => !string.IsNullOrWhiteSpace(roleName))
+                    .Distinct(StringComparer.Ordinal)
+                ?? []);
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"{L["Failed to load profile"]}: {ex.Message}");
+        }
+        finally
+        {
+            _loadingProfile = false;
+        }
+    }
+
+    private async Task OnSubmitBasicInfoAsync(EditContext _)
+    {
+        _savingBasicInfo = true;
+
+        try
+        {
+            var response = await ApiClient.Api.User.Profile.UpdateBasic.PostAsync(
+                new CleanAdminApiServiceEndpointsUsersUpdateCurrentUserProfileRequest
+                {
+                    RealName = _basicModel.RealName,
+                    Email = _basicModel.Email,
+                    Phone = _basicModel.Phone
+                });
+
+            if (response is { Success: true })
+            {
+                await MessageService.SuccessAsync($"{L["Saved successfully"]}");
+                return;
+            }
+
+            await MessageService.ErrorAsync(response?.Message ?? $"{L["Save failed"]}");
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"{L["Save failed"]}: {ex.Message}");
+        }
+        finally
+        {
+            _savingBasicInfo = false;
+        }
+    }
+
+    private async Task OnSubmitPasswordAsync(EditContext _)
+    {
+        if (!string.Equals(_passwordModel.NewPassword, _passwordModel.ConfirmPassword, StringComparison.Ordinal))
+        {
+            await MessageService.ErrorAsync($"{L["Passwords do not match"]}");
+            return;
+        }
+
+        _changingPassword = true;
+
+        try
+        {
+            var response = await ApiClient.Api.User.Profile.ChangePassword.PostAsync(
+                new CleanAdminApiServiceEndpointsUsersChangeCurrentUserPasswordRequest
+                {
+                    OldPassword = _passwordModel.OldPassword,
+                    NewPassword = _passwordModel.NewPassword,
+                    ConfirmPassword = _passwordModel.ConfirmPassword
+                });
+
+            if (response is { Success: true })
+            {
+                _passwordModel.Clear();
+                await MessageService.SuccessAsync($"{L["Password updated successfully"]}");
+                return;
+            }
+
+            await MessageService.ErrorAsync(response?.Message ?? $"{L["Password update failed"]}");
+        }
+        catch (Exception ex)
+        {
+            await MessageService.ErrorAsync($"{L["Password update failed"]}: {ex.Message}");
+        }
+        finally
+        {
+            _changingPassword = false;
+        }
+    }
+
+    private sealed class BasicInfoModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string RoleNames { get; set; } = string.Empty;
+        public string RealName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+    }
+
+    private sealed class PasswordModel
+    {
+        public string OldPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
+
+        public void Clear()
+        {
+            OldPassword = string.Empty;
+            NewPassword = string.Empty;
+            ConfirmPassword = string.Empty;
+        }
+    }
+
+}
