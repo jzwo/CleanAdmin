@@ -16,13 +16,11 @@
     <link id="@ThemeService.ThemeLinkId" rel="stylesheet" href="@(_themeCssPath)"/>
     <ImportMap/>
     <HeadOutlet @rendermode="PageRenderMode"/>
-    <title></title>
+    <title>CleanAdmin</title>
 </head>
 
 <body>
-    <CascadingValue Name="@(nameof(IsDark))" Value="IsDark" IsFixed>
-        <Routes @rendermode="PageRenderMode"/>
-    </CascadingValue>
+    <Routes @rendermode="PageRenderMode"/>
     <AntContainer @rendermode="PageRenderMode"/>
     <ReconnectModal/>
     <script src="@Assets["_framework/blazor.web.js"]"></script>

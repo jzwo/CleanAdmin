@@ -1,21 +1,19 @@
-@* 
-    This component is used to display a loading indicator while the Blazor WebAssembly app is loading.
-    It checks if the renderer is interactive (i.e., the app has fully loaded) and displays the ChildContent
-    only when it is. Otherwise, it shows a loading indicator.
-    view more：https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/startup?view=aspnetcore-9.0#global-interactive-webassembly-rendering-without-prerendering
- *@
+@inject IStringLocalizer<ContentLoading> L
+
 @if (!RendererInfo.IsInteractive)
 {
-    <!-- OPTIONAL ...
-    <HeadContent>
-        <style>
-            ...
-        </style>
-    </HeadContent>
-    -->
-    <div class="flex justify-center items-center w-full h-full min-h-screen p-4 box-border">
-        <img src="@(IsDark ? "images/loading-dark.svg" : "images/loading-light.svg")" alt="Loading..."
-             class="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[400px] h-auto"/>
+    <div class="relative min-h-screen bg-body-bg">
+        <div class="absolute right-6 top-6 opacity-90">
+            <Spin />
+        </div>
+
+        <div class="flex min-h-screen items-center justify-center px-6">
+            <div class="flex flex-col items-center gap-7">
+                <CleanAdminLogo Class="h-24 w-24" />
+                <Spin Size="SpinSize.Large" Spinning="true" />
+                <Text Class="text-3xl" Type="TextElementType.Secondary">@L["Clean Admin"]</Text>
+            </div>
+        </div>
     </div>
 }
 else
@@ -25,5 +23,4 @@ else
 
 @code {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    [CascadingParameter(Name = "IsDark")] public bool IsDark { get; set; }
 }
