@@ -62,16 +62,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <!-- AI Agent packages -->
-        <PackageReference Include="Microsoft.Agents.AI"/>
-        <PackageReference Include="Microsoft.Agents.AI.DevUI"/>
-        <PackageReference Include="Microsoft.Agents.AI.Hosting"/>
-        <PackageReference Include="Microsoft.Agents.AI.Hosting.OpenAI"/>
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI"/>
-        <PackageReference Include="Microsoft.Agents.AI.Workflows"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\CleanAdmin.Domain\CleanAdmin.Domain.csproj"/>
         <ProjectReference Include="..\CleanAdmin.Infrastructure\CleanAdmin.Infrastructure.csproj"/>
         <ProjectReference Include="..\CleanAdmin.ServiceDefaults\CleanAdmin.ServiceDefaults.csproj"/>

@@ -9,6 +9,12 @@
     <ItemGroup>
 <!--        <PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>-->
         <PackageReference Include="Microsoft.Extensions.Identity.Core" />
+        <PackageReference Include="Microsoft.Agents.AI"/>
+        <PackageReference Include="Microsoft.Agents.AI.DevUI"/>
+        <PackageReference Include="Microsoft.Agents.AI.Hosting"/>
+        <PackageReference Include="Microsoft.Agents.AI.Hosting.OpenAI"/>
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI"/>
+        <PackageReference Include="Microsoft.Agents.AI.Workflows"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
         <PackageReference Include="NetCorePal.Extensions.DistributedTransactions.CAP.PostgreSQL"/>
         <PackageReference Include="NetCorePal.Extensions.Repository.EntityFrameworkCore"/>
