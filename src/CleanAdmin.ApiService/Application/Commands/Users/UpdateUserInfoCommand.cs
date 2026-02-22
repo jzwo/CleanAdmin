@@ -61,21 +61,11 @@ public class UpdateUserInfoCommandHandler(IUserRepository userRepository)
             .Select(r => new UserRole(r.RoleId, r.RoleName))
             .ToList();
 
-        var userPermissions = CalculateUserPermissions(request.RoleDetails);
-        user.UpdateInfo(request.Username, request.RealName, request.Email, request.Phone, userRoles, userPermissions);
-    }
-
-    private static List<UserPermission> CalculateUserPermissions(List<RoleDetailDto> roleDetails)
-    {
-        // 将所有权限按PermissionCode分组，记录每个权限来自哪些角色
-        var permissionGroups = roleDetails
-            .SelectMany(role => role.PermissionCodes.Select(code => new { role.RoleId, PermissionCode = code }))
-            .GroupBy(x => x.PermissionCode)
-            .Select(g => new UserPermission(
-                g.Key,
-                g.Select(x => x.RoleId).Distinct().ToList()))
+        var rolePermissionMappings = request.RoleDetails
+            .Select(r => (r.RoleId, PermissionCodes: r.PermissionCodes.AsEnumerable()))
             .ToList();
 
-        return permissionGroups;
+        user.UpdateInfo(request.Username, request.RealName, request.Email, request.Phone, userRoles,
+            rolePermissionMappings);
     }
 }

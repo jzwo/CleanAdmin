@@ -61,32 +61,6 @@ public class UserTests
     }
 
     [Fact]
-    public void AssignPermissions_ShouldSetUserPermissions()
-    {
-        // Arrange
-        var user = CreateTestUser();
-        var roleId1 = new RoleId(Guid.NewGuid());
-        var roleId2 = new RoleId(Guid.NewGuid());
-        var permissions = new List<UserPermission>
-        {
-            new("users.read", new List<RoleId> { roleId1, roleId2 }),
-            new("users.write", new List<RoleId> { roleId1 })
-        };
-
-        // Act
-        user.AssignPermissions(permissions);
-
-        // Assert
-        Assert.Equal(2, user.UserPermissions.Count);
-
-        var readPermission = user.UserPermissions.First(p => p.PermissionCode == "users.read");
-        Assert.Equal(2, readPermission.SourceRoleIds.Count);
-
-        var writePermission = user.UserPermissions.First(p => p.PermissionCode == "users.write");
-        Assert.Single(writePermission.SourceRoleIds);
-    }
-
-    [Fact]
     public void ChangePassword_ShouldUpdatePasswordHash()
     {
         // Arrange
@@ -201,7 +175,7 @@ public class UserTests
             email: "test@example.com",
             phone: "13800138000",
             userRoles: userRoles,
-            []
+            rolePermissionMappings: []
         );
     }
 }

@@ -25,7 +25,7 @@ public static class ApplicationDbContextSeed
                     email: "superadmin@example.com",
                     phone: "13900000000",
                     userRoles: [],
-                    userPermissions: []);
+                    rolePermissionMappings: []);
 
                 await context.Users.AddAsync(superAdminUser, cancellationToken);
             }

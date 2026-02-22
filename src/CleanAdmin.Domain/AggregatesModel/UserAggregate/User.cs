@@ -35,7 +35,7 @@ public class User : Entity<UserId>, IAggregateRoot, ISoftDeletable
         string email,
         string phone,
         ICollection<UserRole> userRoles,
-        ICollection<UserPermission> userPermissions)
+        IEnumerable<(RoleId RoleId, IEnumerable<string> PermissionCodes)> rolePermissionMappings)
     {
         CreatedAt = DateTimeOffset.UtcNow;
         Username = username;
@@ -44,26 +44,36 @@ public class User : Entity<UserId>, IAggregateRoot, ISoftDeletable
         Phone = phone;
         PasswordHash = passwordHash;
         UserRoles = userRoles;
-        UserPermissions = userPermissions;
+        UserPermissions = BuildPermissions(rolePermissionMappings);
         AddDomainEvent(new UserCreatedDomainEvent(this));
     }
 
     public void UpdateInfo(string username, string realName, string email, string phone,
         ICollection<UserRole> userRoles,
-        ICollection<UserPermission> userPermissions)
+        IEnumerable<(RoleId RoleId, IEnumerable<string> PermissionCodes)> rolePermissionMappings)
     {
         Username = username;
         RealName = realName;
         Email = email;
         Phone = phone;
         UserRoles = userRoles;
-        UserPermissions = userPermissions;
+        UserPermissions = BuildPermissions(rolePermissionMappings);
         AddDomainEvent(new UserInfoUpdatedDomainEvent(this));
     }
 
-    public void AssignPermissions(ICollection<UserPermission> permissions)
+    private static List<UserPermission> BuildPermissions(
+        IEnumerable<(RoleId RoleId, IEnumerable<string> PermissionCodes)> rolePermissionMappings)
     {
-        UserPermissions = permissions;
+        var permissionGroups = rolePermissionMappings
+            .SelectMany(role => role.PermissionCodes.Select(code => new { role.RoleId, PermissionCode = code }))
+            .Where(x => !string.IsNullOrWhiteSpace(x.PermissionCode))
+            .GroupBy(x => x.PermissionCode.Trim(), StringComparer.Ordinal)
+            .Select(g => new UserPermission(
+                g.Key,
+                g.Select(x => x.RoleId).Distinct().ToList()))
+            .ToList();
+
+        return permissionGroups;
     }
 
     public void UpdateBasicInfo(string realName, string email, string phone)

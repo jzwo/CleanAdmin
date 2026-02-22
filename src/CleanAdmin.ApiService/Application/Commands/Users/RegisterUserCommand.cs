@@ -43,7 +43,7 @@ public class RegisterUserCommandHandler(
             email: string.Empty,
             phone: string.Empty,
             userRoles: [],
-            userPermissions: []
+            rolePermissionMappings: []
         );
 
         await userRepository.AddAsync(user, cancellationToken);

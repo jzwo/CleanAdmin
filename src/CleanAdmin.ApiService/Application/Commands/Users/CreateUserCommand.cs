@@ -61,7 +61,9 @@ public class CreateUserCommandHandler(
             .Select(r => new UserRole(r.RoleId, r.RoleName))
             .ToList();
 
-        var userPermissions = CalculateUserPermissions(request.RoleDetails);
+        var rolePermissionMappings = request.RoleDetails
+            .Select(r => (r.RoleId, PermissionCodes: r.PermissionCodes.AsEnumerable()))
+            .ToList();
 
         var user = new User(
             username: request.Username,
@@ -70,24 +72,10 @@ public class CreateUserCommandHandler(
             email: request.Email,
             phone: request.Phone,
             userRoles: userRoles,
-            userPermissions: userPermissions
+            rolePermissionMappings: rolePermissionMappings
         );
 
         await userRepository.AddAsync(user, cancellationToken);
         return user.Id;
-    }
-
-    private static List<UserPermission> CalculateUserPermissions(List<RoleDetailDto> roleDetails)
-    {
-        // 将所有权限按PermissionCode分组，记录每个权限来自哪些角色
-        var permissionGroups = roleDetails
-            .SelectMany(role => role.PermissionCodes.Select(code => new { role.RoleId, PermissionCode = code }))
-            .GroupBy(x => x.PermissionCode)
-            .Select(g => new UserPermission(
-                g.Key,
-                g.Select(x => x.RoleId).Distinct().ToList()))
-            .ToList();
-
-        return permissionGroups;
     }
 }
