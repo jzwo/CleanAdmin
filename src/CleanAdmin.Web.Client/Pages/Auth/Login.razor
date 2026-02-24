@@ -106,7 +106,7 @@
                         data?.RefreshTokenExpiry ?? DateTimeOffset.MinValue
                     ),
                     _model.RememberMe);
-                NavigationManager.NavigateTo(!string.IsNullOrWhiteSpace(ReturnUrl) ? ReturnUrl! : Home.PageUri);
+                NavigationManager.NavigateTo(!string.IsNullOrWhiteSpace(ReturnUrl) ? ReturnUrl! : Home.PageUri, true);
                 _ = NotificationService.Success(new NotificationConfig()
                 {
                     Message = $"{L["Login Successful"]}",
