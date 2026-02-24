@@ -47,6 +47,11 @@ jobs:
       - name: dotnet publish
         run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/CleanAdmin.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
+      - name: Remove extra runtimeconfig files
+        run: |
+          find ${{env.DOTNET_ROOT}}/myapp -maxdepth 1 -name "*.runtimeconfig.json" ! -name "CleanAdmin.Web.runtimeconfig.json" -delete
+          find ${{env.DOTNET_ROOT}}/myapp -maxdepth 1 -name "*.runtimeconfig.dev.json" -delete
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
