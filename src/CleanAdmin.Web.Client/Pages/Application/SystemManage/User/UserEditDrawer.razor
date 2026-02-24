@@ -13,7 +13,7 @@
              OnSubmit="@HandleSubmitAsync">
     @if (_loadingEditContext)
     {
-        <div class="py-4 text-center">
+        <div class="w-full h-full flex justify-center items-center">
             <Spin/>
         </div>
     }
@@ -73,7 +73,7 @@
         _loadingEditContext = true;
         _visible = true;
 
-        await InvokeAsync(StateHasChanged);
+        StateHasChanged();
 
         try
         {
@@ -123,6 +123,7 @@
         finally
         {
             _loadingEditContext = false;
+            StateHasChanged();
         }
     }
 
