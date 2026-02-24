@@ -213,8 +213,8 @@
         _currentEditMenuId = menu.MenuId;
         _editModel = new UpdateMenuRequest
         {
-            MenuName = menu.MenuName,
-            RoutePath = menu.RoutePath,
+            MenuName = menu.MenuName ?? string.Empty,
+            RoutePath = menu.RoutePath ?? string.Empty,
             ComponentPath = menu.ComponentPath,
             Icon = menu.Icon,
             PermissionCode = menu.PermissionCode

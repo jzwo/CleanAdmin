@@ -19,7 +19,8 @@
         MaskClosable="@(!_loading)">
     <div class=@("flex flex-col h-full")>
         <div class=@("flex-1 overflow-y-auto " + ContentClass)>
-            <PForm @ref="_form"
+            <PForm @key="Model"
+                   @ref="_form"
                    TModel="TModel"
                    Model="@Model"
                    Layout="@Layout"
