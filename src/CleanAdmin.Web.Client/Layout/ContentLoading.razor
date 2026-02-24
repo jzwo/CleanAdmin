@@ -4,14 +4,22 @@
 {
     <div class="relative min-h-screen bg-body-bg">
         <div class="absolute right-6 top-6 opacity-90">
-            <Spin />
+            <Spin/>
         </div>
 
         <div class="flex min-h-screen items-center justify-center px-6">
             <div class="flex flex-col items-center gap-7">
-                <CleanAdminLogo Class="h-24 w-24" />
-                <Spin Size="SpinSize.Large" Spinning="true" />
-                <Text Class="text-3xl" Type="TextElementType.Secondary">@L["Clean Admin"]</Text>
+                <CleanAdminLogo Class="h-24 w-24"/>
+                <Spin Size="SpinSize.Large" Spinning="true"/>
+                <svg width="260" height="40" viewBox="0 0 260 40" aria-label='@L["Clean Admin"]' role="img">
+                    <text x="130"
+                          y="29"
+                          text-anchor="middle"
+                          fill="var(--ant-text-color-secondary)"
+                          font-size="30"
+                          font-weight="500"
+                          font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif">@L["Clean Admin"]</text>
+                </svg>
             </div>
         </div>
     </div>

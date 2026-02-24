@@ -6,6 +6,7 @@
         <Nullable>enable</Nullable>
         <IsPublishable>false</IsPublishable>
         <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
+        <PublishTrimmed>true</PublishTrimmed>
         <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
         <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
         <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
