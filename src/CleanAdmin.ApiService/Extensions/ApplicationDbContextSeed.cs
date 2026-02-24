@@ -46,7 +46,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: null);
 
                 var systemMenu = new Menu(
-                    menuName: "System Management",
+                    menuName: "System Manage",
                     menuType: MenuType.Directory,
                     parentId: null,
                     routePath: "/SystemManage",
@@ -70,7 +70,7 @@ public static class ApplicationDbContextSeed
 
                 // 创建系统管理子菜单
                 var userMenu = new Menu(
-                    menuName: "User Management",
+                    menuName: "User Manage",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
                     routePath: "/SystemManage/User",
@@ -80,7 +80,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Users_List);
 
                 var roleMenu = new Menu(
-                    menuName: "Role Management",
+                    menuName: "Role Manage",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
                     routePath: "/SystemManage/Role",
@@ -90,7 +90,7 @@ public static class ApplicationDbContextSeed
                     permissionCode: AppPermissions.System_Roles_List);
 
                 var menuMenu = new Menu(
-                    menuName: "Menu Management",
+                    menuName: "Menu Manage",
                     menuType: MenuType.Menu,
                     parentId: systemMenu.Id,
                     routePath: "/SystemManage/Menu",
@@ -98,6 +98,9 @@ public static class ApplicationDbContextSeed
                     icon: "lucide:layout-list",
                     sortOrder: 3,
                     permissionCode: AppPermissions.System_Menus_List);
+
+                await context.Menus.AddRangeAsync([userMenu, roleMenu, menuMenu], cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
 
                 var userCreateButton = new Menu(
                     menuName: "Create User",
@@ -221,9 +224,6 @@ public static class ApplicationDbContextSeed
 
                 await context.Menus.AddRangeAsync(
                 [
-                    userMenu,
-                    roleMenu,
-                    menuMenu,
                     userCreateButton,
                     userUpdateButton,
                     userDeleteButton,

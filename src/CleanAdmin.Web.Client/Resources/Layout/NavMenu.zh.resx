@@ -21,19 +21,19 @@
   <data name="Home" xml:space="preserve">
     <value>首页</value>
   </data>
-  <data name="System Management" xml:space="preserve">
+  <data name="System Manage" xml:space="preserve">
     <value>系统管理</value>
   </data>
   <data name="AI Chat" xml:space="preserve">
     <value>AI 对话</value>
   </data>
-  <data name="User Management" xml:space="preserve">
+  <data name="User Manage" xml:space="preserve">
     <value>用户管理</value>
   </data>
-  <data name="Role Management" xml:space="preserve">
+  <data name="Role Manage" xml:space="preserve">
     <value>角色管理</value>
   </data>
-  <data name="Menu Management" xml:space="preserve">
+  <data name="Menu Manage" xml:space="preserve">
     <value>菜单管理</value>
   </data>
 </root>

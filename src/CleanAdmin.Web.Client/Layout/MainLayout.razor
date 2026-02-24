@@ -12,13 +12,14 @@
     <Layout Class="h-dvh overflow-hidden">
         <Sider @bind-Collapsed="@_collapsed"
                CollapsedWidth="48"
+               Width="220"
                class="@($"{(FullscreenState.IsFullscreen ? "hidden" : "")} border-r border-border bg-sider")">
             <div class="flex items-center justify-center h-14">
             <div class="flex items-center gap-2">
                     <CleanAdminLogo />
                     @if (!_collapsed)
                     {
-                        <span class="text-xl font-semibold text-text">@L["Clean Admin"]</span>
+                        <span class="text-xl font-medium text-text">@L["Clean Admin"]</span>
                     }
                 </div>
             </div>
