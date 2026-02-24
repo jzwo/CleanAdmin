@@ -1,7 +1,7 @@
 name: Build and deploy ASP.Net Core app to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: CleanAdmin-Demo   # set this to your application's name
+  AZURE_WEBAPP_NAME: CleanAdmin   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: './src/CleanAdmin.Web'      # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '10.0'                 # set this to the .NET Core version to use
 
@@ -9,6 +9,8 @@ on:
   push:
     branches:
       - master
+      - deploy-test
+  workflow_dispatch:
 
 jobs:
   build:
@@ -22,6 +24,15 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: ./src/CleanAdmin.Web
+
       - name: Set up dependency caching for faster builds
         uses: actions/cache@v4
         with:
@@ -29,9 +40,6 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
-      - name: Build ApiService for Kiota code generation
-        run: dotnet build ./src/CleanAdmin.ApiService/CleanAdmin.ApiService.csproj --configuration Release
 
       - name: Build with dotnet
         run: dotnet build --configuration Release
@@ -49,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'demo'
+      name: 'development'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
