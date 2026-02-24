@@ -4,20 +4,18 @@
           Title="@(Node.MenuName ?? string.Empty)"
           Key="@NodeMenuId"
           IconTemplate="@NodeIconTemplate"
-          Disabled="@IsDisabled">
-    <Nodes>
-        @if (Node.Children is { Count: > 0 } children)
+          DisableCheckbox="@IsDisabled">
+    @if (Node.Children is { Count: > 0 } children)
+    {
+        @foreach (var child in children)
         {
-            @foreach (var child in children)
-            {
-                <RolePermissionTreeNode Node="child"/>
-            }
+            <RolePermissionTreeNode Node="child"/>
         }
-    </Nodes>
+    }
 </TreeNode>
 
 @code {
-    [Parameter, EditorRequired] public MenuPermissionTreeNodeDto Node { get; set; } = new();
+    [Parameter, EditorRequired] public MenuPermissionTreeNodeDto Node { get; set; }
 
     private string NodeMenuId => string.IsNullOrWhiteSpace(Node.MenuId) ? string.Empty : Node.MenuId;
     private bool IsDisabled => string.IsNullOrWhiteSpace(Node.PermissionCode);
