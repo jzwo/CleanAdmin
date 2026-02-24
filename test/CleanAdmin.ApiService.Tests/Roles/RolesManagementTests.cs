@@ -45,20 +45,6 @@ public class RolesManagementTests(WebAppFixture app, RolesManagementTests.RoleSt
         res.Data.Items.ShouldContain(r => r.Name == state.RoleName);
     }
 
-    [Fact, Priority(3)]
-    public async Task RoleInfo_ShouldReturnRoleInfo()
-    {
-        var roleId = state.RoleId ?? throw new InvalidOperationException("RoleId not initialized");
-
-        var (rsp, res) = await app.AuthenticatedClient
-            .GETAsync<RoleInfoEndpoint, RoleInfoRequest, ResponseData<RoleInfoResponse>>(
-                new RoleInfoRequest { RoleId = roleId });
-
-        rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
-        res.Success.ShouldBeTrue();
-        res.Data.Name.ShouldBe(state.RoleName);
-    }
-
     [Fact, Priority(4)]
     public async Task UpdateRoleInfo_ShouldModifyRoleDetails()
     {
@@ -77,13 +63,6 @@ public class RolesManagementTests(WebAppFixture app, RolesManagementTests.RoleSt
 
         infoRsp.StatusCode.ShouldBe(HttpStatusCode.OK);
         infoRes.Success.ShouldBeTrue();
-
-        var (_, infoResponse) = await app.AuthenticatedClient
-            .GETAsync<RoleInfoEndpoint, RoleInfoRequest, ResponseData<RoleInfoResponse>>(
-                new RoleInfoRequest { RoleId = roleId });
-
-        infoResponse.Success.ShouldBeTrue();
-        infoResponse.Data.Description.ShouldBe(updatedDescription);
     }
 
     [Fact, Priority(6)]

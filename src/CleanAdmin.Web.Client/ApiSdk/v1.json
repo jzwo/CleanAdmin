@@ -294,7 +294,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "35461e15-9fc0-4da6-a969-67165a77685c"
+            "example": "0fc89061-db1b-4d42-8691-733c4716fd10"
           }
         ],
         "requestBody": {
@@ -673,121 +673,6 @@
         ]
       }
     },
-    "/api/roles/{roleId}/info": {
-      "get": {
-        "tags": [
-          "Role",
-          "Api"
-        ],
-        "operationId": "CleanAdminApiServiceEndpointsRolesRoleInfoEndpoint",
-        "parameters": [
-          {
-            "name": "roleId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NetCorePalExtensionsDtoResponseDataOfRoleInfoResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FastEndpointsErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Role",
-          "Api"
-        ],
-        "operationId": "CleanAdminApiServiceEndpointsRolesUpdateRoleInfoEndpoint",
-        "parameters": [
-          {
-            "name": "roleId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "x-name": "UpdateRoleInfoRequest",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CleanAdminApiServiceEndpointsRolesUpdateRoleInfoRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NetCorePalExtensionsDtoResponseData"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FastEndpointsErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
-      }
-    },
     "/api/roles/{roleId}/permissions": {
       "get": {
         "tags": [
@@ -862,6 +747,71 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CleanAdminApiServiceEndpointsRolesUpdateRolePermissionsRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NetCorePalExtensionsDtoResponseData"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FastEndpointsErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "security": [
+          {
+            "JWTBearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/roles/{roleId}/info": {
+      "post": {
+        "tags": [
+          "Role",
+          "Api"
+        ],
+        "operationId": "CleanAdminApiServiceEndpointsRolesUpdateRoleInfoEndpoint",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "x-name": "UpdateRoleInfoRequest",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CleanAdminApiServiceEndpointsRolesUpdateRoleInfoRequest"
               }
             }
           },
@@ -1506,7 +1456,7 @@
                 },
                 "example": {
                   "data": {
-                    "userId": "d3776240-055a-4ccb-99ca-0af4f72984fd"
+                    "userId": "a6bc8f0e-f886-4ec4-a0ba-1c3e2e21cc11"
                   },
                   "success": true,
                   "message": "",
@@ -2084,49 +2034,6 @@
         }
       },
       "CleanAdminApiServiceEndpointsRolesDeleteRoleRequest": {
-        "type": "object",
-        "additionalProperties": false
-      },
-      "NetCorePalExtensionsDtoResponseDataOfRoleInfoResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/NetCorePalExtensionsDtoResponseData"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "data": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/CleanAdminApiServiceEndpointsRolesRoleInfoResponse"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "CleanAdminApiServiceEndpointsRolesRoleInfoResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "roleId": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "isDisabled": {
-            "type": "boolean"
-          }
-        }
-      },
-      "CleanAdminApiServiceEndpointsRolesRoleInfoRequest": {
         "type": "object",
         "additionalProperties": false
       },
