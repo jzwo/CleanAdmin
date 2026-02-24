@@ -32,7 +32,6 @@
         <PermissionView Code="@AppPermissions.System_Users_Create">
             <UserCreateDrawer/>
         </PermissionView>
-        <UserEditDrawer @ref="_userEditDrawer"/>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
         <PropertyColumn Property="c => c.Username" Title='@L["Username"]'/>
@@ -64,6 +63,9 @@
             </Space>
         </ActionColumn>
     </ColumnDefinitions>
+    <ChildrenContent>
+        <UserEditDrawer @ref="_userEditDrawer"/>
+    </ChildrenContent>
 </PTable>
 
 

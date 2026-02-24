@@ -15,49 +15,47 @@
              OnClosed="@(() => IsOpenChanged.InvokeAsync(false))"
              DisableTableReload
              OnSubmit="@HandleSubmitAsync">
-    <ChildContent>
-        @if (_loadingPermissions)
-        {
-            <div class="py-4 text-center">
-                <Spin/>
+    @if (_loadingPermissions)
+    {
+        <div class="py-4 text-center">
+            <Spin/>
+        </div>
+    }
+    else if (_permissionTree.Count == 0)
+    {
+        <Empty/>
+    }
+    else
+    {
+        <div>
+            <div class="mb-3 flex items-center gap-2">
+                <Search @bind-Value="_searchKey"
+                        Placeholder='@L["Search permission name"]'
+                        BindOnInput
+                        AllowClear/>
+                <Button OnClick="@CheckAllPermissions">@L["Select All"]</Button>
+                <Button OnClick="@ClearAllPermissions">@L["Clear"]</Button>
             </div>
-        }
-        else if (_permissionTree.Count == 0)
-        {
-            <Empty/>
-        }
-        else
-        {
-            <div>
-                <div class="mb-3 flex items-center gap-2">
-                    <Search @bind-Value="_searchKey"
-                            Placeholder='@L["Search permission name"]'
-                            BindOnInput
-                            AllowClear/>
-                    <Button OnClick="@CheckAllPermissions">@L["Select All"]</Button>
-                    <Button OnClick="@ClearAllPermissions">@L["Clear"]</Button>
-                </div>
 
-                <Tree TItem="string"
-                      ShowIcon
-                      Checkable
-                      CheckStrictly
-                      CheckOnClickNode="false"
-                      DefaultExpandAll
-                      SearchValue="@_searchKey"
-                      MatchedClass="text-red-500"
-                      @bind-CheckedKeys="_checkedKeys"
-                      OnCheck="OnTreeCheck">
-                    <Nodes>
-                        @foreach (var node in _permissionTree)
-                        {
-                            <RolePermissionTreeNode Node="node"/>
-                        }
-                    </Nodes>
-                </Tree>
-            </div>
-        }
-    </ChildContent>
+            <Tree TItem="string"
+                  ShowIcon
+                  Checkable
+                  CheckStrictly
+                  CheckOnClickNode="false"
+                  DefaultExpandAll
+                  SearchValue="@_searchKey"
+                  MatchedClass="text-red-500"
+                  @bind-CheckedKeys="_checkedKeys"
+                  OnCheck="OnTreeCheck">
+                <Nodes>
+                    @foreach (var node in _permissionTree)
+                    {
+                        <RolePermissionTreeNode Node="node"/>
+                    }
+                </Nodes>
+            </Tree>
+        </div>
+    }
 </PDrawerForm>
 
 @code {

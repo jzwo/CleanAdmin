@@ -21,9 +21,8 @@
     </SearchTemplate>
     <ToolbarButtons>
         <PermissionView Code="@AppPermissions.System_Roles_Create">
-            <RoleCreateDrawer OnSuccess="OnRoleChangedAsync"/>
+            <RoleCreateDrawer/>
         </PermissionView>
-        <RoleEditDrawer @ref="_roleEditDrawer"/>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
         <PropertyColumn Property="c => c.Name" Title='@L["Role Name"]'/>
@@ -58,6 +57,9 @@
             </Space>
         </ActionColumn>
     </ColumnDefinitions>
+    <ChildrenContent>
+        <RoleEditDrawer @ref="_roleEditDrawer"/>
+    </ChildrenContent>
 
 </PTable>
 
@@ -97,11 +99,6 @@
             _ = MessageService.ErrorAsync($"{L["Failed to get role list"]}: {ex.Message}");
             return (0, []);
         }
-    }
-
-    private void OnRoleChangedAsync()
-    {
-        _pTable?.ReloadData();
     }
 
     private async Task OnDelete(RoleListItemDto role)

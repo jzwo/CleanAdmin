@@ -83,6 +83,10 @@
                 </ChildContent>
             </Table>
         </div>
+        @if (ChildrenContent is not null)
+        {
+            @ChildrenContent
+        }
     </CascadingValue>
 </div>
 
@@ -119,6 +123,8 @@
     [Parameter] public string? Title { get; set; }
 
     [Parameter] public RenderFragment? ToolbarButtons { get; set; }
+
+    [Parameter] public RenderFragment? ChildrenContent { get; set; }
 
     [Parameter] public Func<TItem, IEnumerable<TItem>>? TreeChildren { get; set; }
     [Parameter] public bool DefaultExpandAllRows { get; set; }

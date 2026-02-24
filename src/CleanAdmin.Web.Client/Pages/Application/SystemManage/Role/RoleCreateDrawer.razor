@@ -11,32 +11,28 @@
              LabelColSpan="8"
              @bind-Visible="_visible"
              OnSubmit="@HandleSubmitAsync">
-    <ChildContent Context="model">
-        <PFormItem Label='@L["Role Name"]' Required>
-            <Input @bind-Value="@model.Name" Placeholder='@L["Please enter role name"]'/>
-        </PFormItem>
-        <PFormItem Label='@L["Role Description"]' Required>
-            <Input @bind-Value="@model.Description" Placeholder='@L["Please enter role description"]'/>
-        </PFormItem>
-        <PFormItem Label='@L["Status"]' Required>
-            <Select @bind-Value="@model.IsDisabled"
-                    Placeholder='@L["Please select status"]'
-                    TItemValue="bool?"
-                    TItem="bool?">
-                <SelectOptions>
-                    <SelectOption Value="@((bool?)false)" Label='@L["Enabled"]'/>
-                    <SelectOption Value="@((bool?)true)" Label='@L["Disabled"]'/>
-                </SelectOptions>
-            </Select>
-        </PFormItem>
-    </ChildContent>
+    <PFormItem Label='@L["Role Name"]' Required>
+        <Input @bind-Value="@context.Name" Placeholder='@L["Please enter role name"]'/>
+    </PFormItem>
+    <PFormItem Label='@L["Role Description"]' Required>
+        <Input @bind-Value="@context.Description" Placeholder='@L["Please enter role description"]'/>
+    </PFormItem>
+    <PFormItem Label='@L["Status"]' Required>
+        <Select @bind-Value="@context.IsDisabled"
+                Placeholder='@L["Please select status"]'
+                TItemValue="bool?"
+                TItem="bool?">
+            <SelectOptions>
+                <SelectOption Value="@((bool?)false)" Label='@L["Enabled"]'/>
+                <SelectOption Value="@((bool?)true)" Label='@L["Disabled"]'/>
+            </SelectOptions>
+        </Select>
+    </PFormItem>
 </PDrawerForm>
 
 @code {
-    private readonly CreateRoleRequest _model = new() { IsDisabled = false };
+    private readonly CreateRoleRequest _model = new();
     private bool _visible;
-
-    [Parameter] public EventCallback OnSuccess { get; set; }
 
     private void OpenDrawer()
     {
@@ -46,13 +42,7 @@
     private async Task<(bool, string?)> HandleSubmitAsync(CreateRoleRequest model)
     {
         var response = await ApiClient.Api.Roles.PostAsync(model);
-        if (response is not { Success: true })
-        {
-            return (false, response?.Message);
-        }
-
-        await OnSuccess.InvokeAsync();
-        return (true, null);
+        return response is not { Success: true } ? (false, response?.Message) : (true, null);
     }
 
 }

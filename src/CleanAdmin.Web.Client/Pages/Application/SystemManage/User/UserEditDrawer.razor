@@ -11,54 +11,52 @@
              Model="_model"
              @bind-Visible="_visible"
              OnSubmit="@HandleSubmitAsync">
-    <ChildContent Context="model">
-        @if (_loadingEditContext)
-        {
-            <div class="py-4 text-center">
-                <Spin/>
-            </div>
-        }
-        else
-        {
-            <PFormItem Label='@L["Username"]' Required>
-                <Input @bind-Value="@model.Username" Placeholder='@L["Please enter username"]'/>
-            </PFormItem>
-            <PFormItem Label='@L["Real Name"]' Required>
-                <Input @bind-Value="@model.RealName" Placeholder='@L["Please enter real name"]'/>
-            </PFormItem>
-            <PFormItem Label='@L["Email"]'
-                       Rules="@(new[]
-                              {
-                                  new FormValidationRule { Required = true, Message = $"{L["Please enter email"]}" },
-                                  new FormValidationRule { Type = FormFieldType.Email, Message = $"{L["Please enter a valid email address"]}" }
-                              })">
-                <Input @bind-Value="@model.Email" Placeholder='@L["Please enter email"]'/>
-            </PFormItem>
-            <PFormItem Label='@L["Phone"]'>
-                <Input @bind-Value="@model.Phone" Placeholder='@L["Please enter phone"]'/>
-            </PFormItem>
-            <PFormItem Label='@L["Roles"]'>
-                <Select Mode="SelectMode.Multiple"
-                        Placeholder='@L["Please select roles"]'
-                        @bind-Values="_assignedRoleIds"
-                        TItemValue="string"
-                        TItem="string"
-                        EnableSearch
-                        AllowClear
-                        Style="width: 100%;">
-                    <SelectOptions>
-                        @foreach (var role in _assignableRoles)
-                        {
-                            <SelectOption TItemValue="string"
-                                          TItem="string"
-                                          Value="@(role.RoleId ?? string.Empty)"
-                                          Label="@(role.RoleName ?? string.Empty)"/>
-                        }
-                    </SelectOptions>
-                </Select>
-            </PFormItem>
-        }
-    </ChildContent>
+    @if (_loadingEditContext)
+    {
+        <div class="py-4 text-center">
+            <Spin/>
+        </div>
+    }
+    else
+    {
+        <PFormItem Label='@L["Username"]' Required>
+            <Input @bind-Value="@context.Username" Placeholder='@L["Please enter username"]'/>
+        </PFormItem>
+        <PFormItem Label='@L["Real Name"]' Required>
+            <Input @bind-Value="@context.RealName" Placeholder='@L["Please enter real name"]'/>
+        </PFormItem>
+        <PFormItem Label='@L["Email"]'
+                   Rules="@(new[]
+                          {
+                              new FormValidationRule { Required = true, Message = $"{L["Please enter email"]}" },
+                              new FormValidationRule { Type = FormFieldType.Email, Message = $"{L["Please enter a valid email address"]}" }
+                          })">
+            <Input @bind-Value="@context.Email" Placeholder='@L["Please enter email"]'/>
+        </PFormItem>
+        <PFormItem Label='@L["Phone"]'>
+            <Input @bind-Value="@context.Phone" Placeholder='@L["Please enter phone"]'/>
+        </PFormItem>
+        <PFormItem Label='@L["Roles"]'>
+            <Select Mode="SelectMode.Multiple"
+                    Placeholder='@L["Please select roles"]'
+                    @bind-Values="_assignedRoleIds"
+                    TItemValue="string"
+                    TItem="string"
+                    EnableSearch
+                    AllowClear
+                    Style="width: 100%;">
+                <SelectOptions>
+                    @foreach (var role in _assignableRoles)
+                    {
+                        <SelectOption TItemValue="string"
+                                      TItem="string"
+                                      Value="@(role.RoleId ?? string.Empty)"
+                                      Label="@(role.RoleName ?? string.Empty)"/>
+                    }
+                </SelectOptions>
+            </Select>
+        </PFormItem>
+    }
 </PDrawerForm>
 
 @code {

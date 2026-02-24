@@ -12,31 +12,29 @@
              OnSubmit="@HandleSubmitAsync"
              ContentClass="w-100 mr-auto"
              Width="@DrawerWidth">
-    <ChildContent Context="model">
-        <PFormItem Label='@L["Role Name"]' Required>
-            <Input @bind-Value="@model.Name" Placeholder='@L["Please enter role name"]'/>
-        </PFormItem>
-        <PFormItem Label='@L["Role Description"]' Required>
-            <Input @bind-Value="@model.Description" Placeholder='@L["Please enter role description"]'/>
-        </PFormItem>
-        <PFormItem Label='@L["Status"]' Required>
-            <Select @bind-Value="@model.IsDisabled"
-                    Placeholder='@L["Please select status"]'
-                    TItemValue="bool?"
-                    TItem="bool?">
-                <SelectOptions>
-                    <SelectOption Value="@((bool?)false)" Label='@L["Enabled"]'/>
-                    <SelectOption Value="@((bool?)true)" Label='@L["Disabled"]'/>
-                </SelectOptions>
-            </Select>
-        </PFormItem>
-        <PermissionView Code="@AppPermissions.System_Roles_ManagePermissions">
-            <Button OnClick="@OpenPermissionDrawer" Disabled="@string.IsNullOrWhiteSpace(_currentEditRoleId)">
-                @L["Assign Permissions"]
-            </Button>
-            <RolePermissionDrawer Role="@_currentRole" @bind-IsOpen="_permissionDrawerOpen"/>
-        </PermissionView>
-    </ChildContent>
+    <PFormItem Label='@L["Role Name"]' Required>
+        <Input @bind-Value="@context.Name" Placeholder='@L["Please enter role name"]'/>
+    </PFormItem>
+    <PFormItem Label='@L["Role Description"]' Required>
+        <Input @bind-Value="@context.Description" Placeholder='@L["Please enter role description"]'/>
+    </PFormItem>
+    <PFormItem Label='@L["Status"]' Required>
+        <Select @bind-Value="@context.IsDisabled"
+                Placeholder='@L["Please select status"]'
+                TItemValue="bool?"
+                TItem="bool?">
+            <SelectOptions>
+                <SelectOption Value="@((bool?)false)" Label='@L["Enabled"]'/>
+                <SelectOption Value="@((bool?)true)" Label='@L["Disabled"]'/>
+            </SelectOptions>
+        </Select>
+    </PFormItem>
+    <PermissionView Code="@AppPermissions.System_Roles_ManagePermissions">
+        <Button OnClick="@OpenPermissionDrawer" Disabled="@string.IsNullOrWhiteSpace(_currentEditRoleId)">
+            @L["Assign Permissions"]
+        </Button>
+        <RolePermissionDrawer Role="@_currentRole" @bind-IsOpen="_permissionDrawerOpen"/>
+    </PermissionView>
 </PDrawerForm>
 
 @code {
