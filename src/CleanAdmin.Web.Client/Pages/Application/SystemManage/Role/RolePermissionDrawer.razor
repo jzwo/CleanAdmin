@@ -86,7 +86,7 @@
         {
             _permissionTree = [];
             _checkedKeys = [];
-            await MessageService.ErrorAsync($"{L["Role ID cannot be empty"]}");
+            _ = MessageService.ErrorAsync($"{L["Role ID cannot be empty"]}");
             return;
         }
 
@@ -106,7 +106,7 @@
             {
                 _permissionTree = [];
                 _checkedKeys = [];
-                await MessageService.ErrorAsync(permissionTreeResponse?.Message ?? $"{L["Failed to get permission tree"]}");
+                _ = MessageService.ErrorAsync(permissionTreeResponse?.Message ?? $"{L["Failed to get permission tree"]}");
                 return;
             }
 
@@ -130,7 +130,7 @@
         {
             _permissionTree = [];
             _checkedKeys = [];
-            await MessageService.ErrorAsync($"{L["Failed to load permission data"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Failed to load permission data"]}: {ex.Message}");
         }
         finally
         {

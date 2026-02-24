@@ -79,12 +79,12 @@
                 return (data.Total ?? 0, data.Items?.ToList() ?? []);
             }
 
-            await MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to get role list"]}");
+            _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to get role list"]}");
             return (0, []);
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"{L["Failed to get role list"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Failed to get role list"]}: {ex.Message}");
             return (0, []);
         }
     }
@@ -100,24 +100,24 @@
         {
             if (string.IsNullOrWhiteSpace(role.RoleId))
             {
-                await MessageService.ErrorAsync($"{L["Role ID cannot be empty"]}");
+                _ = MessageService.ErrorAsync($"{L["Role ID cannot be empty"]}");
                 return;
             }
 
             var response = await ApiClient.Api.Roles[role.RoleId].DeleteAsync();
             if (response is { Success: true })
             {
-                await MessageService.SuccessAsync($"{L["Deleted successfully"]}");
+                _ = MessageService.SuccessAsync($"{L["Deleted successfully"]}");
                 _pTable?.ReloadData();
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? $"{L["Delete failed"]}");
+                _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Delete failed"]}");
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"{L["Delete failed"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Delete failed"]}: {ex.Message}");
         }
     }
 

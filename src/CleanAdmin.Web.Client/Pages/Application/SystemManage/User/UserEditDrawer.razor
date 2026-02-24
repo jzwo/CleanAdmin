@@ -90,7 +90,7 @@
             };
             _assignableRoles = [];
             _assignedRoleIds = [];
-            await MessageService.ErrorAsync($"{L["User ID cannot be empty"]}");
+            _ = MessageService.ErrorAsync($"{L["User ID cannot be empty"]}");
             return;
         }
 
@@ -108,7 +108,7 @@
             if (assignableRolesResponse is not { Success: true })
             {
                 _assignableRoles = [];
-                await MessageService.ErrorAsync(assignableRolesResponse?.Message ?? $"{L["Failed to get assignable roles"]}");
+                _ = MessageService.ErrorAsync(assignableRolesResponse?.Message ?? $"{L["Failed to get assignable roles"]}");
             }
             else
             {
@@ -126,7 +126,7 @@
                     AssignedRoleIds = []
                 };
                 _assignedRoleIds = [];
-                await MessageService.ErrorAsync(userInfoResponse?.Message ?? $"{L["Failed to get user details"]}");
+                _ = MessageService.ErrorAsync(userInfoResponse?.Message ?? $"{L["Failed to get user details"]}");
                 return;
             }
 
@@ -159,7 +159,7 @@
             };
             _assignableRoles = [];
             _assignedRoleIds = [];
-            await MessageService.ErrorAsync($"{L["Failed to load edit data"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Failed to load edit data"]}: {ex.Message}");
         }
         finally
         {

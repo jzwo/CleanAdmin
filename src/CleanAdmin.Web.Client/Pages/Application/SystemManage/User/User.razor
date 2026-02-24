@@ -93,13 +93,13 @@
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to get user list"]}");
+                _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to get user list"]}");
                 return (0, []);
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"{L["Failed to get user list"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Failed to get user list"]}: {ex.Message}");
             return (0, []);
         }
     }
@@ -111,17 +111,17 @@
             var response = await ApiClient.Api.User[user.Id!].DeletePath.DeleteAsync();
             if (response is { Success: true })
             {
-                await MessageService.SuccessAsync($"{L["Deleted successfully"]}");
+                _ = MessageService.SuccessAsync($"{L["Deleted successfully"]}");
                 _pTable?.ReloadData();
             }
             else
             {
-                await MessageService.ErrorAsync(response?.Message ?? $"{L["Delete failed"]}");
+                _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Delete failed"]}");
             }
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"{L["Delete failed"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Delete failed"]}: {ex.Message}");
         }
     }
 

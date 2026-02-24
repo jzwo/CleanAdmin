@@ -304,12 +304,12 @@
                 if (!DisableTableReload) Table?.ReloadDataByCurrentQueryModel();
                 await CloseAsync();
                 StateHasChanged();
-                await MessageService.SuccessAsync(message ?? $"{L["Operation succeeded"]}");
+                _ = MessageService.SuccessAsync(message ?? $"{L["Operation succeeded"]}");
                 Reset();
             }
             else
             {
-                await MessageService.ErrorAsync(message ?? $"{L["Operation failed"]}");
+                _ = MessageService.ErrorAsync(message ?? $"{L["Operation failed"]}");
             }
         }
         catch (FastEndpointsErrorResponse ex)
@@ -317,12 +317,12 @@
             Logger.LogError(ex, "PDrawerForm submit failed (FastEndpoints). StatusCode={StatusCode}, Message={Message}",
                 ex.StatusCode,
                 ex.Message);
-            await MessageService.ErrorAsync($"{L["Operation failed"]}");
+            _ = MessageService.ErrorAsync($"{L["Operation failed"]}");
         }
         catch (Exception ex)
         {
             Logger.LogError(ex, "PDrawerForm submit failed.");
-            await MessageService.ErrorAsync($"{L["Operation failed"]}");
+            _ = MessageService.ErrorAsync($"{L["Operation failed"]}");
         }
         finally
         {

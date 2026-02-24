@@ -112,7 +112,7 @@
             var response = await ApiClient.Api.User.Profile.GetAsync();
             if (response is not { Success: true, Data: { } profile })
             {
-                await MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to load profile"]}");
+                _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Failed to load profile"]}");
                 return;
             }
 
@@ -129,7 +129,7 @@
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"{L["Failed to load profile"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Failed to load profile"]}: {ex.Message}");
         }
         finally
         {
@@ -137,7 +137,7 @@
         }
     }
 
-    private async Task OnSubmitBasicInfoAsync(EditContext _)
+    private async Task OnSubmitBasicInfoAsync(EditContext editContext)
     {
         _savingBasicInfo = true;
 
@@ -153,15 +153,15 @@
 
             if (response is { Success: true })
             {
-                await MessageService.SuccessAsync($"{L["Saved successfully"]}");
+                _ = MessageService.SuccessAsync($"{L["Saved successfully"]}");
                 return;
             }
 
-            await MessageService.ErrorAsync(response?.Message ?? $"{L["Save failed"]}");
+            _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Save failed"]}");
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"{L["Save failed"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Save failed"]}: {ex.Message}");
         }
         finally
         {
@@ -169,11 +169,11 @@
         }
     }
 
-    private async Task OnSubmitPasswordAsync(EditContext _)
+    private async Task OnSubmitPasswordAsync(EditContext editContext)
     {
         if (!string.Equals(_passwordModel.NewPassword, _passwordModel.ConfirmPassword, StringComparison.Ordinal))
         {
-            await MessageService.ErrorAsync($"{L["Passwords do not match"]}");
+            _ = MessageService.ErrorAsync($"{L["Passwords do not match"]}");
             return;
         }
 
@@ -192,15 +192,15 @@
             if (response is { Success: true })
             {
                 _passwordModel.Clear();
-                await MessageService.SuccessAsync($"{L["Password updated successfully"]}");
+                _ = MessageService.SuccessAsync($"{L["Password updated successfully"]}");
                 return;
             }
 
-            await MessageService.ErrorAsync(response?.Message ?? $"{L["Password update failed"]}");
+            _ = MessageService.ErrorAsync(response?.Message ?? $"{L["Password update failed"]}");
         }
         catch (Exception ex)
         {
-            await MessageService.ErrorAsync($"{L["Password update failed"]}: {ex.Message}");
+            _ = MessageService.ErrorAsync($"{L["Password update failed"]}: {ex.Message}");
         }
         finally
         {
