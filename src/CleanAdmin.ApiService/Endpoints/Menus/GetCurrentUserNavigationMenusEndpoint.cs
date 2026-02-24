@@ -12,7 +12,7 @@ public sealed class GetCurrentUserNavigationMenusEndpoint(IMediator mediator, IC
 {
     public override void Configure()
     {
-        Get("/api/menus/current-user");
+        Get("/api/menu/current-user");
         Description(x => x.WithTags("Menus"));
     }
 

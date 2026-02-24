@@ -294,7 +294,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "6553f482-df19-438b-8bfd-d2360d0caeb0"
+            "example": "35461e15-9fc0-4da6-a969-67165a77685c"
           }
         ],
         "requestBody": {
@@ -1131,7 +1131,7 @@
         ]
       }
     },
-    "/api/menus/current-user": {
+    "/api/menu/current-user": {
       "get": {
         "tags": [
           "Menus",
@@ -1506,7 +1506,7 @@
                 },
                 "example": {
                   "data": {
-                    "userId": "d69bc1b4-92d6-4169-9d60-c8da987a2b70"
+                    "userId": "d3776240-055a-4ccb-99ca-0af4f72984fd"
                   },
                   "success": true,
                   "message": "",

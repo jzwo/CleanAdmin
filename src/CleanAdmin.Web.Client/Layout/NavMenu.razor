@@ -52,7 +52,7 @@
                 return;
             }
 
-            var response = await ApiClient.Api.Menus.CurrentUser.GetAsync();
+            var response = await ApiClient.Api.Menu.CurrentUser.GetAsync();
 
             _menuItems = response?.Data ?? [];
         }

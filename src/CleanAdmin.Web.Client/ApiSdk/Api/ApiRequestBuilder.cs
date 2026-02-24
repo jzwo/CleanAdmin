@@ -2,6 +2,7 @@
 #pragma warning disable CS0618
 using CleanAdmin.Web.Client.ApiSdk.Api.Ai;
 using CleanAdmin.Web.Client.ApiSdk.Api.Auth;
+using CleanAdmin.Web.Client.ApiSdk.Api.Menu;
 using CleanAdmin.Web.Client.ApiSdk.Api.Menus;
 using CleanAdmin.Web.Client.ApiSdk.Api.Roles;
 using CleanAdmin.Web.Client.ApiSdk.Api.User;
@@ -29,6 +30,11 @@ namespace CleanAdmin.Web.Client.ApiSdk.Api
         public global::CleanAdmin.Web.Client.ApiSdk.Api.Auth.AuthRequestBuilder Auth
         {
             get => new global::CleanAdmin.Web.Client.ApiSdk.Api.Auth.AuthRequestBuilder(PathParameters, RequestAdapter);
+        }
+        /// <summary>The menu property</summary>
+        public global::CleanAdmin.Web.Client.ApiSdk.Api.Menu.MenuRequestBuilder Menu
+        {
+            get => new global::CleanAdmin.Web.Client.ApiSdk.Api.Menu.MenuRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The menus property</summary>
         public global::CleanAdmin.Web.Client.ApiSdk.Api.Menus.MenusRequestBuilder Menus
