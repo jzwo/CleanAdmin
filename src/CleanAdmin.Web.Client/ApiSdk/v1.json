@@ -294,7 +294,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "0fc89061-db1b-4d42-8691-733c4716fd10"
+            "example": "881ebb96-f625-4e51-a91a-c69f089656c9"
           }
         ],
         "requestBody": {
@@ -963,58 +963,6 @@
           }
         ]
       },
-      "get": {
-        "tags": [
-          "Menu",
-          "Api"
-        ],
-        "summary": "获取菜单信息",
-        "description": "根据菜单ID获取菜单详细信息",
-        "operationId": "CleanAdminApiServiceEndpointsMenusGetMenuInfoEndpoint",
-        "parameters": [
-          {
-            "name": "menuId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NetCorePalExtensionsDtoResponseDataOfMenuInfoDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FastEndpointsErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          }
-        },
-        "security": [
-          {
-            "JWTBearerAuth": []
-          }
-        ]
-      },
       "put": {
         "tags": [
           "Menu",
@@ -1456,7 +1404,7 @@
                 },
                 "example": {
                   "data": {
-                    "userId": "a6bc8f0e-f886-4ec4-a0ba-1c3e2e21cc11"
+                    "userId": "33fea28e-0775-4236-be64-d9f72422ed4a"
                   },
                   "success": true,
                   "message": "",
@@ -2375,96 +2323,6 @@
           }
         }
       },
-      "NetCorePalExtensionsDtoResponseDataOfMenuInfoDto": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/NetCorePalExtensionsDtoResponseData"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "data": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/CleanAdminApiServiceApplicationQueriesMenusMenuInfoDto"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "CleanAdminApiServiceApplicationQueriesMenusMenuInfoDto": {
-        "type": "object",
-        "description": "菜单信息DTO",
-        "additionalProperties": false,
-        "properties": {
-          "menuId": {
-            "type": "string"
-          },
-          "menuName": {
-            "type": "string"
-          },
-          "menuType": {
-            "$ref": "#/components/schemas/CleanAdminDomainAggregatesModelMenuAggregateMenuType"
-          },
-          "parentId": {
-            "type": "string",
-            "nullable": true
-          },
-          "routePath": {
-            "type": "string"
-          },
-          "componentPath": {
-            "type": "string",
-            "nullable": true
-          },
-          "icon": {
-            "type": "string",
-            "nullable": true
-          },
-          "sortOrder": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "isExternal": {
-            "type": "boolean"
-          },
-          "isVisible": {
-            "type": "boolean"
-          },
-          "permissionCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "$ref": "#/components/schemas/CleanAdminDomainAggregatesModelMenuAggregateMenuStatus"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "CleanAdminDomainAggregatesModelMenuAggregateMenuStatus": {
-        "type": "string",
-        "description": "菜单状态枚举",
-        "x-enumNames": [
-          "Enabled",
-          "Disabled"
-        ],
-        "enum": [
-          "Enabled",
-          "Disabled"
-        ]
-      },
-      "CleanAdminApiServiceEndpointsMenusGetMenuInfoRequest": {
-        "type": "object",
-        "description": "获取菜单信息请求DTO",
-        "additionalProperties": false
-      },
       "NetCorePalExtensionsDtoResponseDataOfListOfMenuPermissionTreeNodeDto": {
         "allOf": [
           {
@@ -2581,6 +2439,18 @@
             }
           }
         }
+      },
+      "CleanAdminDomainAggregatesModelMenuAggregateMenuStatus": {
+        "type": "string",
+        "description": "菜单状态枚举",
+        "x-enumNames": [
+          "Enabled",
+          "Disabled"
+        ],
+        "enum": [
+          "Enabled",
+          "Disabled"
+        ]
       },
       "CleanAdminApiServiceEndpointsMenusHideMenuRequest": {
         "type": "object",

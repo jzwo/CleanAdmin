@@ -35,22 +35,6 @@ public class MenusManagementTests(WebAppFixture app, MenusManagementTests.MenuSt
         state.MenuId = res.Data.MenuId;
     }
 
-    [Fact, Priority(3)]
-    public async Task MenuInfo_ShouldReturnMenuInfo()
-    {
-        var menuId = state.MenuId ?? throw new InvalidOperationException("MenuId not initialized");
-
-        var (rsp, res) = await app.AuthenticatedClient
-            .GETAsync<GetMenuInfoEndpoint, GetMenuInfoRequest, ResponseData<MenuInfoDto>>(
-                new GetMenuInfoRequest { MenuId = menuId });
-
-        rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
-        res.Success.ShouldBeTrue();
-        res.Data.MenuName.ShouldBe(state.MenuName);
-        res.Data.MenuType.ShouldBe(MenuType.Menu);
-        res.Data.RoutePath.ShouldBe("/test");
-    }
-
     [Fact, Priority(4)]
     public async Task UpdateMenu_ShouldModifyMenuDetails()
     {
@@ -72,13 +56,6 @@ public class MenusManagementTests(WebAppFixture app, MenusManagementTests.MenuSt
 
         updateRsp.StatusCode.ShouldBe(HttpStatusCode.OK);
         updateRes.Success.ShouldBeTrue();
-
-        var (_, infoResponse) = await app.AuthenticatedClient
-            .GETAsync<GetMenuInfoEndpoint, GetMenuInfoRequest, ResponseData<MenuInfoDto>>(
-                new GetMenuInfoRequest { MenuId = menuId });
-
-        infoResponse.Success.ShouldBeTrue();
-        infoResponse.Data.RoutePath.ShouldBe(updatedRoutePath);
     }
 
     [Fact, Priority(5)]
@@ -98,13 +75,6 @@ public class MenusManagementTests(WebAppFixture app, MenusManagementTests.MenuSt
 
         rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
         res.Success.ShouldBeTrue();
-
-        var (_, infoResponse) = await app.AuthenticatedClient
-            .GETAsync<GetMenuInfoEndpoint, GetMenuInfoRequest, ResponseData<MenuInfoDto>>(
-                new GetMenuInfoRequest { MenuId = menuId });
-
-        infoResponse.Success.ShouldBeTrue();
-        infoResponse.Data.SortOrder.ShouldBe(newSortOrder);
     }
 
     [Fact, Priority(6)]
@@ -122,13 +92,6 @@ public class MenusManagementTests(WebAppFixture app, MenusManagementTests.MenuSt
 
         rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
         res.Success.ShouldBeTrue();
-
-        var (_, infoResponse) = await app.AuthenticatedClient
-            .GETAsync<GetMenuInfoEndpoint, GetMenuInfoRequest, ResponseData<MenuInfoDto>>(
-                new GetMenuInfoRequest { MenuId = menuId });
-
-        infoResponse.Success.ShouldBeTrue();
-        infoResponse.Data.IsVisible.ShouldBeFalse();
     }
 
     [Fact, Priority(7)]
@@ -146,13 +109,6 @@ public class MenusManagementTests(WebAppFixture app, MenusManagementTests.MenuSt
 
         rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
         res.Success.ShouldBeTrue();
-
-        var (_, infoResponse) = await app.AuthenticatedClient
-            .GETAsync<GetMenuInfoEndpoint, GetMenuInfoRequest, ResponseData<MenuInfoDto>>(
-                new GetMenuInfoRequest { MenuId = menuId });
-
-        infoResponse.Success.ShouldBeTrue();
-        infoResponse.Data.IsVisible.ShouldBeTrue();
     }
 
     [Fact, Priority(8)]
