@@ -22,11 +22,11 @@ public class WebAppFixture : AppFixture<Program>
 
     protected override async ValueTask PreSetupAsync()
     {
-        _redisContainer = new RedisBuilder()
+        _redisContainer = new RedisBuilder("redis:7.2")
             .WithCommand("--databases", "1024").Build();
-        _rabbitMqContainer = new RabbitMqBuilder()
+        _rabbitMqContainer = new RabbitMqBuilder("rabbitmq:3.13")
             .WithUsername("guest").WithPassword("guest").Build();
-        _npgSqlContainer = new PostgreSqlBuilder()
+        _npgSqlContainer = new PostgreSqlBuilder("postgres:16")
             .WithUsername("root").WithPassword("123456")
             .WithEnvironment("TZ", "Asia/Shanghai")
             .WithDatabase("test").Build();

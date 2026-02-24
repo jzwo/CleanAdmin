@@ -259,7 +259,7 @@
             {
                 Id = $"TK-{1000 + i}",
                 Title = string.Format(L["Business task #{0}"], i),
-                Owner = i % 3 == 0 ? $"{L["Wang Nan"]}" : i % 2 == 0 ? $"{L["Chen Tao"]}" : $"{L["Li Xin"]}",
+                Owner = GetOwner(i),
                 CreatedAt = DateTime.Now.AddHours(-i * 3),
                 Priority = GetPriority(i),
                 Status = GetStatus(i)
@@ -390,6 +390,21 @@
         "Pending Assignment" => "orange",
         _ => "green"
     };
+
+    private string GetOwner(int index)
+    {
+        if (index % 3 == 0)
+        {
+            return $"{L["Wang Nan"]}";
+        }
+
+        if (index % 2 == 0)
+        {
+            return $"{L["Chen Tao"]}";
+        }
+
+        return $"{L["Li Xin"]}";
+    }
 
     private sealed class OverviewMetrics
     {

@@ -28,10 +28,8 @@ public class PGenerateColumns<TItem> : ComponentBase
     public IEnumerable<string> HideColumnsByName { get; set; } = new List<string>();
 
     /// <summary>
-    /// An Action to defined each column
+    /// An action used to define each generated column.
     /// </summary>
-    /// <param name="propertyName">The name of the property binding the column. </param>
-    /// <param name="column">The column instance, you need to explicitly cast to a concrete Column type. </param>
     [Parameter]
     public Action<string, IFieldColumn>? Definitions { get; set; }
 
@@ -89,8 +87,9 @@ public class PGenerateColumns<TItem> : ComponentBase
             Definitions?.Invoke(property.Name, instance);
 
             var attributes = typeInfo.Parameters?
-                .ToDictionary(x => x.Name, x => x.GetValue(instance))
-                .Where(x => x.Value != null);
+                .Select(x => new KeyValuePair<string, object?>(x.Name, x.GetValue(instance)))
+                .Where(x => x.Value != null)
+                .Select(x => new KeyValuePair<string, object>(x.Key, x.Value!));
 
             builder.OpenComponent(++i, typeInfo.ColumnType);
             builder.AddAttribute(++i, "DataIndex", property.Name);

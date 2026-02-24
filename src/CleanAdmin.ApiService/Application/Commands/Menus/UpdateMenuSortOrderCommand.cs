@@ -13,12 +13,8 @@ public record UpdateMenuSortOrderCommand(MenuId MenuId, int NewSortOrder) : ICom
 /// </summary>
 public class UpdateMenuSortOrderCommandValidator : AbstractValidator<UpdateMenuSortOrderCommand>
 {
-    private readonly IMediator _mediator;
-
-    public UpdateMenuSortOrderCommandValidator(IMediator mediator)
+    public UpdateMenuSortOrderCommandValidator()
     {
-        _mediator = mediator;
-
         RuleFor(x => x.MenuId)
             .NotEmpty()
             .WithMessage("菜单ID不能为空");
