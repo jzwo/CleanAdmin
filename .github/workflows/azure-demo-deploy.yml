@@ -49,8 +49,11 @@ jobs:
 
       - name: Remove extra runtimeconfig files
         run: |
-          find ${{env.DOTNET_ROOT}}/myapp -maxdepth 1 -name "*.runtimeconfig.json" ! -name "CleanAdmin.Web.runtimeconfig.json" -delete
-          find ${{env.DOTNET_ROOT}}/myapp -maxdepth 1 -name "*.runtimeconfig.dev.json" -delete
+          find ${{env.DOTNET_ROOT}}/myapp -type f -name "*.runtimeconfig.json" ! -name "CleanAdmin.Web.runtimeconfig.json" -delete
+          find ${{env.DOTNET_ROOT}}/myapp -type f -name "*.runtimeconfig.dev.json" -delete
+
+      - name: Verify runtimeconfig files in artifact
+        run: find ${{env.DOTNET_ROOT}}/myapp -type f -name "*.runtimeconfig*.json" -print
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
