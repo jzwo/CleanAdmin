@@ -8,6 +8,7 @@
 <Drawer Title="@Title"
         @bind-Visible="@_visible"
         Width="@Width"
+        OnOpen="@OnOpen"
         OnClose="@CloseAsync"
         WrapClassName="@WrapClassName"
         MaskClosable="@(!_loading)">
@@ -251,6 +252,12 @@
     /// </summary>
     [Parameter]
     public EventCallback OnClosed { get; set; }
+
+    /// <summary>
+    /// 抽屉打开时触发
+    /// </summary>
+    [Parameter]
+    public EventCallback OnOpen { get; set; }
 
     #endregion
 

@@ -12,9 +12,8 @@
              Width="@DrawerWidth"
              Visible="@IsOpen"
              VisibleChanged="@IsOpenChanged"
-             OnClosed="@(() => IsOpenChanged.InvokeAsync(false))"
              DisableTableReload
-             OnSubmit="@HandleSubmitAsync">
+              OnSubmit="@HandleSubmitAsync">
     @if (_loadingPermissions)
     {
         <div class="w-full h-full flex justify-center items-center">
@@ -72,17 +71,11 @@
     private readonly Dictionary<string, string?> _menuIdToPermissionCode = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _permissionCodeToMenuId = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _forcedCheckedMenuIds = new(StringComparer.OrdinalIgnoreCase);
-    private bool _previousIsOpen;
 
-    protected override async Task OnParametersSetAsync()
+    public async Task OpenAsync()
     {
-        var shouldLoad = IsOpen && (!_previousIsOpen || !string.Equals(_currentRoleId, Role.RoleId, StringComparison.OrdinalIgnoreCase));
-        _previousIsOpen = IsOpen;
-
-        if (shouldLoad)
-        {
-            await LoadPermissionDataAsync();
-        }
+        await IsOpenChanged.InvokeAsync(true);
+        await LoadPermissionDataAsync();
     }
 
     private async Task LoadPermissionDataAsync()
@@ -98,6 +91,7 @@
         }
 
         _loadingPermissions = true;
+        StateHasChanged();
 
         try
         {

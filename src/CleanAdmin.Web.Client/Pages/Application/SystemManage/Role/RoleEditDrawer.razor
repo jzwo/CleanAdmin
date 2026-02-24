@@ -30,10 +30,10 @@
         </Select>
     </PFormItem>
     <PermissionView Code="@AppPermissions.System_Roles_ManagePermissions">
-        <Button OnClick="@OpenPermissionDrawer" Disabled="@string.IsNullOrWhiteSpace(_currentEditRoleId)">
+        <Button OnClick="@OpenPermissionDrawerAsync" Disabled="@string.IsNullOrWhiteSpace(_currentEditRoleId)">
             @L["Assign Permissions"]
         </Button>
-        <RolePermissionDrawer Role="@_currentRole" @bind-IsOpen="_permissionDrawerOpen"/>
+        <RolePermissionDrawer @ref="_rolePermissionDrawer" Role="@_currentRole" @bind-IsOpen="_permissionDrawerOpen"/>
     </PermissionView>
 </PDrawerForm>
 
@@ -42,6 +42,7 @@
     private bool _visible;
     private string DrawerWidth => _permissionDrawerOpen ? $"{480 + int.Parse(RolePermissionDrawer.DrawerWidth)}" : "480";
     private bool _permissionDrawerOpen;
+    private RolePermissionDrawer? _rolePermissionDrawer;
     private UpdateRoleRequest _model = new();
     private string? _currentEditRoleId;
 
@@ -61,9 +62,14 @@
         StateHasChanged();
     }
 
-    private void OpenPermissionDrawer()
+    private async Task OpenPermissionDrawerAsync()
     {
-        _permissionDrawerOpen = true;
+        if (_rolePermissionDrawer == null)
+        {
+            return;
+        }
+
+        await _rolePermissionDrawer.OpenAsync();
     }
 
     private async Task<(bool, string?)> HandleSubmitAsync(UpdateRoleRequest model)
