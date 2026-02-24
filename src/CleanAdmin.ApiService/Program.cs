@@ -1,6 +1,13 @@
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CleanAdmin.ApiService.Auth;
+using CleanAdmin.ApiService.Auth.ApiKey;
+using CleanAdmin.ApiService.Auth.Middlewares;
+using CleanAdmin.ApiService.Auth.Permission;
+using CleanAdmin.ApiService.Clients;
+using CleanAdmin.ApiService.Extensions;
+using CleanAdmin.Infrastructure.Ai;
 using FastEndpoints;
 using FastEndpoints.ClientGen.Kiota;
 using FastEndpoints.Security;
@@ -8,26 +15,20 @@ using FastEndpoints.Swagger;
 using FluentValidation.AspNetCore;
 using Hangfire;
 using Hangfire.Redis.StackExchange;
-using Microsoft.Agents.AI.DevUI;
 using Kiota.Builder;
+using Microsoft.Agents.AI.DevUI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
-using CleanAdmin.ApiService.Auth;
-using CleanAdmin.ApiService.Auth.Middlewares;
-using CleanAdmin.ApiService.Auth.Permission;
-using CleanAdmin.ApiService.Auth.ApiKey;
-using CleanAdmin.ApiService.Clients;
-using CleanAdmin.ApiService.Extensions;
-using CleanAdmin.Infrastructure.Ai;
 using NetCorePal.Extensions.CodeAnalysis;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Prometheus;
 using Refit;
+using Scalar.AspNetCore;
 using Serilog;
 
 // using Serilog.Formatting.Json;
@@ -311,9 +312,10 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwaggerGen(); //add this
-        // Map DevUI endpoint to /devui
-        app.MapDevUI();
+        app.UseOpenApi(c =>
+            c.Path = "/openapi/{documentName}.json"); //scalar by default looks for the swagger json file here
+        app.MapScalarApiReference(o => o.AddDocument("v1")); //inform scalar your doc names
+        app.MapDevUI(); // Map DevUI endpoint to /devui
     }
 
     // Map endpoints for OpenAI responses and conversations (also required for DevUI)
