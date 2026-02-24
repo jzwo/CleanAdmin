@@ -18,9 +18,9 @@ builder.AddBlazorCookies();
 
 builder.Services.AddClientAuthentication();
 
-#pragma warning disable S1075
-builder.Services.AddKiotaClient(new("https+http://apiservice"));
-#pragma warning restore S1075
+var apiServiceAddress = builder.Configuration.GetValue<string>("ApiServiceSettings:ServiceAddress")
+                        ?? "https+http://apiservice";
+builder.Services.AddKiotaClient(new(apiServiceAddress));
 
 builder.Services.AddOptions<RequestLocalizationOptions>()
     .Configure<IOptions<CultureOptions>>((locOptions, cultureConfig) =>
@@ -30,6 +30,7 @@ builder.Services.AddOptions<RequestLocalizationOptions>()
         locOptions.AddSupportedCultures(settings.SupportedCultures);
         locOptions.AddSupportedUICultures(settings.SupportedCultures);
     });
+builder.Services.AddHttpForwarderWithServiceDiscovery();
 
 var app = builder.Build();
 
@@ -74,6 +75,8 @@ app.MapGet("/Culture/Set", (string? culture, string redirectUri, HttpContext htt
 
     return Results.LocalRedirect(redirectUri);
 });
+
+app.MapForwarder("/api/{**catch-all}", apiServiceAddress);
 
 #pragma warning disable S6966
 app.Run();

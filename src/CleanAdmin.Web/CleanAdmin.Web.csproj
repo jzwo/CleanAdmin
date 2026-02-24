@@ -13,6 +13,7 @@
         <PackageReference Include="BitzArt.Blazor.Cookies.Server" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server"/>
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" />
+        <PackageReference Include="Microsoft.Extensions.ServiceDiscovery.Yarp" />
         <PackageReference Include="Yarp.ReverseProxy" />
     </ItemGroup>
 
