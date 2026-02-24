@@ -64,12 +64,34 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    env:
+      AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v5
         with:
           name: .net-app
+
+      - name: Clean remote wwwroot before deploy
+        shell: pwsh
+        run: |
+          [xml]$publishProfile = $env:AZURE_WEBAPP_PUBLISH_PROFILE
+          $msDeployProfile = $publishProfile.publishData.publishProfile | Where-Object { $_.publishMethod -eq 'MSDeploy' } | Select-Object -First 1
+
+          if (-not $msDeployProfile) {
+            throw "MSDeploy profile not found in publish profile secret."
+          }
+
+          $kuduHost = ($msDeployProfile.publishUrl -split ':')[0]
+          $kuduUrl = "https://$kuduHost/api/command"
+          $securePassword = ConvertTo-SecureString $msDeployProfile.userPWD -AsPlainText -Force
+          $credential = New-Object System.Management.Automation.PSCredential($msDeployProfile.userName, $securePassword)
+
+          $cleanupCommand = "powershell -NoProfile -NonInteractive -Command \"if (Test-Path 'D:\\home\\site\\wwwroot') { Get-ChildItem 'D:\\home\\site\\wwwroot' -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue }\""
+          $body = @{ command = $cleanupCommand; dir = 'D:\home\site\wwwroot' } | ConvertTo-Json
+
+          Invoke-RestMethod -Method Post -Uri $kuduUrl -Credential $credential -Authentication Basic -ContentType 'application/json' -Body $body
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
