@@ -77,33 +77,10 @@
     private async Task OnOpenDrawerAsync()
     {
         _currentEditUserId = User.Id;
-
-        if (string.IsNullOrWhiteSpace(_currentEditUserId))
-        {
-            _model = new UpdateUserRequest
-            {
-                Username = User.Username,
-                RealName = User.RealName,
-                Email = User.Email,
-                Phone = User.Phone,
-                AssignedRoleIds = []
-            };
-            _assignableRoles = [];
-            _assignedRoleIds = [];
-            _ = MessageService.ErrorAsync($"{L["User ID cannot be empty"]}");
-            return;
-        }
-
         _loadingEditContext = true;
-
         try
         {
-            var userInfoTask = ApiClient.Api.User[_currentEditUserId].Profile.GetAsync();
-            var assignableRolesTask = ApiClient.Api.User.Roles.Assignable.GetAsync();
-            await Task.WhenAll(userInfoTask, assignableRolesTask);
-
-            var userInfoResponse = await userInfoTask;
-            var assignableRolesResponse = await assignableRolesTask;
+            var assignableRolesResponse = await ApiClient.Api.User.Roles.Assignable.GetAsync();
 
             if (assignableRolesResponse is not { Success: true })
             {
@@ -115,22 +92,7 @@
                 _assignableRoles = assignableRolesResponse.Data ?? [];
             }
 
-            if (userInfoResponse is not { Success: true, Data: { } userInfo })
-            {
-                _model = new UpdateUserRequest
-                {
-                    Username = User.Username,
-                    RealName = User.RealName,
-                    Email = User.Email,
-                    Phone = User.Phone,
-                    AssignedRoleIds = []
-                };
-                _assignedRoleIds = [];
-                _ = MessageService.ErrorAsync(userInfoResponse?.Message ?? $"{L["Failed to get user details"]}");
-                return;
-            }
-
-            var assignedRoleIds = userInfo.Roles?
+            var assignedRoleIds = User.Roles?
                 .Select(r => r.RoleId)
                 .Where(roleId => !string.IsNullOrWhiteSpace(roleId))
                 .Select(roleId => roleId!)
@@ -140,10 +102,10 @@
             _assignedRoleIds = assignedRoleIds;
             _model = new UpdateUserRequest
             {
-                Username = userInfo.Username,
-                RealName = userInfo.RealName,
-                Email = userInfo.Email,
-                Phone = userInfo.Phone,
+                Username = User.Username,
+                RealName = User.RealName,
+                Email = User.Email,
+                Phone = User.Phone,
                 AssignedRoleIds = assignedRoleIds
             };
         }

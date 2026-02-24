@@ -46,13 +46,13 @@ namespace CleanAdmin.Web.Client.ApiSdk.Models
 #else
         public string RealName { get; set; }
 #endif
-        /// <summary>The roleNames property</summary>
+        /// <summary>The roles property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public List<string>? RoleNames { get; set; }
+        public List<global::CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceApplicationQueriesUsersUserListRoleItemDto>? Roles { get; set; }
 #nullable restore
 #else
-        public List<string> RoleNames { get; set; }
+        public List<global::CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceApplicationQueriesUsersUserListRoleItemDto> Roles { get; set; }
 #endif
         /// <summary>The username property</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
@@ -85,7 +85,7 @@ namespace CleanAdmin.Web.Client.ApiSdk.Models
                 { "id", n => { Id = n.GetStringValue(); } },
                 { "phone", n => { Phone = n.GetStringValue(); } },
                 { "realName", n => { RealName = n.GetStringValue(); } },
-                { "roleNames", n => { RoleNames = n.GetCollectionOfPrimitiveValues<string>()?.AsList(); } },
+                { "roles", n => { Roles = n.GetCollectionOfObjectValues<global::CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceApplicationQueriesUsersUserListRoleItemDto>(global::CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceApplicationQueriesUsersUserListRoleItemDto.CreateFromDiscriminatorValue)?.AsList(); } },
                 { "username", n => { Username = n.GetStringValue(); } },
             };
         }
@@ -101,7 +101,7 @@ namespace CleanAdmin.Web.Client.ApiSdk.Models
             writer.WriteStringValue("id", Id);
             writer.WriteStringValue("phone", Phone);
             writer.WriteStringValue("realName", RealName);
-            writer.WriteCollectionOfPrimitiveValues<string>("roleNames", RoleNames);
+            writer.WriteCollectionOfObjectValues<global::CleanAdmin.Web.Client.ApiSdk.Models.CleanAdminApiServiceApplicationQueriesUsersUserListRoleItemDto>("roles", Roles);
             writer.WriteStringValue("username", Username);
         }
     }

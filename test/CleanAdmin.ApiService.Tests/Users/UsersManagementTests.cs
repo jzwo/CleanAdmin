@@ -112,18 +112,8 @@ public class UsersManagementTests(WebAppFixture app, UsersManagementTests.UserSt
         listResponse.Success.ShouldBeTrue();
         listResponse.Data.Items.ShouldContain(u =>
             u.Username == username &&
-            u.RealName.Contains(roleRequest.Name));
-
-        var (_, userInfoResponse) = await app.AuthenticatedClient
-            .GETAsync<UserInfoEndpoint, UserInfoRequest, ResponseData<UserInfoDto>>(new UserInfoRequest
-            {
-                UserId = res.Data.UserId
-            });
-
-        userInfoResponse.Success.ShouldBeTrue();
-        userInfoResponse.Data.Roles.ShouldContain(role =>
-            role.RoleId == roleId &&
-            role.RoleName == roleRequest.Name);
+            u.RealName == request.RealName &&
+            u.Roles.Any(role => role.RoleId == roleId && role.RoleName == roleRequest.Name));
     }
 
     [Fact, Priority(5)]
@@ -166,23 +156,7 @@ public class UsersManagementTests(WebAppFixture app, UsersManagementTests.UserSt
             user.RealName == updatedRealName &&
             user.Email == updatedEmail &&
             user.Phone == updatedPhone &&
-            user.RoleNames.Contains(roleName));
-
-        var (_, userInfoResponse) = await app.AuthenticatedClient
-            .GETAsync<UserInfoEndpoint, UserInfoRequest, ResponseData<UserInfoDto>>(new UserInfoRequest
-            {
-                UserId = userId
-            });
-
-        userInfoResponse.Success.ShouldBeTrue();
-        userInfoResponse.Data.ShouldSatisfyAllConditions(
-            dto => dto.RealName.ShouldBe(updatedRealName),
-            dto => dto.Email.ShouldBe(updatedEmail),
-            dto => dto.Phone.ShouldBe(updatedPhone),
-            dto => dto.Roles.ShouldContain(role =>
-                role.RoleId == roleId &&
-                role.RoleName == roleName)
-        );
+            user.Roles.Any(role => role.RoleId == roleId && role.RoleName == roleName));
     }
 
     [Fact, Priority(6)]

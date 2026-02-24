@@ -1,4 +1,5 @@
 using CleanAdmin.Domain.AggregatesModel.UserAggregate;
+using CleanAdmin.Domain.AggregatesModel.RoleAggregate;
 
 namespace CleanAdmin.ApiService.Application.Queries.Users;
 
@@ -17,7 +18,12 @@ public record UserListItemDto(
     string Phone,
     string RealName,
     DateTimeOffset CreatedAt,
-    List<string> RoleNames
+    List<UserListRoleItemDto> Roles
+);
+
+public record UserListRoleItemDto(
+    RoleId RoleId,
+    string RoleName
 );
 
 public class GetUserListQueryValidator : AbstractValidator<GetUserListQuery>
@@ -50,7 +56,7 @@ public class GetUserListQueryHandler(ApplicationDbContext context)
                 u.Phone,
                 u.RealName,
                 u.CreatedAt,
-                u.UserRoles.Select(ur => ur.RoleName).ToList()
+                u.UserRoles.Select(ur => new UserListRoleItemDto(ur.RoleId, ur.RoleName)).ToList()
             ));
 
         return await usersQuery.ToPagedDataAsync(request.PageRequest, cancellationToken);

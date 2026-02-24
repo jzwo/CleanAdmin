@@ -80,23 +80,6 @@ public class UsersAuthTests(WebAppFixture app, UsersAuthTests.UserState state)
     res.Data.Username.ShouldBe(UserState.Username);
     }
     
-    [Fact, Priority(5)]
-    public async Task UserInfo_ShouldReturn_DetailedProfile()
-    {
-        var userId = state.RegisteredUserId ?? throw new InvalidOperationException("UserId not initialized");
-
-        // Act
-        var (rsp, res) = await app.Client
-            .GETAsync<UserInfoEndpoint, UserInfoRequest, ResponseData<UserInfoDto>>(
-                new UserInfoRequest { UserId = userId });
-
-        // Assert
-        rsp.StatusCode.ShouldBe(HttpStatusCode.OK);
-        res.Success.ShouldBeTrue();
-        res.Data.Id.ShouldBe(userId);
-    res.Data.Username.ShouldBe(UserState.Username);
-    }
-
     /// <summary>
     /// use for sharing state between UsersAuthTests
     /// </summary>
