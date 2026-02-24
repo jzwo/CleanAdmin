@@ -61,7 +61,7 @@ public static class ApplicationDbContextSeed
                     parentId: null,
                     routePath: "/chat",
                     componentPath: null,
-                    icon: null,
+                    icon: "lucide:message-circle",
                     sortOrder: 3,
                     permissionCode: null);
 
