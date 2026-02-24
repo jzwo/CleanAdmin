@@ -5,16 +5,10 @@
 @inject ILogger<PDrawerForm<TModel>> Logger
 @inject IStringLocalizer<SharedResource> L
 
-@if (Activator != null)
-{
-    <div class="inline-block" @onclick="@Open">
-        @Activator
-    </div>
-}
 <Drawer Title="@Title"
         @bind-Visible="@_visible"
         Width="@Width"
-        OnClose="@(() => OnClosed.InvokeAsync())"
+        OnClose="@CloseAsync"
         WrapClassName="@WrapClassName"
         MaskClosable="@(!_loading)">
     <div class=@("flex flex-col h-full")>
@@ -90,11 +84,9 @@
     [Parameter]
     public string Width { get; set; } = "520";
 
-    /// <summary>
-    /// 触发器内容（点击打开抽屉）
-    /// </summary>
-    [Parameter]
-    public RenderFragment? Activator { get; set; }
+    [Parameter, EditorRequired] public bool Visible { get; set; }
+
+    [Parameter, EditorRequired] public EventCallback<bool> VisibleChanged { get; set; }
 
     /// <summary>
     /// 提交按钮文字
@@ -265,9 +257,20 @@
     /// <summary>
     /// 打开抽屉
     /// </summary>
+    protected override void OnParametersSet()
+    {
+        _visible = Visible;
+    }
+
     public void Open()
     {
+        _ = OpenAsync();
+    }
+
+    public async Task OpenAsync()
+    {
         _visible = true;
+        await VisibleChanged.InvokeAsync(true);
     }
 
     /// <summary>
@@ -276,7 +279,7 @@
     private async Task CloseAsync()
     {
         _visible = false;
-        StateHasChanged();
+        await VisibleChanged.InvokeAsync(false);
         await OnClosed.InvokeAsync();
     }
 

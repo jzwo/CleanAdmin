@@ -7,16 +7,11 @@
 <PDrawerForm TModel="UpdateRoleRequest"
              Title='@L["Edit Role"]'
              Model="_model"
+             @bind-Visible="_visible"
              LabelColSpan="8"
              OnSubmit="@HandleSubmitAsync"
              ContentClass="w-100 mr-auto"
              Width="@DrawerWidth">
-    <Activator>
-        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
-                OnClick="@OnOpenDrawer">
-            @L["Edit"]
-        </Button>
-    </Activator>
     <ChildContent Context="model">
         <PFormItem Label='@L["Role Name"]' Required>
             <Input @bind-Value="@model.Name" Placeholder='@L["Please enter role name"]'/>
@@ -36,27 +31,40 @@
             </Select>
         </PFormItem>
         <PermissionView Code="@AppPermissions.System_Roles_ManagePermissions">
-            <RolePermissionDrawer Role="@Role" @bind-IsOpen="_permissionDrawerOpen"/>
+            <Button OnClick="@OpenPermissionDrawer" Disabled="@string.IsNullOrWhiteSpace(_currentEditRoleId)">
+                @L["Assign Permissions"]
+            </Button>
+            <RolePermissionDrawer Role="@_currentRole" @bind-IsOpen="_permissionDrawerOpen"/>
         </PermissionView>
     </ChildContent>
 </PDrawerForm>
 
 @code {
-    [Parameter, EditorRequired] public RoleListItemDto Role { get; set; } = new();
+    private RoleListItemDto _currentRole = new();
+    private bool _visible;
     private string DrawerWidth => _permissionDrawerOpen ? $"{480 + int.Parse(RolePermissionDrawer.DrawerWidth)}" : "480";
     private bool _permissionDrawerOpen;
     private UpdateRoleRequest _model = new();
     private string? _currentEditRoleId;
 
-    private void OnOpenDrawer()
+    public void Open(RoleListItemDto role)
     {
-        _currentEditRoleId = Role.RoleId;
+        _currentRole = role;
+        _currentEditRoleId = role.RoleId;
+        _permissionDrawerOpen = false;
         _model = new UpdateRoleRequest
         {
-            Name = Role.Name,
-            Description = Role.Description,
-            IsDisabled = Role.IsDisabled ?? false
+            Name = role.Name,
+            Description = role.Description,
+            IsDisabled = role.IsDisabled ?? false
         };
+
+        _visible = true;
+    }
+
+    private void OpenPermissionDrawer()
+    {
+        _permissionDrawerOpen = true;
     }
 
     private async Task<(bool, string?)> HandleSubmitAsync(UpdateRoleRequest model)

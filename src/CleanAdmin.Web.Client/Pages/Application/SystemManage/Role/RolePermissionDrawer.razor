@@ -10,14 +10,11 @@
              Title='@L["Assign Permissions"]'
              Model="_model"
              Width="@DrawerWidth"
+             Visible="@IsOpen"
+             VisibleChanged="@IsOpenChanged"
              OnClosed="@(() => IsOpenChanged.InvokeAsync(false))"
              DisableTableReload
              OnSubmit="@HandleSubmitAsync">
-    <Activator>
-        <Button OnClick="@OnOpenDrawerAsync">
-            @L["Assign Permissions"]
-        </Button>
-    </Activator>
     <ChildContent>
         @if (_loadingPermissions)
         {
@@ -77,10 +74,21 @@
     private readonly Dictionary<string, string?> _menuIdToPermissionCode = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _permissionCodeToMenuId = new(StringComparer.OrdinalIgnoreCase);
     private readonly HashSet<string> _forcedCheckedMenuIds = new(StringComparer.OrdinalIgnoreCase);
+    private bool _previousIsOpen;
 
-    private async Task OnOpenDrawerAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        await IsOpenChanged.InvokeAsync(true);
+        var shouldLoad = IsOpen && (!_previousIsOpen || !string.Equals(_currentRoleId, Role.RoleId, StringComparison.OrdinalIgnoreCase));
+        _previousIsOpen = IsOpen;
+
+        if (shouldLoad)
+        {
+            await LoadPermissionDataAsync();
+        }
+    }
+
+    private async Task LoadPermissionDataAsync()
+    {
         _currentRoleId = Role.RoleId;
 
         if (string.IsNullOrWhiteSpace(_currentRoleId))

@@ -21,19 +21,22 @@
         DefaultExpandAllRows>
     <ToolbarButtons>
         <PermissionView Code="@AppPermissions.System_Menus_Create">
+            <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus" OnClick="@OpenCreateDrawer">
+                @L["Create"]
+            </Button>
+
             <PDrawerForm TModel="CreateMenuRequest"
                          Title='@L["Create Menu"]'
                          Model="_createModel"
+                         @bind-Visible="_createDrawerVisible"
                          OnSubmit="@HandleCreateAsync">
-                <Activator>
-                    <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
-                </Activator>
                 <ChildContent Context="model">
                     <PFormItem Label='@L["Menu Name"]' Required>
                         <Input @bind-Value="@model.MenuName" Placeholder='@L["Please enter menu name"]'/>
                     </PFormItem>
                     <PFormItem Label='@L["Menu Type"]' Required>
-                        <EnumSelect TEnum="MenuType?" @bind-Value="@model.MenuType" Placeholder='@L["Please select menu type"]'/>
+                        <EnumSelect TEnum="MenuType?" @bind-Value="@model.MenuType"
+                                    Placeholder='@L["Please select menu type"]'/>
                     </PFormItem>
                     <PFormItem Label='@L["Parent Menu"]'>
                         <TreeSelect TItem="MenuTreeNodeDto"
@@ -60,7 +63,38 @@
                         </AntDesign.Input>
                     </PFormItem>
                     <PFormItem Label='@L["Sort Order"]' Required>
-                        <AntDesign.InputNumber @bind-Value="@model.SortOrder" Min="0" Placeholder='@L["Please enter sort order"]'/>
+                        <AntDesign.InputNumber @bind-Value="@model.SortOrder" Min="0"
+                                               Placeholder='@L["Please enter sort order"]'/>
+                    </PFormItem>
+                    <PFormItem Label='@L["Permission Code"]'>
+                        <Input @bind-Value="@model.PermissionCode" Placeholder='@L["Please enter permission code"]'/>
+                    </PFormItem>
+                </ChildContent>
+            </PDrawerForm>
+        </PermissionView>
+
+        <PermissionView Code="@AppPermissions.System_Menus_Update">
+            <PDrawerForm TModel="UpdateMenuRequest"
+                         Title='@L["Edit Menu"]'
+                         Model="_editModel"
+                         @bind-Visible="_editDrawerVisible"
+                         OnSubmit="@HandleEditAsync">
+                <ChildContent Context="model">
+                    <PFormItem Label='@L["Menu Name"]' Required>
+                        <Input @bind-Value="@model.MenuName" Placeholder='@L["Please enter menu name"]'/>
+                    </PFormItem>
+                    <PFormItem Label='@L["Route Path"]'>
+                        <Input @bind-Value="@model.RoutePath" Placeholder='@L["Please enter route path"]'/>
+                    </PFormItem>
+                    <PFormItem Label='@L["Component Path"]'>
+                        <Input @bind-Value="@model.ComponentPath" Placeholder='@L["Please enter component path"]'/>
+                    </PFormItem>
+                    <PFormItem Label='@L["Icon"]'>
+                        <AntDesign.Input @bind-Value="@model.Icon" Placeholder='@L["Please enter icon"]'>
+                            <AddOnAfter>
+                                <iconify-icon icon="@model.Icon"></iconify-icon>
+                            </AddOnAfter>
+                        </AntDesign.Input>
                     </PFormItem>
                     <PFormItem Label='@L["Permission Code"]'>
                         <Input @bind-Value="@model.PermissionCode" Placeholder='@L["Please enter permission code"]'/>
@@ -99,39 +133,10 @@
             <Space>
                 <SpaceItem>
                     <PermissionView Code="@AppPermissions.System_Menus_Update">
-                        @* 编辑菜单抽屉表单 *@
-                        <PDrawerForm TModel="UpdateMenuRequest"
-                                     Title='@L["Edit Menu"]'
-                                     Model="_editModel"
-                                     OnSubmit="@HandleEditAsync">
-                            <Activator>
-                                <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
-                                        OnClick="@(() => OnOpenEditDrawer(context))">
-                                    @L["Edit"]
-                                </Button>
-                            </Activator>
-                            <ChildContent Context="model">
-                                <PFormItem Label='@L["Menu Name"]' Required>
-                                    <Input @bind-Value="@model.MenuName" Placeholder='@L["Please enter menu name"]'/>
-                                </PFormItem>
-                                <PFormItem Label='@L["Route Path"]'>
-                                    <Input @bind-Value="@model.RoutePath" Placeholder='@L["Please enter route path"]'/>
-                                </PFormItem>
-                                <PFormItem Label='@L["Component Path"]'>
-                                    <Input @bind-Value="@model.ComponentPath" Placeholder='@L["Please enter component path"]'/>
-                                </PFormItem>
-                                <PFormItem Label='@L["Icon"]'>
-                                    <AntDesign.Input @bind-Value="@model.Icon" Placeholder='@L["Please enter icon"]'>
-                                        <AddOnAfter>
-                                            <iconify-icon icon="@model.Icon"></iconify-icon>
-                                        </AddOnAfter>
-                                    </AntDesign.Input>
-                                </PFormItem>
-                                <PFormItem Label='@L["Permission Code"]'>
-                                    <Input @bind-Value="@model.PermissionCode" Placeholder='@L["Please enter permission code"]'/>
-                                </PFormItem>
-                            </ChildContent>
-                        </PDrawerForm>
+                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link"
+                                OnClick="@(() => OnOpenEditDrawer(context))">
+                            @L["Edit"]
+                        </Button>
                     </PermissionView>
                 </SpaceItem>
                 <SpaceItem>
@@ -149,6 +154,7 @@
             </Space>
         </ActionColumn>
     </ColumnDefinitions>
+
 </PTable>
 
 
@@ -159,6 +165,13 @@
     private UpdateMenuRequest _editModel = new();
     private string? _currentEditMenuId;
     private string? _selectedParentId;
+    private bool _createDrawerVisible;
+    private bool _editDrawerVisible;
+
+    private void OpenCreateDrawer()
+    {
+        _createDrawerVisible = true;
+    }
 
     /// <summary>
     /// 加载菜单树数据
@@ -219,6 +232,7 @@
             Icon = menu.Icon,
             PermissionCode = menu.PermissionCode
         };
+        _editDrawerVisible = true;
     }
 
     /// <summary>

@@ -23,6 +23,7 @@
         <PermissionView Code="@AppPermissions.System_Roles_Create">
             <RoleCreateDrawer OnSuccess="OnRoleChangedAsync"/>
         </PermissionView>
+        <RoleEditDrawer @ref="_roleEditDrawer"/>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
         <PropertyColumn Property="c => c.Name" Title='@L["Role Name"]'/>
@@ -37,7 +38,9 @@
             <Space>
                 <SpaceItem>
                     <PermissionView Code="@AppPermissions.System_Roles_Update">
-                        <RoleEditDrawer Role="@item"/>
+                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="@(() => OnEdit(item))">
+                            @L["Edit"]
+                        </Button>
                     </PermissionView>
                 </SpaceItem>
                 <SpaceItem>
@@ -55,11 +58,18 @@
             </Space>
         </ActionColumn>
     </ColumnDefinitions>
+
 </PTable>
 
 @code {
     private PTable<RoleListItemDto>? _pTable;
+    private RoleEditDrawer _roleEditDrawer = null!;
     private readonly SearchQueryParameters _searchModel = new();
+
+    private void OnEdit(RoleListItemDto role)
+    {
+        _roleEditDrawer.Open(role);
+    }
 
     private async Task<(int Total, IEnumerable<RoleListItemDto> Data)> LoadDataAsync(
         QueryModel<RoleListItemDto> queryModel)

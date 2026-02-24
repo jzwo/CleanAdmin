@@ -32,6 +32,7 @@
         <PermissionView Code="@AppPermissions.System_Users_Create">
             <UserCreateDrawer/>
         </PermissionView>
+        <UserEditDrawer @ref="_userEditDrawer"/>
     </ToolbarButtons>
     <ColumnDefinitions Context="item">
         <PropertyColumn Property="c => c.Username" Title='@L["Username"]'/>
@@ -43,7 +44,9 @@
             <Space>
                 <SpaceItem>
                     <PermissionView Code="@AppPermissions.System_Users_Update">
-                        <UserEditDrawer User="@item"/>
+                        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="@(() => OnEditAsync(item))">
+                            @L["Edit"]
+                        </Button>
                     </PermissionView>
                 </SpaceItem>
                 <SpaceItem>
@@ -66,7 +69,13 @@
 
 @code {
     private PTable<UserListItemDto>? _pTable;
+    private UserEditDrawer _userEditDrawer = null!;
     private readonly SearchQueryParameters _searchModel = new();
+
+    private async Task OnEditAsync(UserListItemDto user)
+    {
+        await _userEditDrawer.OpenAsync(user);
+    }
 
     /// <summary>
     /// PTable 数据加载回调

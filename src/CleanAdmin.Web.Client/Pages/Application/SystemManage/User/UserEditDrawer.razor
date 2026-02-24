@@ -9,12 +9,8 @@
 <PDrawerForm TModel="UpdateUserRequest"
              Title='@L["Edit User"]'
              Model="_model"
+             @bind-Visible="_visible"
              OnSubmit="@HandleSubmitAsync">
-    <Activator>
-        <Button Size="@ButtonSize.Small" Type="@ButtonType.Link" OnClick="@OnOpenDrawerAsync">
-            @L["Edit"]
-        </Button>
-    </Activator>
     <ChildContent Context="model">
         @if (_loadingEditContext)
         {
@@ -32,10 +28,10 @@
             </PFormItem>
             <PFormItem Label='@L["Email"]'
                        Rules="@(new[]
-                       {
-                           new FormValidationRule { Required = true, Message = $"{L["Please enter email"]}" },
-                           new FormValidationRule { Type = FormFieldType.Email, Message = $"{L["Please enter a valid email address"]}" }
-                       })">
+                              {
+                                  new FormValidationRule { Required = true, Message = $"{L["Please enter email"]}" },
+                                  new FormValidationRule { Type = FormFieldType.Email, Message = $"{L["Please enter a valid email address"]}" }
+                              })">
                 <Input @bind-Value="@model.Email" Placeholder='@L["Please enter email"]'/>
             </PFormItem>
             <PFormItem Label='@L["Phone"]'>
@@ -66,18 +62,21 @@
 </PDrawerForm>
 
 @code {
-    [Parameter, EditorRequired] public UserListItemDto User { get; set; } = new();
-
     private string? _currentEditUserId;
     private bool _loadingEditContext;
+    private bool _visible;
     private UpdateUserRequest _model = new();
     private List<AssignableRoleItemDto> _assignableRoles = [];
     private IEnumerable<string> _assignedRoleIds = [];
 
-    private async Task OnOpenDrawerAsync()
+    public async Task OpenAsync(UserListItemDto user)
     {
-        _currentEditUserId = User.Id;
+        _currentEditUserId = user.Id;
         _loadingEditContext = true;
+        _visible = true;
+
+        await InvokeAsync(StateHasChanged);
+
         try
         {
             var assignableRolesResponse = await ApiClient.Api.User.Roles.Assignable.GetAsync();
@@ -92,7 +91,7 @@
                 _assignableRoles = assignableRolesResponse.Data ?? [];
             }
 
-            var assignedRoleIds = User.Roles?
+            var assignedRoleIds = user.Roles?
                 .Select(r => r.RoleId)
                 .Where(roleId => !string.IsNullOrWhiteSpace(roleId))
                 .Select(roleId => roleId!)
@@ -102,10 +101,10 @@
             _assignedRoleIds = assignedRoleIds;
             _model = new UpdateUserRequest
             {
-                Username = User.Username,
-                RealName = User.RealName,
-                Email = User.Email,
-                Phone = User.Phone,
+                Username = user.Username,
+                RealName = user.RealName,
+                Email = user.Email,
+                Phone = user.Phone,
                 AssignedRoleIds = assignedRoleIds
             };
         }
@@ -113,10 +112,10 @@
         {
             _model = new UpdateUserRequest
             {
-                Username = User.Username,
-                RealName = User.RealName,
-                Email = User.Email,
-                Phone = User.Phone,
+                Username = user.Username,
+                RealName = user.RealName,
+                Email = user.Email,
+                Phone = user.Phone,
                 AssignedRoleIds = []
             };
             _assignableRoles = [];

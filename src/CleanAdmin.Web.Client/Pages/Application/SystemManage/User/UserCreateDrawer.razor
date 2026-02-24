@@ -3,13 +3,13 @@
 @inject ApiClient ApiClient
 @inject IStringLocalizer<UserCreateDrawer> L
 
+<Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus" OnClick="@OpenDrawer">@L["Create"]</Button>
+
 <PDrawerForm TModel="CreateUserRequest"
              Title='@L["Create User"]'
              Model="_model"
+             @bind-Visible="_visible"
              OnSubmit="@HandleSubmitAsync">
-    <Activator>
-        <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
-    </Activator>
     <ChildContent Context="model">
         <PFormItem Label='@L["Username"]' Required>
             <Input @bind-Value="@model.Username" Placeholder='@L["Please enter username"]'/>
@@ -36,6 +36,12 @@
 
 @code {
     private readonly CreateUserRequest _model = new();
+    private bool _visible;
+
+    private void OpenDrawer()
+    {
+        _visible = true;
+    }
 
     private async Task<(bool, string?)> HandleSubmitAsync(CreateUserRequest model)
     {

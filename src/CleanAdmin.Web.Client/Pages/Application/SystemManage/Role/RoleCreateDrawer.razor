@@ -3,14 +3,14 @@
 @inject ApiClient ApiClient
 @inject IStringLocalizer<RoleCreateDrawer> L
 
+<Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus" OnClick="@OpenDrawer">@L["Create"]</Button>
+
 <PDrawerForm TModel="CreateRoleRequest"
              Title='@L["Create Role"]'
              Model="_model"
              LabelColSpan="8"
+             @bind-Visible="_visible"
              OnSubmit="@HandleSubmitAsync">
-    <Activator>
-        <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Plus">@L["Create"]</Button>
-    </Activator>
     <ChildContent Context="model">
         <PFormItem Label='@L["Role Name"]' Required>
             <Input @bind-Value="@model.Name" Placeholder='@L["Please enter role name"]'/>
@@ -34,8 +34,14 @@
 
 @code {
     private readonly CreateRoleRequest _model = new() { IsDisabled = false };
+    private bool _visible;
 
     [Parameter] public EventCallback OnSuccess { get; set; }
+
+    private void OpenDrawer()
+    {
+        _visible = true;
+    }
 
     private async Task<(bool, string?)> HandleSubmitAsync(CreateRoleRequest model)
     {
