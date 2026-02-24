@@ -8,6 +8,5 @@
 
     <ItemGroup>
         <PackageReference Include="FluentPermissions" />
-        <PackageReference Include="NetCorePal.Extensions.Dto" />
     </ItemGroup>
 </Project>

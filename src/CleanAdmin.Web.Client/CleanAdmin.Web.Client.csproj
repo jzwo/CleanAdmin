@@ -34,9 +34,4 @@
       <Folder Include="wwwroot\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="ApiSdk\kiota-lock.json" />
-      <_ContentIncludedByDefault Remove="ApiSdk\v1.json" />
-    </ItemGroup>
-
 </Project>
