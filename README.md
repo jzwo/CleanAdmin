@@ -17,6 +17,11 @@ frontend UI, infrastructure orchestration, migration services, and test projects
 auto-generate strongly typed API clients, reducing integration and maintenance costs while improving team delivery
 efficiency.
 
+## 👀 Project Preview
+
+- Live preview: https://cleanadmin.azurewebsites.net
+- Note: The preview site is currently powered by mock data generated with Apifox.
+
 ## 🌟 Why Choose CleanAdmin
 
 Compared with traditional admin templates, CleanAdmin puts stronger emphasis on maintainability and a modern developer
@@ -33,8 +38,8 @@ experience:
   collaboration.
 - **Kiota strongly typed API clients**: Auto-generates strongly typed API clients from OpenAPI to reduce development
   overhead.
-- **Blazor InteractiveAuto full-stack development**: Combines fast first paint (SSR) with rich client experience (WASM)
-  using one C# stack across frontend and backend.
+- **Blazor full-stack development**: Uses a unified C# stack across frontend and backend, and provides a
+  backend-friendly frontend development experience based on Ant Design Blazor and Tailwind CSS.
 
 ## 🏗️ Architecture
 
@@ -64,7 +69,7 @@ The solution includes the following projects:
 
 ### 1) ✅ Prerequisites
 
-- .NET SDK 10.0.100 (preview allowed)
+- .NET SDK 10.0.100
 - Docker Desktop
 - Node.js 18+
 

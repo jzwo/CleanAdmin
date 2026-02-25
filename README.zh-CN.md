@@ -14,6 +14,11 @@ Scalar，提供现代 API 开发与文档体验。
 CleanAdmin 聚焦清晰架构与简洁实现，在单一解决方案中整合后端 API、前端 UI、基础设施编排、迁移服务与测试工程；同时支持
 Microsoft.Kiota 自动生成强类型 API 客户端，降低联调与维护成本，提升团队交付效率。
 
+## 👀 项目预览
+
+- 在线预览地址：https://cleanadmin.azurewebsites.net
+- 说明：预览站当前基于 Apifox 生成的 Mock 数据进行展示。
+
 ## 🌟 为什么选择 CleanAdmin
 
 相比传统后台模板，CleanAdmin 更关注工程的可维护性与现代化的开发体验：
@@ -24,7 +29,7 @@ Microsoft.Kiota 自动生成强类型 API 客户端，降低联调与维护成�
 - **基于 FastEndpoints 的极简 API**：采用 REPR 模式与垂直切片架构替代传统控制器，提升代码内聚性与执行效率。
 - **现代 API 文档体验（Scalar）**：提供更现代的 API 文档与调试界面，便于接口浏览、联调与团队协作。
 - **Kiota 强类型 API 客户端**：基于 OpenAPI 自动生成强类型化 API 客户端，减少开发开销。
-- **Blazor InteractiveAuto 全栈开发**：兼顾极速首屏加载（SSR）与客户端体验（WASM），前后端统一 C# 技术栈。
+- **Blazor 全栈开发**：前后端统一 C# 技术栈。基于 Ant Design Blazor 与 Tailwind CSS 提供后端友好的前端开发体验。
 
 ## 🏗️ 架构说明
 
@@ -54,7 +59,7 @@ Microsoft.Kiota 自动生成强类型 API 客户端，降低联调与维护成�
 
 ### 1) ✅ 环境准备
 
-- .NET SDK 10.0.100（允许预览版）
+- .NET SDK 10.0.100
 - Docker Desktop
 - Node.js 18+
 
