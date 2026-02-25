@@ -27,7 +27,6 @@
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/CleanAdmin.ApiService.Tests/CleanAdmin.ApiService.Tests.csproj" />
-    <Project Path="test/CleanAdmin.Client.Tests/CleanAdmin.Client.Tests.csproj" />
     <Project Path="test/CleanAdmin.Domain.Tests/CleanAdmin.Domain.Tests.csproj" />
     <Project Path="test/CleanAdmin.Infrastructure.Tests/CleanAdmin.Infrastructure.Tests.csproj" />
   </Folder>

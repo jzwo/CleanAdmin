@@ -279,7 +279,15 @@ try
 
     #region AI Agent
 
-    builder.AddAiInfrastructure();
+    var aiEnabled = !string.IsNullOrWhiteSpace(builder.Configuration["OpenAI:Key"]);
+    if (aiEnabled)
+    {
+        builder.AddAiInfrastructure();
+    }
+    else
+    {
+        Log.Warning("OpenAI:Key is missing. AI features are disabled.");
+    }
 
     #endregion
 
@@ -319,8 +327,11 @@ try
     }
 
     // Map endpoints for OpenAI responses and conversations (also required for DevUI)
-    app.MapOpenAIResponses();
-    app.MapOpenAIConversations();
+    if (aiEnabled)
+    {
+        app.MapOpenAIResponses();
+        app.MapOpenAIConversations();
+    }
 
     // Code analysis endpoint
     app.MapGet("/code-analysis", () =>
