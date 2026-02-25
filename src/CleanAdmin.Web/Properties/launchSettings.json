@@ -19,6 +19,24 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
+    "http-Demo": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5023",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Demo"
+      }
+    },
+    "https-Demo": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7263;http://localhost:5023",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Demo"
+      }
+    },
     "http-wasm": {
       "commandName": "Project",
       "dotnetRunMessages": true,
