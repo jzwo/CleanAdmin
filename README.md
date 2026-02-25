@@ -1,38 +1,55 @@
 # CleanAdmin
 
-> A CleanDDD-based full-stack admin starter built with .NET 10, Aspire, FastEndpoints, and Blazor.
+> A CleanDDD-based full-stack admin template built with .NET 10, Aspire, and Blazor.
 
 English | [简体中文](README.zh-CN.md)
 
-[![.NET](https://img.shields.io/badge/.NET-10.0-blueviolet)](https://dotnet.microsoft.com/)
+[![.NET](https://img.shields.io/badge/.NET-10.0-blueviolet?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
 [![Aspire](https://img.shields.io/badge/Aspire-13.x-512BD4)](https://learn.microsoft.com/dotnet/aspire/)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
-CleanAdmin is an open-source template for building modern admin systems with clear domain boundaries and production-friendly defaults. It includes backend API, frontend UI, infrastructure orchestration, migration service, and test projects in one solution.
+CleanAdmin is an open-source admin template based on .NET 10, designed for lightweight, fast, and maintainable
+enterprise web application development. It integrates FastEndpoints, Aspire, and Scalar to provide a modern API
+development and documentation experience.
 
-## Why CleanAdmin
+CleanAdmin focuses on clear architecture and simple implementation. In a single solution, it combines backend APIs,
+frontend UI, infrastructure orchestration, migration services, and test projects. It also supports Microsoft.Kiota to
+auto-generate strongly typed API clients, reducing integration and maintenance costs while improving team delivery
+efficiency.
 
-- CleanDDD style project structure (Domain, Infrastructure, API, Web)
-- .NET Aspire orchestration for local distributed development
-- FastEndpoints + FluentValidation + Swagger for API productivity
-- Built-in Redis, RabbitMQ, PostgreSQL integration
-- CAP, Hangfire, OpenTelemetry, Prometheus support out of the box
-- Blazor-based frontend with Ant Design ecosystem and Tailwind CSS
+## 🌟 Why Choose CleanAdmin
 
-## Architecture
+Compared with traditional admin templates, CleanAdmin puts stronger emphasis on maintainability and a modern developer
+experience:
 
-The solution includes:
+- **Built on netcorepal-cloud-framework**: Implements DDD tactical patterns and includes core architecture capabilities
+  such as CQRS, event-driven workflows, distributed transactions (eventual consistency), multi-tenancy,
+  multi-environment deployment (including canary), and database sharding.
+- **Aspire cloud-native zero-config development environment**: One command can orchestrate API, Web, database, and
+  middleware services without complex local setup.
+- **Minimal API style with FastEndpoints**: Uses REPR and vertical slices instead of traditional controllers for higher
+  cohesion and better execution efficiency.
+- **Modern API docs with Scalar**: Provides a modern API document and debugging UI for browsing, integration, and team
+  collaboration.
+- **Kiota strongly typed API clients**: Auto-generates strongly typed API clients from OpenAPI to reduce development
+  overhead.
+- **Blazor InteractiveAuto full-stack development**: Combines fast first paint (SSR) with rich client experience (WASM)
+  using one C# stack across frontend and backend.
 
-- `CleanAdmin.AppHost`: Aspire AppHost (orchestration entry point)
+## 🏗️ Architecture
+
+The solution includes the following projects:
+
+- `CleanAdmin.AppHost`: Aspire AppHost (unified orchestration entry)
 - `CleanAdmin.ApiService`: backend API service
-- `CleanAdmin.Web`: Blazor web host and reverse proxy entry
+- `CleanAdmin.Web`: Blazor Web host and reverse proxy entry
 - `CleanAdmin.Web.Client`: frontend client project
-- `CleanAdmin.MigrationService`: database migration and seed service
+- `CleanAdmin.MigrationService`: database migration service
 - `CleanAdmin.Domain`: domain model and business rules
-- `CleanAdmin.Infrastructure`: EF Core, repository, integration details
-- `CleanAdmin.ServiceDefaults`: shared telemetry/health/service defaults
+- `CleanAdmin.Infrastructure`: EF Core, repository, and integration implementations
+- `CleanAdmin.ServiceDefaults`: unified observability, health checks, and service defaults
 
-## Tech Stack
+## 🧰 Tech Stack
 
 - .NET SDK `10.0.100` (see `global.json`)
 - ASP.NET Core + Blazor
@@ -43,72 +60,63 @@ The solution includes:
 - OpenTelemetry + Prometheus
 - Aspire
 
-## Quick Start
+## 🚀 Quick Start
 
-### 1) Prerequisites
+### 1) ✅ Prerequisites
 
 - .NET SDK 10.0.100 (preview allowed)
 - Docker Desktop
 - Node.js 18+
 
-### 2) Restore dependencies
+### 2) 📦 Restore dependencies
 
 ```bash
 dotnet restore
 ```
 
-### 3) Build frontend assets
-
-```bash
-cd src/CleanAdmin.Web
-npm install
-npm run build:css
-```
-
-### 4) Run the full stack with Aspire
+### 3) ▶️ Run the full stack with Aspire
 
 ```bash
 dotnet run --project src/CleanAdmin.AppHost
 ```
 
-AppHost will orchestrate PostgreSQL, Redis, RabbitMQ, migration service, API, and Web frontend.
+AppHost will orchestrate PostgreSQL, Redis, RabbitMQ, MigrationService, ApiService, and the Web frontend.
 
-## Local Development
+## 🛠️ Backend Development Notes
 
-Run API only:
+For backend development conventions, refer to the guideline files under `.github/instructions` (such as
+`endpoint.instructions.md`, `command.instructions.md`, `query.instructions.md`, and `aggregate.instructions.md`).
+
+## 💻 Local Development
+
+During development, build ApiService in Release mode to generate API clients:
 
 ```bash
-dotnet run --project src/CleanAdmin.ApiService
+dotnet build src/CleanAdmin.ApiService -c Release
 ```
 
-Run Web only:
-
-```bash
-dotnet run --project src/CleanAdmin.Web
-```
-
-Watch frontend CSS during development:
+Watch CSS for hot reload during development:
 
 ```bash
 cd src/CleanAdmin.Web
 npm run watch:css
 ```
 
-## Common Endpoints
+## 🔗 Common Endpoints
 
-- Swagger (dev): `/swagger`
+- Scalar (development): `/scalar`
 - Health check: `/health`
 - Liveness: `/alive`
-- Metrics (Prometheus): `/metrics`
+- Prometheus metrics: `/metrics`
 - CAP dashboard: `/cap`
 - Hangfire dashboard: `/hangfire`
 - Code analysis visualization: `/code-analysis`
 
-## Configuration
+## ⚙️ Configuration
 
-- Default local app settings are in each project's `appsettings*.json`
-- Aspire parameters are configured in `src/CleanAdmin.AppHost/appsettings.json`
-- Prefer environment variables or user secrets for sensitive values
+- Default local settings are in each project's `appsettings*.json`
+- Aspire parameters are in `src/CleanAdmin.AppHost/appsettings.json`
+- Use environment variables or user secrets for sensitive values
 
 Example:
 
@@ -117,19 +125,19 @@ dotnet user-secrets set "Auth:Jwt:TokenSigningKey" "your-long-random-signing-key
 dotnet user-secrets set "Auth:ApiKey" "your-api-key" --project src/CleanAdmin.ApiService
 ```
 
-## Database Migration
+## 🗄️ Database Migration
 
-`CleanAdmin.MigrationService` runs migrations when started by AppHost.
+When starting with AppHost, `CleanAdmin.MigrationService` runs migrations automatically.
 
 If you need EF CLI manually:
 
 ```bash
 dotnet tool install --global dotnet-ef
-dotnet ef migrations add <MigrationName> -p src/CleanAdmin.Infrastructure
-dotnet ef database update -p src/CleanAdmin.Infrastructure
+dotnet ef migrations add <MigrationName> -p src/CleanAdmin.MigrationService
+dotnet ef database update -p src/CleanAdmin.MigrationService
 ```
 
-## Testing
+## 🧪 Testing
 
 Run all tests:
 
@@ -137,31 +145,22 @@ Run all tests:
 dotnet test
 ```
 
-## IDE Snippets
+## ✨ IDE Snippets
 
 This repository includes productivity snippets under `vs-snippets` and `.vscode/csharp.code-snippets`.
 
 Read more: `vs-snippets/README.md`
 
-## Related Projects
+## 📚 Related Projects
 
 - [NetCorePal Cloud Framework](https://github.com/netcorepal/netcorepal-cloud-framework)
-- [ASP.NET Core](https://github.com/dotnet/aspnetcore)
-- [Entity Framework Core](https://github.com/dotnet/efcore)
-- [CAP](https://github.com/dotnetcore/CAP)
+- [Ant Design Blazor](https://github.com/ant-design-blazor/ant-design-blazor)
 - [FastEndpoints](https://fast-endpoints.com/)
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome.
+Contributions are welcome in many forms. Code submissions, suggestions, and issue reports are all appreciated.
 
-1. Fork this repository
-2. Create your feature branch (`git checkout -b feat/your-feature`)
-3. Commit your changes (`git commit -m "feat: add ..."`)
-4. Push to your branch and open a Pull Request
-
-Please make sure build and tests pass before submitting.
-
-## License
+## 📄 License
 
 MIT License. See `LICENSE` for details.
