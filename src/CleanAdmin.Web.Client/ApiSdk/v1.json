@@ -294,7 +294,7 @@
             "schema": {
               "type": "string"
             },
-            "example": "f5b490f8-1d2b-476a-aa2c-28cf6d50310c"
+            "example": "439728db-ec90-42c4-bca7-9df58f11cf79"
           }
         ],
         "requestBody": {
@@ -1404,7 +1404,7 @@
                 },
                 "example": {
                   "data": {
-                    "userId": "e6760992-6406-48dd-a623-dc57773d9ac3"
+                    "userId": "1f3635e2-958f-400b-b7fd-8fc448b1b668"
                   },
                   "success": true,
                   "message": "",
