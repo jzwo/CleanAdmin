@@ -31,7 +31,7 @@
                     {
                         <Button Type="@(_searchFormVisible ? ButtonType.Primary : ButtonType.Default)"
                                 Shape="ButtonShape.Circle"
-                                OnClick="@(() => _searchFormVisible = !_searchFormVisible)">
+                                OnClick="@ToggleSearchForm">
                             <Icon Type="@IconType.Outline.Search"></Icon>
                         </Button>
                     }
@@ -173,6 +173,12 @@
         if (_tableSize.ToString() == item.Key) return;
         _tableSize = Enum.Parse<TableSize>(item.Key);
         StateHasChanged();
+        ResetTableHeight();
+    }
+
+    private void ToggleSearchForm()
+    {
+        _searchFormVisible = !_searchFormVisible;
         ResetTableHeight();
     }
 
