@@ -35,25 +35,40 @@ Microsoft.Kiota 自动生成强类型 API 客户端，降低联调与维护成�
 
 解决方案包含以下项目：
 
-- `CleanAdmin.AppHost`：Aspire AppHost（统一编排入口）
-- `CleanAdmin.ApiService`：后端 API 服务
-- `CleanAdmin.Web`：Blazor Web 宿主与反向代理入口
-- `CleanAdmin.Web.Client`：前端客户端工程
-- `CleanAdmin.MigrationService`：数据库迁移服务
-- `CleanAdmin.Domain`：领域模型与业务规则
-- `CleanAdmin.Infrastructure`：EF Core、仓储与集成实现
-- `CleanAdmin.ServiceDefaults`：统一可观测性、健康检查与服务默认配置
+| 项目 | 说明 |
+|------|------|
+| `CleanAdmin.AppHost` | Aspire AppHost — 统一编排入口 |
+| `CleanAdmin.ApiService` | 后端 API 服务 |
+| `CleanAdmin.Web` | Blazor Web 宿主与 YARP 反向代理入口 |
+| `CleanAdmin.Web.Client` | Blazor WebAssembly 前端客户端 |
+| `CleanAdmin.MigrationService` | EF Core 数据库迁移工作服务 |
+| `CleanAdmin.Domain` | 领域模型、聚合与业务规则 |
+| `CleanAdmin.Infrastructure` | EF Core DbContext、仓储与集成实现 |
+| `CleanAdmin.Shared` | 前后端共享代码 |
+| `CleanAdmin.ServiceDefaults` | Aspire 共享默认配置、可观测性与健康检查 |
+| `CleanAdmin.*.Tests` | 单元测试与集成测试（xUnit、Testcontainers） |
 
 ## 🧰 技术栈
 
-- .NET SDK `10.0.100`（见 `global.json`）
-- ASP.NET Core + Blazor
-- FastEndpoints
-- Entity Framework Core + PostgreSQL
-- Redis + RabbitMQ
-- CAP + Hangfire
-- OpenTelemetry + Prometheus
-- Aspire
+| 类别 | 技术 |
+|------|------|
+| 运行时 | .NET 10（SDK `10.0.100`，见 `global.json`） |
+| 云编排 | .NET Aspire |
+| API 框架 | FastEndpoints（REPR 模式，垂直切片） |
+| 前端 | Blazor WebAssembly + Ant Design Blazor + Tailwind CSS |
+| 数据库 | PostgreSQL（EF Core + Npgsql） |
+| 缓存 | Redis |
+| 消息队列 | RabbitMQ（通过 CAP 实现分布式事务） |
+| CQRS / 中介者 | MediatR |
+| 模型验证 | FluentValidation |
+| 身份认证 | JWT + API Key（双方案） |
+| 任务调度 | Hangfire（Redis 存储） |
+| API 客户端生成 | Microsoft Kiota |
+| API 文档 | Scalar |
+| 可观测性 | OpenTelemetry + Prometheus + Serilog |
+| 反向代理 | YARP |
+| DDD 框架 | NetCorePal Cloud Framework |
+| 测试 | xUnit v3 + Testcontainers + Shouldly + Moq |
 
 ## 🚀 快速开始
 
@@ -63,13 +78,39 @@ Microsoft.Kiota 自动生成强类型 API 客户端，降低联调与维护成�
 - Docker Desktop
 - Node.js 18+
 
-### 2) 📦 还原依赖
+### 2) 📦 通过模板创建新项目
+
+CleanAdmin 支持 `dotnet new` 模板，可以快速创建以自己项目名命名的全新解决方案：
+
+```bash
+# 安装模板（从 NuGet）
+dotnet new install CleanAdmin.Template
+
+# 或从本地源码安装
+dotnet new install .
+
+# 创建新项目（将 CleanAdmin 替换为你的项目名）
+dotnet new cleanadmin -n CleanAdmin -o CleanAdmin
+cd CleanAdmin
+```
+
+### 3) 📦 还原依赖
 
 ```bash
 dotnet restore
 ```
 
-### 3) ▶️ 通过 Aspire 启动完整系统
+### 4) 📦 安装前端依赖
+
+Tailwind CSS 构建需要 Node.js 依赖：
+
+```bash
+cd src/CleanAdmin.Web
+npm install
+cd ../..
+```
+
+### 5) ▶️ 通过 Aspire 启动完整系统
 
 ```bash
 dotnet run --project src/CleanAdmin.AppHost
@@ -142,9 +183,10 @@ dotnet test
 
 ## ✨ IDE 代码片段
 
-仓库内置开发效率代码片段，位于 `vs-snippets` 与 `.vscode/csharp.code-snippets`。
+仓库内置常用 DDD 模式的开发效率代码片段：
 
-更多说明：`vs-snippets/README.md`
+- **VS Code**：`.vscode/csharp.code-snippets` — 输入 `epp`、`ncpcmd`、`ncpar`、`ncprepo` 等前缀触发
+- **Visual Studio**：`vs-snippets/NetCorePalTemplates.snippet` — 运行 `vs-snippets/Install-VSSnippets.ps1` 安装
 
 ## 📚 相关项目
 

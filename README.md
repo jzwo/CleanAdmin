@@ -45,25 +45,40 @@ experience:
 
 The solution includes the following projects:
 
-- `CleanAdmin.AppHost`: Aspire AppHost (unified orchestration entry)
-- `CleanAdmin.ApiService`: backend API service
-- `CleanAdmin.Web`: Blazor Web host and reverse proxy entry
-- `CleanAdmin.Web.Client`: frontend client project
-- `CleanAdmin.MigrationService`: database migration service
-- `CleanAdmin.Domain`: domain model and business rules
-- `CleanAdmin.Infrastructure`: EF Core, repository, and integration implementations
-- `CleanAdmin.ServiceDefaults`: unified observability, health checks, and service defaults
+| Project | Description |
+|---------|-------------|
+| `CleanAdmin.AppHost` | Aspire AppHost — unified orchestration entry |
+| `CleanAdmin.ApiService` | Backend API service |
+| `CleanAdmin.Web` | Blazor Web host and YARP reverse proxy entry |
+| `CleanAdmin.Web.Client` | Blazor WebAssembly frontend client |
+| `CleanAdmin.MigrationService` | EF Core database migration worker service |
+| `CleanAdmin.Domain` | Domain model, aggregates, and business rules |
+| `CleanAdmin.Infrastructure` | EF Core DbContext, repositories, and integrations |
+| `CleanAdmin.Shared` | Shared code across frontend and backend |
+| `CleanAdmin.ServiceDefaults` | Aspire shared defaults, observability, and health checks |
+| `CleanAdmin.*.Tests` | Unit and integration tests (xUnit, Testcontainers) |
 
 ## 🧰 Tech Stack
 
-- .NET SDK `10.0.100` (see `global.json`)
-- ASP.NET Core + Blazor
-- FastEndpoints
-- Entity Framework Core + PostgreSQL
-- Redis + RabbitMQ
-- CAP + Hangfire
-- OpenTelemetry + Prometheus
-- Aspire
+| Category | Technology |
+|----------|------------|
+| Runtime | .NET 10 (SDK `10.0.100`, see `global.json`) |
+| Cloud Orchestration | .NET Aspire |
+| API Framework | FastEndpoints (REPR pattern, vertical slices) |
+| Frontend | Blazor WebAssembly + Ant Design Blazor + Tailwind CSS |
+| Database | PostgreSQL (EF Core + Npgsql) |
+| Cache | Redis |
+| Message Queue | RabbitMQ (via CAP for distributed transactions) |
+| CQRS / Mediator | MediatR |
+| Validation | FluentValidation |
+| Auth | JWT + API Key (dual scheme) |
+| Job Scheduling | Hangfire (Redis-backed) |
+| API Client Generation | Microsoft Kiota |
+| API Documentation | Scalar |
+| Observability | OpenTelemetry + Prometheus + Serilog |
+| Reverse Proxy | YARP |
+| DDD Framework | NetCorePal Cloud Framework |
+| Testing | xUnit v3 + Testcontainers + Shouldly + Moq |
 
 ## 🚀 Quick Start
 
@@ -73,13 +88,39 @@ The solution includes the following projects:
 - Docker Desktop
 - Node.js 18+
 
-### 2) 📦 Restore dependencies
+### 2) 📦 Create a new project from template
+
+CleanAdmin is available as a `dotnet new` template. Install it and create your project:
+
+```bash
+# Install the template (from NuGet)
+dotnet new install CleanAdmin.Template
+
+# Or install from local source
+dotnet new install .
+
+# Create a new project (replace CleanAdmin with your desired name)
+dotnet new cleanadmin -n CleanAdmin -o CleanAdmin
+cd CleanAdmin
+```
+
+### 3) 📦 Restore dependencies
 
 ```bash
 dotnet restore
 ```
 
-### 3) ▶️ Run the full stack with Aspire
+### 4) 📦 Install frontend dependencies
+
+Tailwind CSS build requires Node.js dependencies:
+
+```bash
+cd src/CleanAdmin.Web
+npm install
+cd ../..
+```
+
+### 5) ▶️ Run the full stack with Aspire
 
 ```bash
 dotnet run --project src/CleanAdmin.AppHost
@@ -152,9 +193,10 @@ dotnet test
 
 ## ✨ IDE Snippets
 
-This repository includes productivity snippets under `vs-snippets` and `.vscode/csharp.code-snippets`.
+This repository includes productivity snippets for common DDD patterns:
 
-Read more: `vs-snippets/README.md`
+- **VS Code**: `.vscode/csharp.code-snippets` — type prefixes like `epp`, `ncpcmd`, `ncpar`, `ncprepo` etc.
+- **Visual Studio**: `vs-snippets/NetCorePalTemplates.snippet` — run `vs-snippets/Install-VSSnippets.ps1` to install
 
 ## 📚 Related Projects
 

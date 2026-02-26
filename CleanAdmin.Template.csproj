@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageVersion>1.0.0</PackageVersion>
+    <PackageId>CleanAdmin.Template</PackageId>
+    <Title>CleanAdmin DDD Admin Template</Title>
+    <Description>A full-stack Clean DDD admin template with .NET Aspire, Blazor WASM, FastEndpoints, EF Core PostgreSQL, and Ant Design Blazor</Description>
+    <Authors>CleanAdmin</Authors>
+    <PackageTags>dotnet-new;template;ddd;aspire;blazor;fastendpoints;clean-architecture;admin</PackageTags>
+    <TargetFramework>net10.0</TargetFramework>
+
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="**/*"
+             Exclude="**/bin/**;**/obj/**;**/.git/**;**/.idea/**;**/.vs/**;**/node_modules/**;artifacts/**;*.DotSettings.user;CleanAdmin.Template.csproj;.github/workflows/**;opencode.json;LICENSE" />
+    <Compile Remove="**/*" />
+  </ItemGroup>
+
+</Project>

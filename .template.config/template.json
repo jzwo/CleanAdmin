@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "CleanAdmin",
+  "classifications": [
+    "Web",
+    "Blazor",
+    "ASP.NET",
+    "DDD",
+    "Aspire",
+    "Admin"
+  ],
+  "identity": "CleanAdmin.Template",
+  "name": "CleanAdmin DDD Admin Template",
+  "shortName": "cleanadmin",
+  "description": "A full-stack Clean DDD admin template with .NET Aspire, Blazor WASM, FastEndpoints, EF Core PostgreSQL, and Ant Design Blazor",
+  "defaultName": "CleanAdmin",
+  "sourceName": "CleanAdmin",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".git/**",
+            ".idea/**",
+            ".vs/**",
+            "artifacts/**",
+            "**/bin/**",
+            "**/obj/**",
+            "**/node_modules/**",
+            "*.DotSettings.user",
+            ".template.config/**",
+            "CleanAdmin.Template.csproj",
+            ".github/workflows/**",
+            "opencode.json",
+            "LICENSE"
+          ]
+        }
+      ]
+    }
+  ],
+  "symbols": {
+    "ApiServiceUserSecretsId": {
+      "type": "generated",
+      "generator": "guid",
+      "replaces": "c6bafec3-7baa-4567-ae05-4d348783548d",
+      "parameters": {
+        "format": "D"
+      }
+    },
+    "MigrationServiceUserSecretsGuid": {
+      "type": "generated",
+      "generator": "guid",
+      "replaces": "52a369e1-faaa-44a3-b426-9825e332f02d",
+      "parameters": {
+        "format": "D"
+      }
+    }
+  }
+}

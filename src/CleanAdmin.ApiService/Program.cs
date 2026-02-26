@@ -241,7 +241,7 @@ try
 
     #region 多环境支持与服务注册发现
 
-    builder.Services.AddMultiEnv(envOption => envOption.ServiceName = "Abc.Template")
+    builder.Services.AddMultiEnv(envOption => envOption.ServiceName = "CleanAdmin")
         .UseMicrosoftServiceDiscovery();
     builder.Services.AddConfigurationServiceEndpointProvider();
 
