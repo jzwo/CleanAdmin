@@ -22,6 +22,7 @@
     <Content Include="**/*"
              Exclude="**/bin/**;**/obj/**;**/.git/**;**/.idea/**;**/.vs/**;**/node_modules/**;artifacts/**;*.DotSettings.user;CleanAdmin.Template.csproj;.github/workflows/**;opencode.json;LICENSE" />
     <Compile Remove="**/*" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 
 </Project>
