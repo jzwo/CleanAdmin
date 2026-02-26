@@ -41,7 +41,7 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build CleanAdmin.slnx --configuration Release
 
       - name: dotnet publish
         run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/CleanAdmin.Web.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
